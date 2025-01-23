@@ -1,149 +1,149 @@
-\documentclass[12pt]{article}
-\usepackage{geometry}
-\geometry{left=1in,right=0.75in,top=1in,bottom=1in}
+%% !Mode:: "TeX:UTF-8"
+\documentclass{mcmthesis}
+%  \documentclass[CTeX = true]{mcmthesis}
+\mcmsetup{tstyle=\color{red}\bfseries,%修改题号，队号的颜色和加粗显示，黑色可以修改为 black
+        tcn = 0000, problem = A, %修改队号，参赛题号
+        sheet = true, titleinsheet = true, keywordsinsheet = true,
+        titlepage = false, abstract = true}
 
-\newcommand{\Problem}{$ABCDEFG$}
-\newcommand{\Team}{$team$}
+% 代码块设置
+    \usepackage{fontspec}
+    \setmainfont{Charter} [
+        Extension = .ttf,
+        UprightFont = * Regular,
+        BoldFont = * Bold, 
+        ItalicFont = * Italic,
+        BoldItalicFont = * Bold Italic
+    ]
+    \newfontfamily\consolasfont{Consola}[
+        Extension = .ttf,
+        UprightFont = *,
+        BoldFont = *b,
+        ItalicFont = *i,
+        BoldItalicFont = *z
+    ]
 
-\usepackage{ebgaramond}
-\usepackage{amsmath,amssymb,amsthm}
-% \usepackage{garamondx-math} % must come after amsXXX
+    \definecolor{bg}{rgb}{0.92,0.95,1.0} % Lighter blue fill
+    \definecolor{borderblue}{rgb}{0.4,0.4,1.0} % Blue border
+    \definecolor{commentcolor}{rgb}{0.4,0.85,0.4} % Softer green comment color
 
-\usepackage{graphicx}
-\usepackage{xcolor}
-\usepackage{fancyhdr}
-\usepackage{shellesc}
-\lhead{Team \Team}
-\rhead{}
-\cfoot{}
+    \lstset{
+        basicstyle=\consolasfont,  % Changed to use Consolas
+        backgroundcolor=\color{bg},
+        lineskip=1.5pt,
+        frame=single,
+        framesep=1mm,
+        rulecolor=\color{borderblue}, % Blue border
+        numbers=left,
+        numberstyle=\small\color{gray}, % Changed from \tiny to \small
+        keywordstyle=\color{blue},
+        commentstyle=\color{green},
+        commentstyle=\color{commentcolor}\itshape,
+        stringstyle=\color{red},
+        showstringspaces=false,
+        breaklines=true,  % Ensure lines break within margins
+        breakatwhitespace=true, % Allow breaking at whitespace
+        prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+        postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookrightarrow}},
+        escapeinside={(*@}{@*)},
+        literate={-}{{\textendash}}1
+    }
 
-\newfontfamily\consolasfont{Consola}[
-    Extension = .ttf,
-    UprightFont = *,
-    BoldFont = *b,
-    ItalicFont = *i,
-    BoldItalicFont = *z
-]
+\usepackage{indentfirst}  %首行缩进，注释掉，首行就不再缩进。
+\usepackage{lipsum}
+\title{The \LaTeX{} Template for MCM Version \MCMversion}
+\author{\small \href{https://www.latexstudio.net/}
+  {\includegraphics[width=7cm]{mcmthesis-logo}}}
+\date{\today}
 
-\usepackage{listings}
-
-\definecolor{bg}{rgb}{0.92,0.95,1.0} % Lighter blue fill
-\definecolor{borderblue}{rgb}{0.4,0.4,1.0} % Blue border
-\definecolor{commentcolor}{rgb}{0.4,0.85,0.4} % Softer green comment color
-
-
-\lstset{
-    basicstyle=\consolasfont,  % Changed to use Consolas
-    backgroundcolor=\color{bg},
-    frame=single,
-    framesep=1mm,
-    rulecolor=\color{borderblue}, % Blue border
-    numbers=left,
-    numberstyle=\small\color{gray}, % Changed from \tiny to \small
-    keywordstyle=\color{blue},
-    % commentstyle=\color{green},
-    commentstyle=\color{commentcolor}\itshape,
-    stringstyle=\color{red},
-    showstringspaces=false,
-    breaklines=true,  % Ensure lines break within margins
-    breakatwhitespace=true, % Allow breaking at whitespace
-    prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
-    postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookrightarrow}},
-    escapeinside={(*@}{@*)},
-    literate={-}{{\textendash}}1
-}
-
-
-\newtheorem{theorem}{Theorem}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{definition}{Definition}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
-\thispagestyle{empty}
-\vspace*{-16ex}
-\centerline{\begin{tabular}{*3{c}}
-	\parbox[t]{0.3\linewidth}{\begin{center}\textbf{Problem Chosen}\\ \Large \textcolor{red}{\Problem}\end{center}}
-	& \parbox[t]{0.3\linewidth}{\begin{center}\textbf{2025\\ MCM/ICM\\ Summary Sheet}\end{center}}
-	& \parbox[t]{0.3\linewidth}{\begin{center}\textbf{Team Control Number}\\ \Large \textcolor{red}{\Team}\end{center}}	\\
-	\hline
-\end{tabular}}
-%%%%%%%%%%% Begin Summary %%%%%%%%%%%
-% Enter your summary here replacing the (red) text
-% Replace the text from here ...
-\begin{center}
-{\Large \textbf{Mathematical Contest in Modeling 2025}} \\[1.5ex]
+\begin{abstract}
+    \par 
+        SUMMARY HERE
 
-\textbf{Summary} \\[1.3ex]
+\begin{keywords}
+    keyword1; keyword2
+\end{keywords}
 
-\textcolor{black}{%
-Use this template to begin typing the first page (summary page) of your electronic report. This 
-template uses a 12-point Times New Roman font. Submit your paper as an Adobe PDF 
-electronic file (e.g. 1111111.pdf), typed in English, with a readable font of at least 12-point type.	\\[2ex]
-Do not include the name of your school, advisor, or team members on this or any page.	\\[2ex]
-Be sure to change the control number and problem choice above.	\\
-You may delete these instructions as you begin to type your report here. 	\\[2ex]
-\textbf{Follow us @COMAPMath on X or COMAPCHINAOFFICIAL on Weibo for the 
-most up to date contest information.}
-}
-\end{center}
-% to here
-%%%%%%%%%%% End Summary %%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\clearpage
-\pagestyle{fancy}
-% Uncomment the next line to generate a Table of Contents
-%\tableofcontents
+\end{abstract}
+\maketitle
+\tableofcontents
 \newpage
-\setcounter{page}{1}
-\rhead{Page \thepage\ }
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Begin your paper here
 
-$
-\exp \left(\left[\begin{array}{llllll}
-1 & 0 & 0 & 1 & 0 & 0 \\
-0 & 1 & 0 & 0 & 2 & 0 \\
-0 & 0 & 2 & 0 & 0 & 3 \\
-0 & 0 & 0 & 2 & 0 & 0 \\
-0 & 0 & 0 & 0 & 3 & 0 \\
-4 & 0 & 0 & 0 & 0 & 3
-\end{array}\right]\right)
-$
-\newline
-$
-\sum_{k=0}^{\infty}\left(A^*\right)^k A^k
-$
-\newline
+\section{Introduction}
+\subsection{...}
 
-$
-\operatorname{det}\left(\frac{A_1+A_2+\cdots+A_m}{m}\right) \geq\left(\operatorname{det}\left(A_1\right) \operatorname{det}\left(A_2\right) \cdots \operatorname{det}\left(A_m\right)\right)^{1 / m}
-$
+\begin{Theorem} \label{thm:latex}
+    \LaTeX
+\end{Theorem}
 
-\begin{lemma}
-This is a lemma.
-\end{lemma}
+\begin{Lemma} \label{thm:tex}
+    \TeX .
+\end{Lemma}
 
-\begin{theorem}
-This is a theorem.
-\end{theorem}
+\begin{proof}
+    The proof of theorem.
+\end{proof}
 
-\begin{corollary}
-This is a corollary.
-\end{corollary}
+\subsection{Other Assumptions}
 
-\begin{definition}
-This is a definition.
-\end{definition}
 
-\begin{lstlisting}[language=Python]
-import numpy as np
-import matplotlib.pyplot as plt
+\section{Analysis of the Problem}
 
-x = np.linspace(0, 10, 100)
+\section{Calculating and Simplifying the Model}
 
-\end{lstlisting}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The Model Results}
+
+\section{Validating the Model}
+
+\section{Conclusions}
+
+\section{A Summary}
+
+\section{Evaluate of the Model}
+
+\section{Strengths and weaknesses}
+
+\subsection{Strengths}
+
+\subsection{How to cite?}
+bibliography cite use \cite{1}
+
+AI cite use \AIcite{AI1,AI2,AI3}
+
+\begin{thebibliography}{99}
+\bibitem{1} ...
+\end{thebibliography}
+
+\begin{appendices}
+
+\section{First appendix}
+
+% In addition, your report must include a letter to the Chief Financial Officer (CFO) of the Goodgrant Foundation, Mr. Alpha Chiang, that describes the optimal investment strategy, your modeling approach and major results, and a brief discussion of your proposed concept of a return-on-investment (ROI). This letter should be no more than two pages in length.
+
+\begin{letter}{Dear, Mr. Alpha Chiang}
+
+    \vspace{\parskip}
+
+    Sincerely yours,
+
+    Your friends
+
+\end{letter}
+
+\section{Second appendix}
+
+    \lstinputlisting[language=C++]{./code/mcmthesis-sudoku.cpp}
+
+\end{appendices}
+
+% AI report begins here
+\AImatter
+\begin{ReportAiUse}{9}
+\bibitem{AI1}
+
+
+
+\end{ReportAiUse}
+
 \end{document}

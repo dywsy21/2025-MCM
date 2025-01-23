@@ -1,3 +1,11 @@
+**/build
+
+
+
+
+
+# ------------------ # Latex below
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
