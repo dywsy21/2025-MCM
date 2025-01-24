@@ -44,11 +44,20 @@ print(7)
 first_year_df = pd.read_csv("data/generated_training_data/ID_FirstYear.csv")
 # generate a dict to map id to first year
 id_first_year_dict = {k.lower(): v for k, v in zip(first_year_df["ID"], first_year_df["First_Year_In_Match"])}
+
 # fill the First_Year_In_Match column in data_df
 # data_df["First_Year_In_Match"] = data_df["id"].map(id_first_year_dict)
 for i, row in data_df.iterrows():
     data_df.at[i, "First_Year_In_Match"] = id_first_year_dict[row["id"].lower()]
 
-# 8. Save the data_df to data/generated_training_data/ult.csv
+# 8. if id of adjacent rows are the same, merge their medal counts together until all ids are unique
 print(8)
+# Separate columns to be summed and those to be excluded
+columns_to_sum = [col for col in data_df.columns if col not in ["id", "NOC", "First_Year_In_Match"]]
+data_df_summed = data_df.groupby("id", as_index=False)[columns_to_sum].sum()
+data_df_non_summed = data_df.groupby("id", as_index=False)[["NOC", "First_Year_In_Match"]].first()
+data_df = pd.merge(data_df_summed, data_df_non_summed, on="id")
+
+# 9. Save the data_df to data/generated_training_data/ult.csv
+print(9)
 data_df.to_csv("data/generated_training_data/ult.csv", index=False)
