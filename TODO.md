@@ -1,5 +1,10 @@
 # TODO List
 
-1. [ ] Fill `requirements.txt` file
-2. [ ] Search for athletes' retirement status? (May not be permitted to use)
-3. [ ] 
+1. [ ] 写代码: python / matlab
+2. [ ] 最长年限？
+3. [ ] 判断团体，算团体人数
+4. [ ] 构建csv表训练数据
+5. [ ] 多种模型训练
+6. [ ] 构建2028年输入数据 筛选哪些运动员能参加
+7. [ ] 多种模型预测2028年数据
+8. [ ] 比较多种模型预测结果
