@@ -3,7 +3,7 @@ from sklearn.linear_model import LinearRegression
 import xgboost as xgb
 import lightgbm as lgb
 import statsmodels.api as sm
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error
 import numpy as np
 from data_processer import load_and_prepare_data
 
@@ -37,7 +37,8 @@ def evaluate_model(models, X_test, y_test):
     for name, model in models.items():
         predictions = model.predict(X_test)
         mse = mean_squared_error(y_test, predictions)
-        results[name] = mse
+        mae = mean_absolute_error(y_test, predictions)
+        results[name] = {'MSE': mse, 'MAE': mae}
     return results
 
 def main():
@@ -57,8 +58,8 @@ def main():
 
         # Evaluate models
         results = evaluate_model(models, X_test, y_test)
-        for name, mse in results.items():
-            print(f"{name} {medal_type} MSE: {mse}")
+        for name, metrics in results.items():
+            print(f"{name} {medal_type} MSE: {metrics['MSE']}, MAE: {metrics['MAE']}")
 
 if __name__ == "__main__":
     main()
