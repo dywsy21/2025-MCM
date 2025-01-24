@@ -15,17 +15,18 @@ years = range(1896, 2025, 4)
 columns = ["id"] + [f"{medal}_{year}" for year in years for medal in ["Gold", "Silver", "Bronze", "Host_NOC"]] + ["NOC", "First_Year_In_Match"]
 data_df = pd.DataFrame(columns=columns)
 # fill data_df with 0
-data_df["id"] = range(1, 1 + len(city_noc_dict) * len(events_df))
-
+# data_df["id"] = range(1, 1 + len(city_noc_dict) * len(events_df))
 
 # 4. Read data from data/generated_training_data/summerOly_athletes_ID_nocomma.csv, extract ID column and fill it in the id column of data_df
 print(4)
-athletes_df = pd.read_csv("data/generated_training_data/summerOly_athletes_ID_nocomma.csv")
+athletes_df = pd.read_csv("data/generated_training_data/summerOly_athletes_IDascend_nocomma.csv")
 data_df["id"] = athletes_df["ID"]
 
 # 5. Read data from data/generated_training_data/summerOly_athletes_ID_nocomma.csv, extract Medal column. The medal column is in the format of "Gold", "Silver", "Bronze", "No medal". Fill the corresponding columns in data_df with 1
 print(5)
 for index, row in athletes_df.iterrows():
+    if index % 1000 == 0:
+        print(index)
     year = row["Year"]
     medal = row["Medal"]
     name, event = row["ID"].split("_")
