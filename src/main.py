@@ -70,7 +70,7 @@ def main():
         
         # Predict medals for each country
         predictions = results[best_model_name]['predictions']
-        countries = X_test['Country']
+        countries = X_test['NOC']
         
         for country, prediction in zip(countries, predictions):
             if country not in country_medals[medal_type]:

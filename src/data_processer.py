@@ -1,19 +1,26 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from config import NUMBER_OF_MATCHES_TO_USE, RETIREMENT_LIMIT
+import hashlib
+
+def hash_noc(noc):
+    return int(hashlib.sha256(noc.encode('utf-8')).hexdigest(), 16) % 10**8
 
 def load_and_prepare_data(target_year):
-    data = pd.read_csv('data/generated_training_data/training_data.csv')
+    data = pd.read_csv('data/generated_training_data/ultoutput.csv')
     
     # Invalidate a player if target_year > First_Year_In_Match + RETIREMENT_LIMIT
-    data = data[data['First_Year_In_Match'] + RETIREMENT_LIMIT >= target_year]
+    # data = data[data['First_Year_In_Match'] + RETIREMENT_LIMIT >= target_year]
 
     # Prepare the data
     # Assuming the data has columns: 'id', 'Country', 'Gold_{year}', 'Silver_{year}', 'Bronze_{year}', ...
     years = [target_year - i * 4 for i in range(1, NUMBER_OF_MATCHES_TO_USE + 1)]
-    feature_columns = ['Country'] + [f'Gold_{year}' for year in years] + [f'Silver_{year}' for year in years] + [f'Bronze_{year}' for year in years] + [f'Host_country_{year}' for year in years]
+    feature_columns = ['NOC'] + [f'Gold_{year}' for year in years] + [f'Silver_{year}' for year in years] + [f'Bronze_{year}' for year in years] + [f'Host_NOC_{year}' for year in years]
     
     features = data[feature_columns]
+    
+    # Convert NOC strings to numbers using hashing
+    features['NOC'] = features['NOC'].apply(hash_noc)
     
     # Targets for gold, silver, and bronze medals
     target_gold = data[f'Gold_{target_year}']
