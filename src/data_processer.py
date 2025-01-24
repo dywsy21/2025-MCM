@@ -1,26 +1,38 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-def load_and_prepare_data():
-    # Read CSVs (#file: summerOly_athletes.csv, #file: summerOly_hosts.csv, etc.)
-    df_athletes = pd.read_csv("data/summerOly_athletes.csv")
-    df_hosts = pd.read_csv("data/summerOly_hosts.csv")
-    df_medals = pd.read_csv("data/summerOly_medal_counts.csv")
-    df_programs = pd.read_csv("data/summerOly_programs.csv")
+def load_and_prepare_data(target_year):
+    data = pd.read_csv('data/generated_training_data/training_data.csv')
 
-    # Merge/join as needed
-    df_merged = df_medals.merge(df_hosts, how="left", on="Year")
-    df_merged = df_merged.merge(df_athletes, how="left", on=["NOC", "Year"])
-
-    # Create feature columns and target columns (gold medals, total medals)
-    df_merged["host_advantage"] = (df_merged["Host_NOC"] == df_merged["NOC"]).astype(int)
-    y_gold = df_merged["Gold"]
-    y_total = df_merged["Total"]
-    X = df_merged[["Year", "host_advantage"]]
-    y = pd.concat([y_gold, y_total], axis=1)
-
-    # Split into train/test sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    # Prepare the data
+    # Assuming the data has columns: 'id', 'Gold_{year}', 'Silver_{year}', 'Bronze_{year}', ...
+    years = [target_year - i*4 for i in range(1, 9)]
+    feature_columns = [f'Gold_{year}' for year in years] + [f'Silver_{year}' for year in years] + [f'Bronze_{year}' for year in years] + [f'Host_country_{year}' for year in years]
     
-    return X_train, y_train, X_test, y_test
+    features = data[feature_columns]
+    
+    # Targets for gold, silver, and bronze medals
+    target_gold = data[f'Gold_{target_year}']
+    target_silver = data[f'Silver_{target_year}']
+    target_bronze = data[f'Bronze_{target_year}']
+    
+    # Split the data into training and testing sets for each target
+    X_train_gold, X_test_gold, y_train_gold, y_test_gold = train_test_split(features, target_gold, test_size=0.2, random_state=42)
+    X_train_silver, X_test_silver, y_train_silver, y_test_silver = train_test_split(features, target_silver, test_size=0.2, random_state=42)
+    X_train_bronze, X_test_bronze, y_train_bronze, y_test_bronze = train_test_split(features, target_bronze, test_size=0.2, random_state=42)
+    
+    return {
+        'gold': {
+            'train': (X_train_gold, y_train_gold),
+            'test': (X_test_gold, y_test_gold)
+        },
+        'silver': {
+            'train': (X_train_silver, y_train_silver),
+            'test': (X_test_silver, y_test_silver)
+        },
+        'bronze': {
+            'train': (X_train_bronze, y_train_bronze),
+            'test': (X_test_bronze, y_test_bronze)
+        }
+    }
 
