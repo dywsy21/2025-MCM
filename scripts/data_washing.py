@@ -1,6 +1,7 @@
 # 1. store city -> NOC dict from data/generated_training_data/City_NOC.csv
 print(1)
 import pandas as pd
+from sympy import idiff
 city_noc_df = pd.read_csv("data/generated_training_data/City_NOC.csv")
 city_noc_dict = dict(zip(city_noc_df["City"], city_noc_df["NOC"]))
 
@@ -30,6 +31,7 @@ for index, row in athletes_df.iterrows():
     year = row["Year"]
     medal = row["Medal"]
     name, event = row["ID"].split("_")
+    # row["ID"] = f"{name}_{event}"
     if medal in ["Gold", "Silver", "Bronze"]:
         data_df.at[index, f"{medal}_{year}"] = 1.0 / event_team_people_count[event]
 
@@ -40,8 +42,12 @@ data_df["NOC"] = athletes_df["NOC"]
 # 7. Read data from data/generated_training_data/ID_FirstYear.csv (two columns: id, First_Year_In_Match), extract First_Year_In_Match column. Fill the First_Year_In_Match column in data_df with the correct id.
 print(7)
 first_year_df = pd.read_csv("data/generated_training_data/ID_FirstYear.csv")
-# data_df = data_df.set_index("id").combine_first(first_year_df.set_index("id")).reset_index()
-data_df["First_Year_In_Match"] = first_year_df["First_Year_In_Match"]
+# generate a dict to map id to first year
+id_first_year_dict = {k.lower(): v for k, v in zip(first_year_df["ID"], first_year_df["First_Year_In_Match"])}
+# fill the First_Year_In_Match column in data_df
+# data_df["First_Year_In_Match"] = data_df["id"].map(id_first_year_dict)
+for i, row in data_df.iterrows():
+    data_df.at[i, "First_Year_In_Match"] = id_first_year_dict[row["id"].lower()]
 
 # 8. Save the data_df to data/generated_training_data/ult.csv
 print(8)
