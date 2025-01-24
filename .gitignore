@@ -3,6 +3,8 @@
 **/__pycache__
 prompt.md
 projected_medals_of_2024.csv
+**/*.exe
+scores_of_2024.csv
 
 
 # ------------------ # Latex below

@@ -1,12 +1,14 @@
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.linear_model import LinearRegression
+from sympy import use
 import xgboost as xgb
 import lightgbm as lgb
 import statsmodels.api as sm
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 import numpy as np
-from data_processer import load_and_prepare_data
+from data_processer import *
 import pandas as pd
+from config import *
 
 # Input data format:
 # id, (Gold, Silver, Bronze, Host_country) * 8
@@ -42,11 +44,17 @@ def evaluate_model(models, X_test, y_test):
         results[name] = {'MSE': mse, 'MAE': mae, 'predictions': predictions}
     return results
 
-def main():
-    target_year = 2024  # Change this to the year you want to predict
+def main_1(use_normalization=False):
+    # Directly * 100 + 10 to increase k and avoid zero
+    target_year = TARGET_YEAR  # Change this to the year you want to predict
     
     # Load and prepare data
-    data = load_and_prepare_data(target_year)
+    data = None
+    
+    if not use_normalization:
+        data = load_and_prepare_data(target_year, linear_transformation=True)
+    else:
+        data = load_and_prepare_data_normalization(target_year)
     
     country_medals = {'gold': {}, 'silver': {}, 'bronze': {}}
     
@@ -72,11 +80,28 @@ def main():
         predictions = results[best_model_name]['predictions']
         countries = X_test['NOC']
         
-        for country, prediction in zip(countries, predictions):
-            if country not in country_medals[medal_type]:
-                country_medals[medal_type][country] = 0
-            country_medals[medal_type][country] += prediction
-    
+        if not use_normalization:
+            for country, prediction in zip(countries, predictions):
+                if country not in country_medals[medal_type]:
+                    country_medals[medal_type][country] = 0
+                country_medals[medal_type][country] += prediction
+        else:
+            for country, prediction in zip(countries, predictions):
+                if 0 <= prediction <= 0.25:
+                    pass
+                elif 0.25 <= prediction <= 0.5:
+                    if not country in country_medals['bronze'].keys():
+                        country_medals['bronze'][country] = 0
+                    country_medals['bronze'][country] += 1
+                elif 0.5 <= prediction <= 0.75:
+                    if not country in country_medals['silver'].keys():
+                        country_medals['silver'][country] = 0
+                    country_medals['silver'][country] += 1
+                elif 0.75 <= prediction <= 1:
+                    if not country in country_medals['gold'].keys():
+                        country_medals['gold'][country] = 0
+                    country_medals['gold'][country] += 1
+                
     # Draw the prediction into a table
     table_data = []
     for medal_type, medals in country_medals.items():
@@ -87,4 +112,4 @@ def main():
     df.to_csv(f'projected_medals_of_{target_year}.csv', index=False)
 
 if __name__ == "__main__":
-    main()
+    main_1(use_normalization=False)
