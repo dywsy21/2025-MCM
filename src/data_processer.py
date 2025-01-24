@@ -5,9 +5,9 @@ def load_and_prepare_data(target_year):
     data = pd.read_csv('data/generated_training_data/training_data.csv')
 
     # Prepare the data
-    # Assuming the data has columns: 'id', 'Gold_{year}', 'Silver_{year}', 'Bronze_{year}', ...
+    # Assuming the data has columns: 'id', 'Country', 'Gold_{year}', 'Silver_{year}', 'Bronze_{year}', ...
     years = [target_year - i*4 for i in range(1, 9)]
-    feature_columns = [f'Gold_{year}' for year in years] + [f'Silver_{year}' for year in years] + [f'Bronze_{year}' for year in years] + [f'Host_country_{year}' for year in years]
+    feature_columns = ['Country'] + [f'Gold_{year}' for year in years] + [f'Silver_{year}' for year in years] + [f'Bronze_{year}' for year in years] + [f'Host_country_{year}' for year in years]
     
     features = data[feature_columns]
     

@@ -6,6 +6,7 @@ import statsmodels.api as sm
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 import numpy as np
 from data_processer import load_and_prepare_data
+import pandas as pd
 
 # Input data format:
 # id, (Gold, Silver, Bronze, Host_country) * 8
@@ -38,7 +39,7 @@ def evaluate_model(models, X_test, y_test):
         predictions = model.predict(X_test)
         mse = mean_squared_error(y_test, predictions)
         mae = mean_absolute_error(y_test, predictions)
-        results[name] = {'MSE': mse, 'MAE': mae}
+        results[name] = {'MSE': mse, 'MAE': mae, 'predictions': predictions}
     return results
 
 def main():
@@ -46,6 +47,8 @@ def main():
     
     # Load and prepare data
     data = load_and_prepare_data(target_year)
+    
+    country_medals = {'gold': {}, 'silver': {}, 'bronze': {}}
     
     for medal_type in ['gold', 'silver', 'bronze']:
         print(f"Training and evaluating models for {medal_type} medals")
@@ -58,8 +61,30 @@ def main():
 
         # Evaluate models
         results = evaluate_model(models, X_test, y_test)
+        best_model_name = min(results, key=lambda k: (results[k]['MSE'], results[k]['MAE']))
+        best_model = models[best_model_name]
+        print(f"Best model for {medal_type} medals: {best_model_name}")
+        
         for name, metrics in results.items():
             print(f"{name} {medal_type} MSE: {metrics['MSE']}, MAE: {metrics['MAE']}")
+        
+        # Predict medals for each country
+        predictions = results[best_model_name]['predictions']
+        countries = X_test['Country']
+        
+        for country, prediction in zip(countries, predictions):
+            if country not in country_medals[medal_type]:
+                country_medals[medal_type][country] = 0
+            country_medals[medal_type][country] += prediction
+    
+    # Draw the prediction into a table
+    table_data = []
+    for medal_type, medals in country_medals.items():
+        for country, count in medals.items():
+            table_data.append({'Country': country, 'Medal_Type': medal_type, 'Count': count})
+    
+    df = pd.DataFrame(table_data)
+    df.to_csv(f'projected_medals_of_{target_year}.csv', index=False)
 
 if __name__ == "__main__":
     main()
