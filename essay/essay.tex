@@ -84,17 +84,24 @@ Key aspects include:
     \item Projecting medal counts for the 2028 Los Angeles Olympics, including prediction intervals, while addressing uncertainty and potential breakthroughs for nations without prior Olympic success.
 \end{enumerate}
 
-\begin{Theorem} \label{thm:latex}
-    \LaTeX
-\end{Theorem}
+\subsection{Literature Review}
 
-\begin{Lemma} \label{thm:tex}
-    \TeX .
-\end{Lemma}
+Predicting Olympic medal counts has been a topic of interest for researchers across various fields, including economics, sociology, and sports science. Early studies, such as those by Ball (1972) and Grimes et al. (1974), \cite{1} focused on identifying fundamental socioeconomic and demographic factors that influence a nation's medal count. These studies emphasized the importance of population size and economic resources in determining Olympic success. Subsequent research, including work by Bernard and Busse (2004) and Xun Bian (2005) \cite{2}, further explored the impact of political systems and hosting advantages on medal counts, finding that hosting the Games and having a centrally-planned economy can significantly enhance a country's performance.
 
-\begin{proof}
-    The proof of theorem.
-\end{proof}
+Recent advancements in statistical and machine learning techniques have led to more sophisticated models for predicting Olympic medals. Schlembach et al. (2022) \cite{5} applied a two-staged Random Forest model, incorporating a wide range of socioeconomic variables, including GDP, population, and public health indicators. This approach outperformed traditional models and naïve forecasts, demonstrating the potential of machine learning to improve prediction accuracy. Similarly, Forrest et al. (2010) \cite{4} enhanced traditional regression-based models by including additional regressors such as public spending on recreation and the effects of future hosts. These studies highlight the importance of considering multiple factors, including public health crises like COVID-19, in predicting Olympic performance.
+
+Despite significant progress, predicting Olympic medals remains a complex task due to the interplay of numerous factors. It's recommended that future research should focus on incorporating more granular data, such as individual athlete performance and training conditions, to enhance prediction accuracy. Additionally, the use of panel data and advanced machine learning techniques, such as neural networks and ensemble methods, could provide further insights into the determinants of Olympic success. It's also deemed important to address the exogeneity of the total number of medals available and considering cultural factors, such as political freedom and gender equality. Overall, the field has evolved from simple correlation-based models to sophisticated machine learning algorithms, with traditional socioeconomic factors remaining significant predictors of Olympic success.
+
+\subsection{Our Work}
+
+Due to the limitation of usable dataset, we cannot explore many of the aforementioned factors in detail. Instead, we focus on developing a model that predicts Olympic medal counts based on historical data and sport-specific information. Our model has the following features:
+
+\begin{enumerate}
+    \item A two-stage model that first predicts the number of medals won by each country in each sport, then aggregates these predictions to estimate the total medal count.
+    \item Train and evaluate multiple models with different underlying algorithms on the same dataset, and use the best-performing model for prediction.
+    \item Separates different countries into multiple clusters based on their historical performance (in which their comprehensive national power is also embodied \cite{7}), allowing for more accurate predictions for countries with similar characteristics.
+    \item A sensitivity analysis that assesses the impact of different factors on medal counts and identifies key drivers of success. 
+\end{enumerate}
 
 \subsection{Other Assumptions}
 
@@ -124,8 +131,14 @@ bibliography cite use \cite{1}
 AI cite use \AIcite{AI1,AI2,AI3}
 
 \begin{thebibliography}{99}
-\bibitem{1} Schlembach C, Schmidt S L, Schreyer D, et al. Forecasting the Olympic medal distribution–a socioeconomic machine learning model[J]. Technological Forecasting and Social Change, 2022, 175: 121314.
-
+    
+    \bibitem{1} Ball, D. W. (1972). Olympic Games competition: Structural correlates of national success. International Journal of Comparative Sociology, 15, 186–200.
+    \bibitem{2} Bernard, A. B., \& Busse, M. R. (2004). Who wins the Olympic Games: Economic resources and medal totals. Review of Economics and Statistics, 86, 414–417.
+    \bibitem{3} Bian, X. (2005). Predicting Olympic Medal Counts: The Effects of Economic Development on Olympic Performance. The Park Place Economist, 13, 37-44.
+    \bibitem{4} Forrest, D., Sanz, I., \& Tena, J. D. (2010). Forecasting national team medal totals at the Summer Olympic Games. International Journal of Forecasting, 26, 576–588.
+    \bibitem{5} Schlembach, C., Schmidt, S. L., Schreyer, D., \& Wunderlich, L. (2022). Forecasting the Olympic medal distribution – A socioeconomic machine learning model. Technological Forecasting \& Social Change, 175, 121314.
+    \bibitem{6} Tcha, M., \& Pershin, V. (2003). Reconsidering performance at the Summer Olympics and revealed comparative advantage. Journal of Sports Economics, 4, 216–239.
+    \bibitem{7} Bernard A B, Busse M R. Who wins the Olympic Games: Economic resources and medal totals[J]. Review of economics and statistics, 2004, 86(1): 413-417.
 
 \end{thebibliography}
 
