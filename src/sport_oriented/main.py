@@ -66,6 +66,12 @@ def evaluate_model(models, X_test, y_test):
         for name, model in models[medal_type].items():
             predictions = model.predict(X_test)
             
+            # Calculate prediction intervals using residuals
+            residuals = y_test_medal - predictions
+            std_residuals = np.std(residuals)
+            lower_bound = predictions - 1.96 * std_residuals
+            upper_bound = predictions + 1.96 * std_residuals
+            
             # Add validation checks
             if np.any(np.isnan(predictions)):
                 print(f"Warning: NaN predictions found for {name} on {medal_type}")
@@ -88,12 +94,13 @@ def evaluate_model(models, X_test, y_test):
                 'MSE': mse, 
                 'MAE': mae,
                 'predictions': predictions,
-                # 'R2': model.score(X_test, y_test_medal)
+                'lower_bound': lower_bound,
+                'upper_bound': upper_bound
             }
             
             print(f"MSE: {mse:.4f}")
             print(f"MAE: {mae:.4f}")
-            # print(f"R2 Score: {medal_results[name]['R2']:.4f}")
+            print(f"95% Prediction Interval: ±{1.96 * std_residuals:.2f}")
         
         results[medal_type] = medal_results
     
@@ -172,12 +179,22 @@ def main():
     
     # Make predictions using best models for each medal type
     predictions = {}
+    prediction_intervals = {}
     for medal_type in ['Bronze', 'Silver', 'Gold']:
         best_model_name = best_models[medal_type]
         model = trained_models[medal_type][best_model_name]
         preds = model.predict(X_pred_scaled)
-        # predictions[medal_type] = np.maximum(np.round(preds), 0).astype(int)
+        
+        # Calculate prediction intervals for final predictions
+        train_preds = model.predict(X_train_scaled)
+        residuals = y_train[:, ['Bronze', 'Silver', 'Gold'].index(medal_type)] - train_preds
+        std_residuals = np.std(residuals)
+        
         predictions[medal_type] = preds
+        prediction_intervals[medal_type] = {
+            'lower': preds - 1.96 * std_residuals,
+            'upper': preds + 1.96 * std_residuals
+        }
     
     # Create results dataframe
     results = pd.DataFrame({
@@ -185,31 +202,41 @@ def main():
         'Year': X_pred['Year'],
         'Predicted_Bronze': predictions['Bronze'],
         'Predicted_Silver': predictions['Silver'],
-        'Predicted_Gold': predictions['Gold']
+        'Predicted_Gold': predictions['Gold'],
+        'Bronze_Lower': prediction_intervals['Bronze']['lower'],
+        'Bronze_Upper': prediction_intervals['Bronze']['upper'],
+        'Silver_Lower': prediction_intervals['Silver']['lower'],
+        'Silver_Upper': prediction_intervals['Silver']['upper'],
+        'Gold_Lower': prediction_intervals['Gold']['lower'],
+        'Gold_Upper': prediction_intervals['Gold']['upper']
     })
     
     results['Total_Medals'] = results[['Predicted_Bronze', 'Predicted_Silver', 'Predicted_Gold']].sum(axis=1)
     results = results.sort_values('Total_Medals', ascending=False)
 
-    
-    print("\nAll results:")
+    print("\nResults with prediction intervals:")
     print(results.to_string(index=False))
+    
+    # save to csv
+    results.to_csv(f'sport_oriented_predictions_{TARGET_YEAR}.csv', index=False)
 
-    # Adjust predictions to match total medal counts
+    # Adjust predictions to match total medal counts (without rounding)
     for medal_type, total in zip(['Bronze', 'Silver', 'Gold'], [BRONZE_TOTAL, SILVER_TOTAL, GOLD_TOTAL]):
         predicted_total = results[f'Predicted_{medal_type}'].sum()
         coefficient = total / predicted_total
-        results[f'Predicted_{medal_type}'] = np.maximum(0,np.round(results[f'Predicted_{medal_type}'] * coefficient)).astype(int)
+        results[f'Predicted_{medal_type}'] *= coefficient
+        results[f'{medal_type}_Lower'] *= coefficient
+        results[f'{medal_type}_Upper'] *= coefficient
     
-    # Sort by total predicted medals
+    # Update total medals
     results['Total_Medals'] = results[['Predicted_Bronze', 'Predicted_Silver', 'Predicted_Gold']].sum(axis=1)
     results = results.sort_values('Total_Medals', ascending=False)
     
     # Save predictions
-    results.to_csv(f'sport_oriented_predictions_{TARGET_YEAR}.csv', index=False)
+    results.to_csv(f'sport_oriented_predictions_{TARGET_YEAR}_rounded.csv', index=False)
     print(f"\nPredictions for {TARGET_YEAR} saved to predictions/sport_oriented_predictions_{TARGET_YEAR}.csv")
     
-    print("\nRounded results:")
+    print("\nFinal results with prediction intervals:")
     print(results.to_string(index=False))
 
 if __name__ == '__main__':
