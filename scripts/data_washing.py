@@ -1,7 +1,6 @@
 # 1. store city -> NOC dict from data/generated_training_data/City_NOC.csv
 print(1)
 import pandas as pd
-from sympy import idiff
 city_noc_df = pd.read_csv("data/generated_training_data/City_NOC.csv")
 city_noc_dict = dict(zip(city_noc_df["City"], city_noc_df["NOC"]))
 
