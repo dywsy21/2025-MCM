@@ -12,12 +12,12 @@ def load_data(filepath):
     # Remove rows where Host is '#N/A'
     df = df[df['Host'] != '#N/A']
     # Aggregate medals by country and year
-    medal_counts = df.groupby(['NOC', 'Year', 'Sport', 'Host'])[['Bronze', 'Silver', 'Gold']].sum().reset_index()
+    medal_counts = df.groupby(['NOC', 'Year', 'Sport', 'Host', 'Tier'])[['Bronze', 'Silver', 'Gold']].sum().reset_index()
     return medal_counts
 
 def get_all_features(df, n_matches):
     """Get all possible feature names"""
-    feature_names = ['NOC', 'Year', 'Host']
+    feature_names = ['NOC', 'Year', 'Host', 'Tier']
     
     # Add historical medal count features
     for i in range(n_matches):
@@ -36,7 +36,7 @@ def get_all_features(df, n_matches):
 def ensure_consistent_features(features_df, all_features):
     """Ensure dataframe has all expected features, filling missing ones with 0"""
     for feature in all_features:
-        if feature not in features_df.columns and feature not in ['NOC', 'Year', 'Host']:
+        if feature not in features_df.columns and feature not in ['NOC', 'Year', 'Host', 'Tier']:
             features_df[feature] = 0
     return features_df[all_features]
 
@@ -73,7 +73,8 @@ def create_features(df, target_year, n_matches):
                 feature_row = {
                     'NOC': country,
                     'Year': target_year - 4,
-                    'Host': int(country in df[df['Year'] == target_year - 4]['Host'].values)
+                    'Host': int(country in df[df['Year'] == target_year - 4]['Host'].values),
+                    'Tier': country_data['Tier'].values[0] if 'Tier' in country_data.columns else 0
                 }
                 
                 # Add historical medal counts
@@ -144,7 +145,8 @@ def prepare_prediction_features(df, target_year, n_matches):
             feature_row = {
                 'NOC': country,
                 'Year': target_year,
-                'Host': int(country in df[df['Year'] == target_year]['Host'].values)
+                'Host': int(country in df[df['Year'] == target_year]['Host'].values),
+                'Tier': country_data['Tier'].values[0] if 'Tier' in country_data.columns else 0
             }
             
             # Add historical features using same logic as create_features

@@ -119,7 +119,7 @@ def select_best_model(evaluation_results, metric='MAE'):
 
 def main():
     # Load data
-    data = load_data('data/generated_training_data/sport_oriented/Training_data.csv')
+    data = load_data('data/generated_training_data/sport_oriented/Training_data_tier.csv')
     
     # Get years to use for training (NUMBER_OF_MATCHES_TO_USE most recent Olympics before TARGET_YEAR - 4)
     years = sorted(data['Year'].unique())
@@ -141,8 +141,8 @@ def main():
     X_pred = prepare_prediction_features(prediction_data, TARGET_YEAR, NUMBER_OF_MATCHES_TO_USE)
     
     # Verify feature consistency
-    train_cols = set(X_train.columns) - {'NOC', 'Year', 'Host'}
-    pred_cols = set(X_pred.columns) - {'NOC', 'Year', 'Host'}
+    train_cols = set(X_train.columns) - {'NOC', 'Year', 'Host', 'Tier'}
+    pred_cols = set(X_pred.columns) - {'NOC', 'Year', 'Host', 'Tier'}
     assert train_cols == pred_cols, "Feature mismatch between training and prediction data"
     
     # Verify no NaN values in features and labels
@@ -151,8 +151,8 @@ def main():
     
     # Scale features
     scaler = StandardScaler()
-    X_train_scaled = scaler.fit_transform(X_train.drop(['NOC', 'Year', 'Host'], axis=1))
-    X_pred_scaled = scaler.transform(X_pred.drop(['NOC', 'Year', 'Host'], axis=1))
+    X_train_scaled = scaler.fit_transform(X_train.drop(['NOC', 'Year', 'Host', 'Tier'], axis=1))
+    X_pred_scaled = scaler.transform(X_pred.drop(['NOC', 'Year', 'Host', 'Tier'], axis=1))
     
     # Split data into training and validation sets
     X_train_split, X_val_split, y_train_split, y_val_split = train_test_split(
