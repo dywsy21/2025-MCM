@@ -6,3 +6,4 @@ projected_medals_of_2024.csv
 scores_of_2024.csv
 # **/*.pdf
 sport_oriented*.csv
+**/*.gz
