@@ -1,3 +1,3 @@
 # Model configuration
 TARGET_YEAR = 2024
-NUMBER_OF_MATCHES_TO_USE = 8  # Number of previous Olympics to use for training
+NUMBER_OF_MATCHES_TO_USE = 7  # Number of previous Olympics to use for training

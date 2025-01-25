@@ -8,10 +8,10 @@ import numpy as np
 import pandas as pd
 from config import *
 from utils import *
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, KFold
+from sklearn.base import clone
 
 def train_model(X_train, y_train):
-    # Train separate models for Bronze, Silver, and Gold
     medal_types = ['Bronze', 'Silver', 'Gold']
     trained_models = {}
     
@@ -24,15 +24,33 @@ def train_model(X_train, y_train):
             # 'LightGBM': lgb.LGBMRegressor()
         }
         
-        # Get the column for current medal type
         y_train_medal = y_train[:, medal_idx]
+        kf = KFold(n_splits=5, shuffle=True, random_state=42)
         
-        medal_models = {}
-        for name, model in models.items():
-            model.fit(X_train, y_train_medal)
-            medal_models[name] = model
+        best_score = float('inf')
+        best_model_name = None
+        best_model_instance = None
+        
+        for name, base_model in models.items():
+            total_score = 0.0
+            for train_idx, val_idx in kf.split(X_train):
+                X_tr, X_val = X_train[train_idx], X_train[val_idx]
+                y_tr, y_val = y_train_medal[train_idx], y_train_medal[val_idx]
+                
+                cloned_model = clone(base_model)
+                cloned_model.fit(X_tr, y_tr)
+                preds = cloned_model.predict(X_val)
+                total_score += mean_absolute_error(y_val, preds)
             
-        trained_models[medal_type] = medal_models
+            avg_score = total_score / kf.get_n_splits()
+            if avg_score < best_score:
+                best_score = avg_score
+                best_model_name = name
+                best_model_instance = clone(base_model)
+        
+        # Retrain the best model on the entire X_train
+        best_model_instance.fit(X_train, y_train_medal)
+        trained_models[medal_type] = {best_model_name: best_model_instance}
     
     return trained_models
 
