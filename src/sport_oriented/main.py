@@ -123,8 +123,8 @@ def main():
     X_pred = prepare_prediction_features(prediction_data, TARGET_YEAR, NUMBER_OF_MATCHES_TO_USE)
     
     # Verify feature consistency
-    train_cols = set(X_train.columns) - {'NOC', 'Year'}
-    pred_cols = set(X_pred.columns) - {'NOC', 'Year'}
+    train_cols = set(X_train.columns) - {'NOC', 'Year', 'Host'}
+    pred_cols = set(X_pred.columns) - {'NOC', 'Year', 'Host'}
     assert train_cols == pred_cols, "Feature mismatch between training and prediction data"
     
     # Verify no NaN values in features and labels
@@ -133,8 +133,8 @@ def main():
     
     # Scale features
     scaler = StandardScaler()
-    X_train_scaled = scaler.fit_transform(X_train.drop(['NOC', 'Year'], axis=1))
-    X_pred_scaled = scaler.transform(X_pred.drop(['NOC', 'Year'], axis=1))
+    X_train_scaled = scaler.fit_transform(X_train.drop(['NOC', 'Year', 'Host'], axis=1))
+    X_pred_scaled = scaler.transform(X_pred.drop(['NOC', 'Year', 'Host'], axis=1))
     
     # Split data into training and validation sets
     X_train_split, X_val_split, y_train_split, y_val_split = train_test_split(
