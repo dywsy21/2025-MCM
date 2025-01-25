@@ -128,6 +128,7 @@ def main():
     # Load data
     data = load_data('data/generated_training_data/sport_oriented/Training_data_tier.csv')
     
+    
     # Get years to use for training (NUMBER_OF_MATCHES_TO_USE most recent Olympics before TARGET_YEAR - 4)
     years = sorted(data['Year'].unique())
     evaluation_year = TARGET_YEAR - 4
@@ -141,6 +142,10 @@ def main():
     
     # Create features and labels using only the filtered data
     X_train, y_train = create_features(training_data, TARGET_YEAR, NUMBER_OF_MATCHES_TO_USE)
+    
+    # Find unique NOCs in the training data
+    unique_nocs = X_train['NOC'].unique()
+    print(unique_nocs.__len__())
     
     # Get prediction data ready first
     prediction_years = training_years[-NUMBER_OF_MATCHES_TO_USE:] + [evaluation_year]

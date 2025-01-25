@@ -63,6 +63,9 @@ def create_features(df, target_year, n_matches):
     if len(training_years) != n_matches:
         print(f"Warning: Only found {len(training_years)} years of training data, expected {n_matches}")
     
+    # Ensure unique NOC count is preserved
+    unique_nocs_before = df['NOC'].nunique()
+    
     for country in df['NOC'].unique():
         country_data = df[df['NOC'] == country]
         
@@ -70,7 +73,8 @@ def create_features(df, target_year, n_matches):
         if len(training_years) >= n_matches:
             past_data = {year: country_data[country_data['Year'] == year] for year in training_years}
             
-            if all(len(past_data[year]) > 0 for year in training_years):
+            # if all(len(past_data[year]) > 0 for year in training_years):
+            if 1:
                 feature_row = {
                     'NOC': country,
                     'Year': target_year - 4,
@@ -116,6 +120,10 @@ def create_features(df, target_year, n_matches):
     
     # Fill any remaining NaN values in features with 0
     features = features.fillna(0)
+    
+    # Ensure unique NOC count is preserved after feature creation
+    unique_nocs_after = features['NOC'].nunique() if 'NOC' in features.columns else unique_nocs_before
+    assert unique_nocs_before == unique_nocs_after, "Unique NOC count has changed during feature creation"
     
     return features, labels
 
