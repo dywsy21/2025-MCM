@@ -15,16 +15,52 @@ def load_data(filepath):
     medal_counts = df.groupby(['NOC', 'Year', 'Sport'])[['Bronze', 'Silver', 'Gold']].sum().reset_index()
     return medal_counts
 
+def get_all_features(df, n_matches):
+    """Get all possible feature names"""
+    feature_names = ['NOC', 'Year']
+    
+    # Add historical medal count features
+    for i in range(n_matches):
+        feature_names.extend([f'bronze_{i}', f'silver_{i}', f'gold_{i}'])
+    
+    # Add sport-specific features for all sports
+    for sport in df['Sport'].unique():
+        feature_names.extend([
+            f'{sport}_bronze',
+            f'{sport}_silver',
+            f'{sport}_gold'
+        ])
+    
+    return feature_names
+
+def ensure_consistent_features(features_df, all_features):
+    """Ensure dataframe has all expected features, filling missing ones with 0"""
+    for feature in all_features:
+        if feature not in features_df.columns and feature not in ['NOC', 'Year']:
+            features_df[feature] = 0
+    return features_df[all_features]
+
 def create_features(df, target_year, n_matches):
     """Create features for each country based on historical performance"""
+    # Get all possible feature names first
+    all_features = get_all_features(df, n_matches)
+    
     features = []
     labels = []
     
     # Get unique years and sort them as numpy array
     years = np.sort(df['Year'].unique().astype(int))
-    # Get training years
-    mask = years < target_year
-    training_years = years[mask][-n_matches:]
+    
+    # Ensure we only use n_matches most recent years
+    if len(years) > n_matches + 1:  # +1 for evaluation year
+        years = years[-(n_matches+1):]
+    
+    # Get training years (all except last year which is evaluation year)
+    training_years = years[:-1]
+    evaluation_year = years[-1]
+    
+    if len(training_years) != n_matches:
+        print(f"Warning: Only found {len(training_years)} years of training data, expected {n_matches}")
     
     for country in df['NOC'].unique():
         country_data = df[df['NOC'] == country]
@@ -67,6 +103,7 @@ def create_features(df, target_year, n_matches):
     
     # Add additional NaN handling in feature creation
     features = pd.DataFrame(features)
+    features = ensure_consistent_features(features, all_features)
     labels = np.array(labels)
     
     # Drop any rows with NaN values
@@ -81,12 +118,22 @@ def create_features(df, target_year, n_matches):
 
 def prepare_prediction_features(df, target_year, n_matches):
     """Prepare features for prediction"""
+    # Get all possible feature names first
+    all_features = get_all_features(df, n_matches)
+    
     features = []
+    
     # Get unique years and sort them as numpy array
     years = np.sort(df['Year'].unique().astype(int))
-    # Get training years
-    mask = years < target_year
-    training_years = years[mask][-n_matches:]
+    
+    # Ensure we only use n_matches most recent years
+    if len(years) > n_matches:
+        years = years[-n_matches:]
+        
+    training_years = years
+    
+    if len(training_years) != n_matches:
+        print(f"Warning: Only found {len(training_years)} years of training data, expected {n_matches}")
     
     for country in df['NOC'].unique():
         country_data = df[df['NOC'] == country]
@@ -121,6 +168,7 @@ def prepare_prediction_features(df, target_year, n_matches):
     
     # Create DataFrame and handle NaN values
     features = pd.DataFrame(features)
+    features = ensure_consistent_features(features, all_features)
     
     # Fill NaN values with 0
     features = features.fillna(0)

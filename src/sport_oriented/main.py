@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 from config import *
 from utils import *
+from sklearn.model_selection import train_test_split
 
 def train_model(X_train, y_train):
     # Train separate models for Bronze, Silver, and Gold
@@ -46,45 +47,118 @@ def evaluate_model(models, X_test, y_test):
         
         for name, model in models[medal_type].items():
             predictions = model.predict(X_test)
+            
+            # Add validation checks
+            if np.any(np.isnan(predictions)):
+                print(f"Warning: NaN predictions found for {name} on {medal_type}")
+                continue
+                
+            if np.all(predictions == 0):
+                print(f"Warning: All zero predictions for {name} on {medal_type}")
+                
+            # Print some statistics
+            print(f"\n{name} - {medal_type}:")
+            print(f"Prediction range: {predictions.min():.2f} to {predictions.max():.2f}")
+            print(f"Mean prediction: {predictions.mean():.2f}")
+            print(f"Actual range: {y_test_medal.min():.2f} to {y_test_medal.max():.2f}")
+            print(f"Actual mean: {y_test_medal.mean():.2f}")
+            
             mse = mean_squared_error(y_test_medal, predictions)
             mae = mean_absolute_error(y_test_medal, predictions)
-            medal_results[name] = {'MSE': mse, 'MAE': mae, 'predictions': predictions}
+            
+            medal_results[name] = {
+                'MSE': mse, 
+                'MAE': mae,
+                'predictions': predictions,
+                # 'R2': model.score(X_test, y_test_medal)
+            }
+            
+            print(f"MSE: {mse:.4f}")
+            print(f"MAE: {mae:.4f}")
+            # print(f"R2 Score: {medal_results[name]['R2']:.4f}")
         
         results[medal_type] = medal_results
     
     return results
 
+def select_best_model(evaluation_results, metric='MAE'):
+    """Select best model based on specified metric (MAE or MSE)"""
+    best_models = {}
+    for medal_type in ['Bronze', 'Silver', 'Gold']:
+        best_score = float('inf')
+        best_model_name = None
+        
+        for model_name, metrics in evaluation_results[medal_type].items():
+            score = metrics[metric]
+            if score < best_score:
+                best_score = score
+                best_model_name = model_name
+        
+        best_models[medal_type] = best_model_name
+        print(f"\nBest model for {medal_type} ({metric}={best_score:.4f}): {best_model_name}")
+    
+    return best_models
+
 def main():
     # Load data
     data = load_data('data/generated_training_data/sport_oriented/Training_data.csv')
     
-    # Verify no NaN values in data
-    assert not data.isnull().values.any(), "NaN values found in data"
+    # Get years to use for training (NUMBER_OF_MATCHES_TO_USE most recent Olympics before TARGET_YEAR - 4)
+    years = sorted(data['Year'].unique())
+    evaluation_year = TARGET_YEAR - 4
+    training_years = [year for year in years if year < evaluation_year][-NUMBER_OF_MATCHES_TO_USE:]
     
-    # Create features and labels for training
-    X_train, y_train = create_features(data, TARGET_YEAR, NUMBER_OF_MATCHES_TO_USE)
+    # Filter data to only include training years and evaluation year
+    training_data = data[data['Year'].isin(training_years + [evaluation_year])]
+    
+    print(f"\nUsing Olympics from years {training_years} to predict {evaluation_year}")
+    print(f"Then using that model to predict {TARGET_YEAR}")
+    
+    # Create features and labels using only the filtered data
+    X_train, y_train = create_features(training_data, TARGET_YEAR, NUMBER_OF_MATCHES_TO_USE)
+    
+    # Get prediction data ready first
+    prediction_years = training_years[-NUMBER_OF_MATCHES_TO_USE:] + [evaluation_year]
+    prediction_data = data[data['Year'].isin(prediction_years)]
+    X_pred = prepare_prediction_features(prediction_data, TARGET_YEAR, NUMBER_OF_MATCHES_TO_USE)
+    
+    # Verify feature consistency
+    train_cols = set(X_train.columns) - {'NOC', 'Year'}
+    pred_cols = set(X_pred.columns) - {'NOC', 'Year'}
+    assert train_cols == pred_cols, "Feature mismatch between training and prediction data"
     
     # Verify no NaN values in features and labels
     assert not X_train.isnull().values.any(), "NaN values found in training features"
     assert not np.isnan(y_train).any(), "NaN values found in training labels"
-    
-    # Split features for prediction
-    X_pred = prepare_prediction_features(data, TARGET_YEAR, NUMBER_OF_MATCHES_TO_USE)
     
     # Scale features
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train.drop(['NOC', 'Year'], axis=1))
     X_pred_scaled = scaler.transform(X_pred.drop(['NOC', 'Year'], axis=1))
     
-    # Train models
-    trained_models = train_model(X_train_scaled, y_train)
+    # Split data into training and validation sets
+    X_train_split, X_val_split, y_train_split, y_val_split = train_test_split(
+        X_train_scaled, y_train, 
+        test_size=0.2, 
+        random_state=42
+    )
     
-    # Make predictions for target year
+    # Train models on training split
+    trained_models = train_model(X_train_split, y_train_split)
+    
+    # Evaluate models on validation split
+    evaluation_results = evaluate_model(trained_models, X_val_split, y_val_split)
+    
+    # Select best models based on MAE
+    best_models = select_best_model(evaluation_results, metric='MAE')
+    
+    # Make predictions using best models for each medal type
     predictions = {}
     for medal_type in ['Bronze', 'Silver', 'Gold']:
-        model = trained_models[medal_type]['GradientBoosting']  # Using GradientBoosting as default
+        best_model_name = best_models[medal_type]
+        model = trained_models[medal_type][best_model_name]
         preds = model.predict(X_pred_scaled)
-        predictions[medal_type] = np.maximum(np.round(preds), 0).astype(int)  # Ensure non-negative integers
+        predictions[medal_type] = np.maximum(np.round(preds), 0).astype(int)
     
     # Create results dataframe
     results = pd.DataFrame({
