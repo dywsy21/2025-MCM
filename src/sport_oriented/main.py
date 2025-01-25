@@ -176,7 +176,8 @@ def main():
         best_model_name = best_models[medal_type]
         model = trained_models[medal_type][best_model_name]
         preds = model.predict(X_pred_scaled)
-        predictions[medal_type] = np.maximum(np.round(preds), 0).astype(int)
+        # predictions[medal_type] = np.maximum(np.round(preds), 0).astype(int)
+        predictions[medal_type] = preds
     
     # Create results dataframe
     results = pd.DataFrame({
@@ -187,6 +188,19 @@ def main():
         'Predicted_Gold': predictions['Gold']
     })
     
+    results['Total_Medals'] = results[['Predicted_Bronze', 'Predicted_Silver', 'Predicted_Gold']].sum(axis=1)
+    results = results.sort_values('Total_Medals', ascending=False)
+
+    
+    print("\nAll results:")
+    print(results.to_string(index=False))
+
+    # Adjust predictions to match total medal counts
+    for medal_type, total in zip(['Bronze', 'Silver', 'Gold'], [BRONZE_TOTAL, SILVER_TOTAL, GOLD_TOTAL]):
+        predicted_total = results[f'Predicted_{medal_type}'].sum()
+        coefficient = total / predicted_total
+        results[f'Predicted_{medal_type}'] = np.maximum(0,np.round(results[f'Predicted_{medal_type}'] * coefficient)).astype(int)
+    
     # Sort by total predicted medals
     results['Total_Medals'] = results[['Predicted_Bronze', 'Predicted_Silver', 'Predicted_Gold']].sum(axis=1)
     results = results.sort_values('Total_Medals', ascending=False)
@@ -195,9 +209,8 @@ def main():
     results.to_csv(f'sport_oriented_predictions_{TARGET_YEAR}.csv', index=False)
     print(f"\nPredictions for {TARGET_YEAR} saved to predictions/sport_oriented_predictions_{TARGET_YEAR}.csv")
     
-    # Display top 10 countries
-    print("\nTop 10 predicted medal-winning countries:")
-    print(results.head(10).to_string(index=False))
+    print("\nRounded results:")
+    print(results.to_string(index=False))
 
 if __name__ == '__main__':
     main()

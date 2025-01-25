@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
+from config import *
 
 def load_data(filepath):
     """Load the Olympics data"""
@@ -73,7 +74,7 @@ def create_features(df, target_year, n_matches):
                 feature_row = {
                     'NOC': country,
                     'Year': target_year - 4,
-                    'Host': int(country in df[df['Year'] == target_year - 4]['Host'].values),
+                    'Host': int(country in df[df['Year'] == target_year - 4]['Host'].values) * HOST_WEIGHT,
                     'Tier': country_data['Tier'].values[0] if 'Tier' in country_data.columns else 0
                 }
                 
