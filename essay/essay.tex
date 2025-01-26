@@ -117,7 +117,11 @@ Due to the limitation of usable dataset, we cannot explore many of the aforement
 % 1. event/sport name changed over the course of time
 % 2. some special years like 1906, when an unofficial Olympic Games was held. We need to exclude this year from our analysis.
 % 3. event name ambiguity, e.g. 500+ events named "Men" and "Women"
+\subsection{Data Washing}
+\subsubsection{Early Attempts: Athlete-based Prediction}
+Firstly, we negated the method of making prediction based on the historical data of total medals of countries, which is logically unreasonable and too crude. As the most concrete data offered is all individual Olympic competitors with sport, event and result, it is a quite natural thought to predict the medal counts based on every individual athletes.
 
+\subsubsection{Sport/Event Oriented Data Preprocessing}
 
 
 
@@ -336,13 +340,31 @@ We further polish the program used in the identification step to calculate the m
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.8\textwidth]{pics/coach_effect_impact_Sport.png}
+    \includegraphics[width=0.8\textwidth]{pics/coach_effect_impact_Sport_from_csv.png}
     \caption{Quantification of The Great Coach Effect}
 \end{figure}
 
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        Tier & Avg. Increase & Avg. Decrease & Relative Increase(\%) & Relative Decrease(\%) \\
+        \hline
+        1 & 1.8125 & -1.6667 & 32.0772 & -10.9944 \\
+        \hline
+        2 & 2.0562 & -1.6795 & 20.1028 & -9.0563 \\
+        \hline
+        3 & 2.2623 & -1.9041 & 1.9766 & -0.7317 \\
+        \hline
+        4 & 2.2743 & -1.7923 & 0.1780 & -0.4518 \\
+        \hline
+        5 & 2.0746 & -2.4638 & 0.0660 & -0.3472 \\
+        \hline
+    \end{tabular}
+    \caption{Impact of The Great Coach Effect on Different Tiers of Countries}
+\end{table}
+
 This figure clearly shows the impact of the Great Coach Effect on different tiers of countries, highlighting the potential for significant performance improvements under the guidance of elite coaches. We can see that the positive and negative impact of the Great Coach Effect(namely, the moving in and out of great coaches) on absolute medal changes has remained constant among different tiers of countries, while its impact on relative medal changes decreases as the tier goes up. This is an expected phenomenon because countries with better overall power already do well in sports across a wide range of fields, so the arrival or departure of one specific coach won't have much effect relative to the total medal count. By quantifying the magnitude and percentage of the effect, we can better understand the strategic value of investing in high-caliber coaching talent and its implications for national Olympic success.
-
-
 
 
 \subsection{Exemplification}
@@ -379,15 +401,22 @@ The program identifies two overlapping periods: 1992-2004 and 2004-2012. In both
 Looking at Lang Ping's coaching career spanning over 20 years, we can also discover the distinct influence of a capable coach. During her first tenure with China (1995-2005), the team achieved notable successes, including a Gold medal in 2004. After transitioning to coach the U.S. team (2005-2013) which had won few medals in history, U.S. quickly surpassed China and won 2 consecutive Silver medals. When Lang Ping returned to coach China in 2013, the Chinese team quickly regained its dominance with a Gold in 2016. This fluctuation in performance underscores her unique ability to transform teams and highlights the strategic importance of securing top-tier coaching talent.
 
 % These examples illustrate how the transfer of elite coaches can create significant shifts in medal performance across countries, substantiating the Great Coach Effect. The patterns not only validate the causality between coaching expertise and medal counts but also provide insights for national Olympic committees to consider investing in high-caliber coaching for sustained success.
-\subsubsection{Cross Validation with Program-based Data}
-- Event: Synchronized Swimming Women's Team, Overlap Years [2008-2012], Increase: CHN(slope=0.125) / Decrease: ESP(slope=-0.250)
-- Event: Gymnastics Women's Team All-Around, Overlap Years [2000-2008], Increase: USA(slope=0.125) / Decrease: ROU(slope=-0.250)
-- Event: Volleyball Women's Volleyball, Overlap Years [1992-2004], Increase: CHN(slope=0.175) / Decrease: USA(slope=-0.075)
-- Event: Volleyball Women's Volleyball, Overlap Years [2004-2012], Increase: USA(slope=0.250) / Decrease: CHN(slope=-0.375)
-
-
 
 \subsection{Recommendation}
+
+In the Quantification part, we represented that the Great Coach Effect has a consistent impact on the absolute medal count changes across different tiers of countries, while its impact on relative medal count changes decreases as the tier goes up. This suggests that investing in elite coaching talent can yield substantial performance improvements, particularly for countries with lower historical medal counts(represented by low tier).
+
+Therefore, we recommend that national Olympic committees prioritize recruiting and retaining top-tier coaches for tier 2 countries. Tier 1 countries usually have too tight a budget to afford the cost of coaches with great expertise, while it won't be really necessary for tier 3~5 countries to do so because of the low relative effect.
+
+To determine which three tier 2 countries can benefit the most from the Great Coach Effect, we use the python code from Quantification part and modifies it to find the 3 countries with the highest potential for performance improvement. 
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{pics/tier2_top10_absolute_gain.png}
+    \caption{Quantification of The Great Coach Effect}
+\end{figure}
+
+From the figure above, we recommend the top 3 countries with the highest potential for performance improvement: ISR (Israel), BRN (Bahrain), and VEN (Venezuela), with respective projected medal gain of 5.5, 3.9 and 3.9.
 
 \section{Sensitivity Analysis}
 
