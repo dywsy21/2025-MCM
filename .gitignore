@@ -6,3 +6,8 @@ prompt.md
 **/*.gz
 **/essay.pdf
 analysis_result*.txt
+**/*.aux
+**/*.log
+**/*.out
+**/*.synctex*
+**/*.toc
