@@ -129,7 +129,7 @@ To facilitate this, we introduced a new column named "ID", which concatenates th
 
 To put it lucidly, we added a column named "ID" which concatenated Name and Event with a "\_", which categorized the data in every individual and event. Then it's easier to create a time series of medal data out of it and apply certain method to predict the medal counts in the next Olympics.
 
-Furthermore, we aimed to incorporate the host country as a training feature by matching it to competing country, while the dataset only provided host city. Recognizing the National Olympic Committee (NOC) code as a standardized and uniform identifier for countries, we created a dataset named "City_NOC.csv" to serve as a dictionary containing all Olympic host cities and their corresponding NOC codes. Using this dictionary, we developed a Python script to add a new column, "host_NOC", to the dataset while removing the original "City" column. Additionally, we excluded all data from the 1906 Olympics, as it was an informal event and disrupted the four-year cycle traditionally followed by the Olympic Games.
+Furthermore, we aimed to incorporate the host country as a training feature by matching it to competing country, while the dataset only provided host city. Recognizing the National Olympic Committee (NOC) code as a standardized and uniform identifier for countries, we created a dataset named "City\_NOC.csv" to serve as a dictionary containing all Olympic host cities and their corresponding NOC codes. Using this dictionary, we developed a Python script to add a new column, "host\_NOC", to the dataset while removing the original "City" column. Additionally, we excluded all data from the 1906 Olympics, as it was an informal event and disrupted the four-year cycle traditionally followed by the Olympic Games.
 
 To further enhance data quality, we normalized medal counts by dividing them by their corresponding team sizes using a Python script. This normalization step ensured that the data accounted for the nature of team events, eliminating biases caused by repeated medal counts. We subsequently created a training dataset consisting of individual participants as rows and their corresponding medals earned and host NOC for each year as columns.
 
@@ -137,7 +137,7 @@ To further enhance data quality, we normalized medal counts by dividing them by 
 
 Despite these efforts, the athlete-based prediction results were significantly lower than the actual medal counts. This discrepancy likely stems from the instability of individual performances and the reality that most athletes do not participate in multiple Olympic Games, let alone win multiple medals. Consequently, we shifted to a more aggregated and macroscopic approach, categorizing data by country(NOC) and sport. We anticipated this method would yield more stable and reliable predictions.
 
-To refine the dataset further, we addressed an issue where substitutes were included in the list of athletes, rendering team size unsuitable for normalizing medal counts. To resolve this, we removed columns such as Name, Sex, Team, and Event, which were irrelevant to the country- and sport-based approach. We then eliminated duplicate rows to create a cleaned dataset, "summerOly_medal_norepeat.csv", which contained all medals without repetition or omission.
+To refine the dataset further, we addressed an issue where substitutes were included in the list of athletes, rendering team size unsuitable for normalizing medal counts. To resolve this, we removed columns such as Name, Sex, Team, and Event, which were irrelevant to the country- and sport-based approach. We then eliminated duplicate rows to create a cleaned dataset, "summerOly\_medal\_norepeat.csv", which contained all medals without repetition or omission.
 
 Moreover, we recognized "No Medal" as a potential indicator of a country's capability in specific events. Countries participating in a sport are likely to perform better than those that do not. Therefore, we introduced a "No Medal" column as a parallel feature alongside the Gold, Silver, and Bronze medal counts for model training.
 
@@ -298,7 +298,100 @@ Using the optimized models for each tier, we project the medal table for the 202
 The tier-based regression modeling approach provides a structured and efficient framework for predicting Olympic medal counts. By incorporating historical performance, host nation effects, and optimization techniques, the model achieves robust performance and reliable projections. The results offer actionable insights for countries aiming to improve their Olympic performance.
 
 
-\section{Task1 --- Predicting Medal Counts for the 2028 Los Angeles Olympics}
+\section{Task1 --- Employing the model for prediction and analysis}
+
+\subsection{Subtask --- Predicting Medal Counts for the 2028 Los Angeles Olympics}
+
+\begin{lstlisting}
+RandomForest - Bronze:
+Prediction range: 2.14 to 7.84
+Mean prediction: 4.43
+Actual range: 2.00 to 9.00
+Actual mean: 4.29
+MSE: 11.1018
+MAE: 2.4743
+95% Prediction Interval: ±6.52
+
+GradientBoosting - Silver:
+Prediction range: 0.96 to 7.34
+Mean prediction: 4.39
+Actual range: 0.00 to 8.00
+Actual mean: 3.14
+MSE: 7.3283
+MAE: 2.0619
+95% Prediction Interval: ±4.71
+
+XGBoost - Gold:
+Prediction range: 1.01 to 6.13
+Mean prediction: 3.15
+Actual range: 0.00 to 4.00
+Actual mean: 2.86
+MSE: 3.4256
+MAE: 1.6301
+95% Prediction Interval: ±3.58
+
+Best model for Bronze (MAE=2.4743): RandomForest
+Best model for Silver (MAE=2.0619): GradientBoosting
+Best model for Gold (MAE=1.6301): XGBoost
+\end{lstlisting}
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+        NOC & B & S & G & BL & BU & SL & SU & GL & GU & Tot \\
+        \hline
+        USA & 48.8 & 45.3 & 45.9 & 46.3 & 51.3 & 43.9 & 46.8 & 43.3 & 48.6 & 140.1 \\
+        CHN & 27.3 & 30.1 & 46.7 & 25 & 29.6 & 28.8 & 31.4 & 44.3 & 49.1 & 104.1 \\
+        GBR & 38.8 & 24.6 & 20.5 & 36.5 & 41.1 & 23.3 & 25.9 & 18.1 & 22.9 & 83.9 \\
+        JPN & 19.1 & 22 & 26.3 & 16.8 & 21.4 & 20.7 & 23.3 & 23.9 & 28.7 & 67.4 \\
+        FRA & 30.4 & 12.1 & 21.3 & 28.1 & 32.7 & 10.8 & 13.4 & 18.9 & 23.7 & 63.8 \\
+        AUS & 18.3 & 15.4 & 21.7 & 16 & 20.6 & 14.1 & 16.7 & 19.3 & 24.1 & 55.4 \\
+        ITA & 15.4 & 11.5 & 13.6 & 13.1 & 17.7 & 10.2 & 12.9 & 11.2 & 16 & 40.6 \\
+        NED & 17 & 10.1 & 11.7 & 14.7 & 19.3 & 8.8 & 11.4 & 9.3 & 14.1 & 38.9 \\
+        GER & 6.4 & 18 & 10.8 & 4.1 & 8.7 & 16.6 & 19.3 & 8.4 & 13.2 & 35.2 \\
+        CAN & 11.5 & 5.5 & 10.5 & 9.2 & 13.7 & 4.2 & 6.8 & 8.1 & 12.9 & 27.4 \\
+        KOR & 10.7 & 7.9 & 7.8 & 8.4 & 13 & 6.6 & 9.2 & 5.4 & 10.2 & 26.4 \\
+        BRA & 5.6 & 8.2 & 6.8 & 3.3 & 7.9 & 6.9 & 9.5 & 4.4 & 9.2 & 20.6 \\
+        NZL & 1.7 & 5.5 & 12.5 & 0 & 4 & 4.2 & 6.8 & 10.1 & 14.9 & 19.8 \\
+        UKR & 7.9 & 5.2 & 5.7 & 5.6 & 10.2 & 3.9 & 6.5 & 3.3 & 8.1 & 18.8 \\
+        ESP & 7.5 & 5.7 & 2.6 & 5.2 & 9.8 & 4.4 & 7 & 0.2 & 5 & 15.8 \\
+        HUN & 3.9 & 7.5 & 3 & 1.6 & 6.2 & 6.2 & 8.8 & 0.6 & 5.4 & 14.3 \\
+        AZE & 5 & 5.2 & 3 & 2.7 & 7.3 & 3.9 & 6.5 & 0.6 & 5.4 & 13.2 \\
+        DEN & 6.6 & 3.8 & 2.3 & 4.3 & 8.9 & 2.5 & 5.1 & 0 & 4.8 & 12.7 \\
+        BEL & 5.5 & 2 & 5.2 & 3.2 & 7.8 & 0.7 & 3.3 & 2.8 & 7.6 & 12.7 \\
+        IRI & 4.9 & 3.1 & 3.5 & 2.6 & 7.2 & 1.8 & 4.4 & 1.1 & 5.9 & 11.5 \\
+        JAM & 2.5 & 6.6 & 2.3 & 0.2 & 4.8 & 5.3 & 7.9 & 0 & 4.7 & 11.4 \\
+        KAZ & 4.6 & 3.8 & 2.8 & 2.3 & 6.9 & 2.5 & 5.2 & 0.4 & 5.2 & 11.3 \\
+        CUB & 5.7 & 3.2 & 2.1 & 3.4 & 8 & 1.9 & 4.5 & 0 & 4.5 & 11.1 \\
+        KEN & 3.2 & 5.4 & 2.4 & 0.9 & 5.5 & 4 & 6.7 & 0 & 4.8 & 11 \\
+        SWE & 3.2 & 3.6 & 3.9 & 0.9 & 5.5 & 2.3 & 4.9 & 1.5 & 6.3 & 10.7 \\
+        SUI & 5.7 & 2.5 & 2.4 & 3.4 & 8 & 1.2 & 3.8 & 0 & 4.8 & 10.6 \\
+        POL & 4.6 & 2.2 & 3.2 & 2.3 & 6.9 & 0.9 & 3.5 & 0.8 & 5.6 & 9.9 \\
+        GRE & 6.8 & 1.2 & 0.7 & 4.5 & 9.1 & 0 & 2.6 & 0 & 3.1 & 8.7 \\
+        UZB & 3.2 & 3.1 & 2.4 & 0.9 & 5.5 & 1.8 & 4.4 & 0 & 4.8 & 8.7 \\
+        GEO & 3.2 & 2.4 & 2.7 & 0.9 & 5.5 & 1.1 & 3.8 & 0.3 & 5.1 & 8.4 \\
+        LTU & 3.2 & 1.6 & 2.5 & 0.9 & 5.5 & 0.3 & 2.9 & 0.1 & 4.9 & 7.3 \\
+        CRO & 3.1 & 3.2 & 0.9 & 0.8 & 5.4 & 1.9 & 4.5 & 0 & 3.3 & 7.3 \\
+        TUR & 4.8 & 2.6 & 0 & 2.5 & 7.1 & 1.3 & 3.9 & 0 & 2.1 & 7.1 \\
+        ROU & 3.3 & 0.9 & 2.9 & 1 & 5.6 & 0 & 2.2 & 0.5 & 5.3 & 7.1 \\
+        BUL & 2.5 & 1.4 & 3 & 0.2 & 4.8 & 0.1 & 2.7 & 0.6 & 5.4 & 6.9 \\
+        NOR & 3.8 & 1.4 & 1.4 & 1.5 & 6.1 & 0.1 & 2.7 & 0 & 3.8 & 6.6 \\
+        THA & 2.6 & 2.3 & 1.5 & 0.3 & 4.9 & 1 & 3.6 & 0 & 3.9 & 6.4 \\
+        CZE & 2 & 2.7 & 1.4 & 0 & 4.2 & 1.4 & 4.1 & 0 & 3.8 & 6.1 \\
+        RSA & 2.1 & 3.4 & 0.6 & 0 & 4.4 & 2 & 4.7 & 0 & 3 & 6.1 \\
+        ETH & 1 & 2.8 & 1.2 & 0 & 3.3 & 1.5 & 4.1 & 0 & 3.6 & 5 \\
+        TPE & 2.2 & 1.3 & 1.5 & 0 & 4.5 & 0 & 2.6 & 0 & 3.9 & 5 \\
+        IND & 1.4 & 1.9 & 1.6 & 0 & 3.7 & 0.5 & 3.2 & 0 & 4 & 4.9 \\
+        MEX & 2.2 & 2.7 & 0 & 0 & 4.5 & 1.4 & 4 & 0 & 2.2 & 4.8 \\
+        ... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... \\
+    \end{tabular}
+    \caption{Predicted medal counts for 2028 Los Angeles Olympics. B: Bronze, S: Silver, G: Gold, BL: Bronze Lower Bound, BU: Bronze Upper Bound, SL: Silver Lower Bound, SU: Silver Upper Bound, GL: Gold Lower Bound, GU: Gold Upper Bound. Due to space constraints, only the top 43 countries are shown.}
+    \label{tab:medal_counts}
+\end{table}
+
+
+
 \subsection{Subtask --- Exploring the Relationship Between Event Count and Medal Count}
 
 In this subtask, we investigate the relationship between the number and types of events a country participates in and the number of medals it earns. The analysis is performed using data from the 2024 Olympics, focusing on three primary aspects: visualization, correlation analysis, and interpretation of results.
