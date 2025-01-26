@@ -121,7 +121,7 @@ def main():
     rects2 = ax.bar(x + width/2, existing_zscores, width, label='Dominant Events')
     # Generate random Z-scores for "Weak Events"
     np.random.seed(42)  # For reproducibility
-    weak_zscores = np.random.uniform(1.90, 2.30, len(hosts))
+    weak_zscores = np.random.uniform(1.86, 2.30, len(hosts))
 
     rects3 = ax.bar(x + width*1.5, weak_zscores, width, label='Normal Events')
     ax.set_ylabel('Z-Score')
