@@ -150,7 +150,37 @@ Therefore, we propose a two-step approach to identify and quantify the Great Coa
 
 
 \subsection{Quantification}
+This program is designed to identify the Great Coach Effect, a phenomenon where the presence of a highly skilled coach significantly enhances the performance of athletes in specific sports, often leading to a noticeable shift in medal counts between countries. Coaches, unlike athletes, are not bound to a single nation and may transfer their expertise, potentially causing one nation to experience a sharp increase in medals while another experiences a decline in the same sport. Identifying this effect can provide valuable insights for predicting Olympic success and optimizing investment in coaching.
 
+Key Idea of the Pattern
+The Great Coach Effect is characterized by two primary observations:
+
+A sharp increase in medal counts for one country in a specific sport over a defined time period.
+A gradual-to-sharp decrease in medal counts for another country in the same sport over a similar or overlapping time frame.
+By focusing on these trends, the program aims to isolate and quantify the impact of influential coaches on national performances.
+
+Methodology
+The program uses a two-step approach to identify the pattern:
+
+Data Analysis and Trend Detection
+
+The dataset is grouped by country (NOC), sport, and year, with a weighted medal count (Gold = 3, Silver = 2, Bronze = 1) calculated for each combination.
+For each country and sport, the program uses linear regression on the most recent 12 years of data to calculate the slope of the medal trend over time:
+A positive slope exceeding a defined threshold (POS\_K\_LOWER) indicates a sharp increase.
+A negative slope below another threshold (NEG\_K\_UPPER) indicates a sharp decrease.
+Countries with significant trends are recorded as having possible increases or decreases.
+Pattern Matching and Pairing
+
+The program pairs countries with overlapping trends in the same sport:
+The overlap period is checked to ensure it spans at least four years and does not exceed a defined gap (OVERLAP\_GAP\_UPPER).
+Paired trends suggest the transfer of coaching expertise from one country to another.
+Output
+The program outputs three key results:
+
+Possible Increases: Countries with significant positive slopes in their medal counts for specific sports.
+Possible Decreases: Countries with significant negative slopes in the same metrics.
+Paired Trends: Potential Great Coach Effect cases, listing both the increasing and decreasing countries, the sport, and the overlapping time frame.
+This data-driven approach allows for systematic identification of the Great Coach Effect, which can then be cross-referenced with external sources to pinpoint the specific coaches responsible for these shifts. By doing so, the program provides actionable insights into the strategic importance of coaching in achieving Olympic success.
 
 
 
