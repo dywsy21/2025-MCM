@@ -127,7 +127,8 @@ Firstly, we negated the method of making prediction based on the historical data
 \section{Establishing the Model}
 
 \section{Task1 --- Predicting Medal Counts for the 2028 Los Angeles Olympics}
-\subsection{Subtask1 --- Exploring the Relationship Between Event Count and Medal Count}
+\subsection{Subtask --- Exploring the Relationship Between Event Count and Medal Count}
+
 In this subtask, we investigate the relationship between the number and types of events a country participates in and the number of medals it earns. The analysis is performed using data from the 2024 Olympics, focusing on three primary aspects: visualization, correlation analysis, and interpretation of results.
 
 \subsubsection{Visualization}
@@ -136,6 +137,26 @@ To better understand the relationship between event count and medal count, we em
     \item \textbf{Scatter Plot}: A scatter plot was created to display the relationship between the number of events a country participates in (event count) and the number of medals it earns (medal count).  
     \item \textbf{Box Plot}: To further analyze the distribution of medal counts across different event count intervals, a box plot was used. This visualization captures the median, interquartile range (IQR), and outliers of medal counts for countries grouped into event count bins. The box plot reveals that countries with higher event participation tend to have a wider distribution of medal counts, suggesting greater variability.
 \end{itemize}
+
+    
+\begin{figure}[htbp]
+    \begin{minipage}[t]{0.5\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{pics/event_count_vs_medal_count.png}
+    \end{minipage}
+    \begin{minipage}[t]{0.5\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{pics/medal_count_distribution_by_event_count_bins.png}
+    \end{minipage}
+    \caption{Visualizations: (Left) Scatter plot showing the correlation; 
+    (Right) Box plot depicting the distributions.}
+\end{figure}
+
+    To better understand the relationship between event count and medal count, countries were grouped into five distinct tiers based on their competitive performance using the K-means clustering algorithm. This method allowed for the segmentation of countries into groups with similar competition characteristics, providing a more nuanced analysis of the underlying relationships.
+
+    The decision to use K-means clustering was motivated by the scatter plot observations, which suggested heterogeneous patterns in the event count and medal count relationship across different types of countries. The clustering process was informed by previous medal achievements(first gold medals, then total medals), ensuring that the grouping reflected meaningful competitive distinctions.
+    
+    Once the countries were assigned to tiers, we conducted separate correlation analyses within each tier. This approach allowed for a targeted examination of the relationship between event count and medal count, accounting for the differences in competitive capabilities and strategies across tiers. Spearman's correlation coefficient was used to measure the strength and direction of the relationship, as it is well-suited for non-parametric data and can handle potential non-linearities. The results are shown in following Table.
 
 
 \begin{table}[h!]
@@ -152,30 +173,26 @@ To better understand the relationship between event count and medal count, we em
     \bottomrule
     \end{tabular}
     \caption{Spearman correlation and p-values across different tiers.}
-    \label{tab:spearman_tiers}
-    \end{table}
-    
-    \begin{figure}[htbp]
-        \begin{minipage}[t]{0.5\textwidth}
-            \centering
-            \includegraphics[width=0.8\textwidth]{pics/event_count_vs_medal_count.png}
-        \end{minipage}
-        \begin{minipage}[t]{0.5\textwidth}
-            \centering
-            \includegraphics[width=0.8\textwidth]{pics/medal_count_distribution_by_event_count_bins.png}
-        \end{minipage}
-        \caption{Visualizations: (Left) Scatter plot showing the correlation; (Right) Box plot depicting the distributions.}
-    \end{figure}
-    
-    To better understand the relationship between event count and medal count, countries were grouped into five distinct tiers based on their competitive performance using the K-means clustering algorithm. This method allowed for the segmentation of countries into groups with similar competition characteristics, providing a more nuanced analysis of the underlying relationships.
+    \label{tab1}
+\end{table}
 
-    The decision to use K-means clustering was motivated by the scatter plot observations, which suggested heterogeneous patterns in the event count and medal count relationship across different types of countries. The clustering process was informed by previous medal achievements(first gold medals, then total medals), ensuring that the grouping reflected meaningful competitive distinctions.
-    
-    Once the countries were assigned to tiers, we conducted separate correlation analyses within each tier. This approach allowed for a targeted examination of the relationship between event count and medal count, accounting for the differences in competitive capabilities and strategies across tiers. Spearman's correlation coefficient was used to measure the strength and direction of the relationship, as it is well-suited for non-parametric data and can handle potential non-linearities.
+\subsubsection{Interpretation of Results}
+The analysis indicates that for most tiers (1, 2, 4, and 5), there is a statistically significant positive relationship between event count and medal count ($p < 0.05$). This suggests that the number of events a country participates in positively impacts its medal count. For Tier 3, the $p$-value is greater than 0.05, indicating no statistically significant correlation between event count and medal count within this group. This anomaly could be due to specific factors such as high variability in event outcomes or unmeasured country-specific attributes.
 
-    
-\subsection{Subtask2}
-\subsection{Subtask3}
+The correlation coefficients also show a general trend where the relationship between event count and medal count strengthens as the tier increases. This aligns with the expectation that more competitive countries (higher tiers) are better equipped to convert event participation into medals due to superior resources, training, and athletes.
+
+\subsubsection{Conclusions and Recommendations(Optional)}
+The results of this analysis demonstrate the critical importance of event participation in achieving higher medal counts. Based on these findings, we propose the following recommendations for countries aiming to improve their medal counts in the 2028 Los Angeles Olympics:
+\begin{itemize}
+    \item \textbf{Strategic Participation}: Countries should carefully select events where they have a competitive advantage and allocate resources to maximize medal potential.
+    \item \textbf{Investment in Training and Resources}: Especially for lower-tier countries, investing in infrastructure, coaching, and athlete preparation can increase their ability to perform well across a broader range of events.
+    \item \textbf{Focus on Key Events}: Higher-tier countries should focus on optimizing performance in key events where they historically perform well, while also expanding into new events with medal potential.
+\end{itemize}
+This analysis underscores the interplay between event participation and medal success, offering actionable insights for Olympic planning and preparation.
+
+\subsection{Subtask}
+
+\subsection{Subtask}
 \section{Task2 --- }
 
 \section{Task3}
@@ -238,13 +255,31 @@ We further polish the program used in the identification step to calculate the m
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.8\textwidth]{pics/coach_effect_impact_Sport.png}
+    \includegraphics[width=0.8\textwidth]{pics/coach_effect_impact_Sport_from_csv.png}
     \caption{Quantification of The Great Coach Effect}
 \end{figure}
 
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        Tier & Avg. Increase & Avg. Decrease & Relative Increase(\%) & Relative Decrease(\%) \\
+        \hline
+        1 & 1.8125 & -1.6667 & 32.0772 & -10.9944 \\
+        \hline
+        2 & 2.0562 & -1.6795 & 20.1028 & -9.0563 \\
+        \hline
+        3 & 2.2623 & -1.9041 & 1.9766 & -0.7317 \\
+        \hline
+        4 & 2.2743 & -1.7923 & 0.1780 & -0.4518 \\
+        \hline
+        5 & 2.0746 & -2.4638 & 0.0660 & -0.3472 \\
+        \hline
+    \end{tabular}
+    \caption{Impact of The Great Coach Effect on Different Tiers of Countries}
+\end{table}
+
 This figure clearly shows the impact of the Great Coach Effect on different tiers of countries, highlighting the potential for significant performance improvements under the guidance of elite coaches. We can see that the positive and negative impact of the Great Coach Effect(namely, the moving in and out of great coaches) on absolute medal changes has remained constant among different tiers of countries, while its impact on relative medal changes decreases as the tier goes up. This is an expected phenomenon because countries with better overall power already do well in sports across a wide range of fields, so the arrival or departure of one specific coach won't have much effect relative to the total medal count. By quantifying the magnitude and percentage of the effect, we can better understand the strategic value of investing in high-caliber coaching talent and its implications for national Olympic success.
-
-
 
 
 \subsection{Exemplification}
@@ -283,6 +318,12 @@ Looking at Lang Ping's coaching career spanning over 20 years, we can also disco
 % These examples illustrate how the transfer of elite coaches can create significant shifts in medal performance across countries, substantiating the Great Coach Effect. The patterns not only validate the causality between coaching expertise and medal counts but also provide insights for national Olympic committees to consider investing in high-caliber coaching for sustained success.
 
 \subsection{Recommendation}
+
+In the Quantification part, we represented that the Great Coach Effect has a consistent impact on the absolute medal count changes across different tiers of countries, while its impact on relative medal count changes decreases as the tier goes up. This suggests that investing in elite coaching talent can yield substantial performance improvements, particularly for countries with lower historical medal counts(represented by low tier).
+
+Therefore, we recommend that national Olympic committees prioritize recruiting and retaining top-tier coaches for tier 2 countries. Tier 1 countries usually have too tight a budget to afford the cost of coaches with great expertise, while it won't be really necessary for tier 3~5 countries to do so because of the low relative effect.
+
+To determine which three tier 2 countries can benefit the most from the Great Coach Effect, we use the python code from Quantification part and modifies it to find the 3 countries with the highest potential for performance improvement. 
 
 \section{Sensitivity Analysis}
 
