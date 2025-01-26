@@ -145,13 +145,13 @@ To enhance prediction accuracy, we planned to classify all participating countri
 
 \section{Establishing the Model}
 
-In this section, we outline the process of developing a regression-based model to predict medal counts (Gold, Silver and Bronze medals) for each country(especially the top 10(???) country) in the Los Angeles 2028 Summer Olympics. Our methodology accounts for historical performance, and hosting effects. The proposed approach includes estimates of uncertainty, prediction intervals, and measures of model performance. Additionally, we assess potential improvements or declines in medal counts for individual countries.
+In this section, we outline the process of developing a regression-based model to predict medal counts (Gold, Silver and Bronze medals) for each country in the Los Angeles 2028 Summer Olympics. Our methodology accounts for historical performance, and hosting effects. The proposed approach includes estimates of uncertainty, prediction intervals, and measures of model performance. Additionally, we assess potential improvements or declines in medal counts for individual countries.
 
-\subsection{Methodology}
+Thanks to the nature of this problem being inherently correlated to chronological projection and the provided data being complete with regard of countries, sports, events and individual athletes, we adopt time series analysis and regression models to predict medal counts for the 2028 Los Angeles Olympics.
 
-To address the problem of predicting medal counts, we adopt a tier-based modeling strategy, aligning with the classification established in Task 1 - Subtask 3. Countries are grouped into five tiers based on their historical performance. Separate regression models are trained for each tier to capture the unique dynamics of countries within the same tier. The methodology involves the following steps:
+To specify, we adopt a tier-based modeling strategy, aligning with the classification to be established in Task 1 - Subtask 3. Countries are grouped into five tiers based on their historical performance. Separate regression models are trained for each tier to capture the unique dynamics of countries within the same tier. The methodology involves the following steps:
 
-\subsubsection{Data Loading \& Transformation}
+\subsection{Data Loading \& Transformation}
 
 \begin{itemize}
     \item \textbf{Loading:} We use data from the most recent eight Olympic Games, including information on hosting nations and medal counts (Gold, Silver, and Bronze) for each participating country.
@@ -165,7 +165,7 @@ To address the problem of predicting medal counts, we adopt a tier-based modelin
     \label{fig:metaheuristic_algorithm}
 \end{wrapfigure}
 
-\subsubsection{Feature Engineering}
+\subsection{Feature Engineering}
 
 Features are selected and optimized using metaheuristic algorithms to determine the most effective combinations. Like the image showed, this process involves transforming the feature selection problem into a binary optimization problem, where:
 \begin{itemize}
@@ -175,11 +175,11 @@ Features are selected and optimized using metaheuristic algorithms to determine 
 A random forest model is trained iteratively with different feature combinations, and the performance of each combination is evaluated. Among all algorithms tested, the Sparrow Search Algorithm (SSA) achieved the best results for feature selection in Tier 1 Gold medal prediction.
 
 
-\subsubsection{Data Splitting}
+\subsection{Data Splitting}
 
 Given the relatively small dataset size, we adopt k-fold cross-validation to split the data into training, validation, and testing subsets. This approach ensures that the model is evaluated robustly across multiple splits of the data.
 
-\subsubsection{Model Training}
+\subsection{Model Training}
 
 We train several regression models on the training set, including:
 \begin{itemize}
@@ -193,7 +193,7 @@ We train several regression models on the training set, including:
 
 Each model is trained using the training set and evaluated on the validation set to determine the optimal hyperparameters.
 
-\subsubsection{Model Evaluation}
+\subsection{Model Evaluation}
 
 The performance of each model is assessed on the test set using the following metrics:
 \begin{itemize}
@@ -204,7 +204,43 @@ The performance of each model is assessed on the test set using the following me
     \item Coefficient of Determination ($R^2$)
 \end{itemize}
 
-\subsubsection{Model Selection}
+The evaluation result is stated as below. From the result we can see that each medal type can have very different best models. This phenomenon also vouches for the veracity of our tier-based modeling strategy.
+
+\begin{lstlisting}
+    RandomForest - Bronze:
+    Prediction range: 2.14 to 7.84
+    Mean prediction: 4.43
+    Actual range: 2.00 to 9.00
+    Actual mean: 4.29
+    MSE: 11.1018
+    MAE: 2.4743
+    95% Prediction Interval: ±6.52
+    
+    GradientBoosting - Silver:
+    Prediction range: 0.96 to 7.34
+    Mean prediction: 4.39
+    Actual range: 0.00 to 8.00
+    Actual mean: 3.14
+    MSE: 7.3283
+    MAE: 2.0619
+    95% Prediction Interval: ±4.71
+    
+    XGBoost - Gold:
+    Prediction range: 1.01 to 6.13
+    Mean prediction: 3.15
+    Actual range: 0.00 to 4.00
+    Actual mean: 2.86
+    MSE: 3.4256
+    MAE: 1.6301
+    95% Prediction Interval: ±3.58
+    
+    Best model for Bronze (MAE=2.4743): RandomForest
+    Best model for Silver (MAE=2.0619): GradientBoosting
+    Best model for Gold (MAE=1.6301): XGBoost
+\end{lstlisting}
+    
+
+\subsection{Model Selection}
 
 The best-performing model is selected using the TOPSIS (Technique for Order Preference by Similarity to Ideal Solution) method. This approach ensures a balanced evaluation by simultaneously considering models with:
 \begin{itemize}
@@ -213,7 +249,7 @@ The best-performing model is selected using the TOPSIS (Technique for Order Pref
 \end{itemize}
 In the Tier 1 Gold medal prediction model, XGBoost exhibited the best performance after evaluation.
 
-\subsubsection{Model Optimization}
+\subsection{Model Optimization}
 
 We apply various optimization algorithms to enhance model performance further. The algorithms tested include:
 SSA \cite{8}, DBO \cite{9}, SCA \cite{10}, SA \cite{11}, PSO \cite{12}, SO \cite{13}, POA \cite{14},  
@@ -270,70 +306,23 @@ As an example, SSA algorithm demonstrated the best results for optimizing the Ti
 
     
 
-\subsubsection{Uncertainty Quantification and Prediction Intervals}
+\subsection{Uncertainty Quantification and Prediction Intervals}
 
 To quantify the uncertainty in model predictions, we use Gaussian Probability Interval Prediction. This method calculates prediction intervals, providing upper and lower bounds for the estimated medal counts. The intervals represent the range within which the actual medal counts are expected to fall with a specified confidence level.
-\begin{figure}
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=3.33in, keepaspectratio]{pics/Gaussian Probability Interval Prediction.eps}  
 \end{figure}
-\subsection{Projection for the 2028 Los Angeles Olympics}
-
-Using the optimized models for each tier, we project the medal table for the 2028 Summer Olympics. The projections include:
-\begin{itemize}
-    \item Predicted Gold and total medal counts for each country.
-    \item Prediction intervals representing the uncertainty in the projections.
-    \item Insights into potential improvements or declines in performance compared to 2024.
-\end{itemize}
-
-\subsubsection{Identifying Trends and Insights}
-
-\begin{itemize}
-    \item \textbf{Countries Likely to Improve:} Projections indicate that countries with increasing trends in medal counts over recent Olympics and consistent improvements in performance metrics are likely to perform better.
-    \item \textbf{Countries Likely to Decline:} Nations showing a decline in recent performance or with reduced investments in sports infrastructure may see a drop in medal counts.
-\end{itemize}
 
 \subsection{Conclusion}
 
 The tier-based regression modeling approach provides a structured and efficient framework for predicting Olympic medal counts. By incorporating historical performance, host nation effects, and optimization techniques, the model achieves robust performance and reliable projections. The results offer actionable insights for countries aiming to improve their Olympic performance.
 
+\section{Task1 --- Employing the model for prediction}
 
-\section{Task1 --- Employing the model for prediction and analysis}
+\subsection{Subtask 1 --- Predicting Medal Counts for the 2028 Los Angeles Olympics}
 
-\subsection{Subtask --- Predicting Medal Counts for the 2028 Los Angeles Olympics}
-
-\begin{lstlisting}
-RandomForest - Bronze:
-Prediction range: 2.14 to 7.84
-Mean prediction: 4.43
-Actual range: 2.00 to 9.00
-Actual mean: 4.29
-MSE: 11.1018
-MAE: 2.4743
-95% Prediction Interval: ±6.52
-
-GradientBoosting - Silver:
-Prediction range: 0.96 to 7.34
-Mean prediction: 4.39
-Actual range: 0.00 to 8.00
-Actual mean: 3.14
-MSE: 7.3283
-MAE: 2.0619
-95% Prediction Interval: ±4.71
-
-XGBoost - Gold:
-Prediction range: 1.01 to 6.13
-Mean prediction: 3.15
-Actual range: 0.00 to 4.00
-Actual mean: 2.86
-MSE: 3.4256
-MAE: 1.6301
-95% Prediction Interval: ±3.58
-
-Best model for Bronze (MAE=2.4743): RandomForest
-Best model for Silver (MAE=2.0619): GradientBoosting
-Best model for Gold (MAE=1.6301): XGBoost
-\end{lstlisting}
+We tested the established model to predict medal counts for the 2028 Los Angeles Olympics. The resulting medal table is as follows:
 
 \begin{table}[htbp]
     \centering
@@ -390,9 +379,39 @@ Best model for Gold (MAE=1.6301): XGBoost
     \label{tab:medal_counts}
 \end{table}
 
+%! TODO: WHICH COUNTRIES IMPROVED OR DECLINED?
 
 
-\subsection{Subtask --- Exploring the Relationship Between Event Count and Medal Count}
+
+
+
+
+
+
+
+
+
+
+\subsection{Subtask 2 --- Predicting the Number of Countries Winning Their First Medal}
+
+In this subtask, we aim to predict the number of countries that will win their first Olympic medal at the 2028 Los Angeles Olympics. This involves analyzing historical data to identify trends and factors that contribute to countries winning their first medals and applying these insights to make predictions for the upcoming Olympics.
+
+\subsubsection{Methodology}
+
+To predict the number of countries winning their first medal, we follow these steps:
+
+\begin{enumerate}
+    \item \textbf{Data Collection}: Gather historical data on countries that have won their first Olympic medals in past Games.
+    \item \textbf{Model Training}: Train a regression model using the selected features and historical data to predict the likelihood of a country winning its first medal.
+    \item \textbf{Prediction}: Apply the trained model to the data for the 2028 Los Angeles Olympics to predict the number of countries that will win their first medal.
+\end{enumerate}
+
+\subsubsection{Results}
+
+Based on our analysis and model predictions, we estimate that approximately $X$ countries will win their first Olympic medal at the 2028 Los Angeles Olympics. This prediction is based on the trends observed in historical data and the identified key features that contribute to a country's likelihood of winning its first medal.
+
+
+\subsection{Subtask 3.1 --- Exploring the Relationship Between Event Count and Medal Count}
 
 In this subtask, we investigate the relationship between the number and types of events a country participates in and the number of medals it earns. The analysis is performed using data from the 2024 Olympics, focusing on three primary aspects: visualization, correlation analysis, and interpretation of results.
 
@@ -455,7 +474,7 @@ The results of this analysis demonstrate the critical importance of event partic
 \end{itemize}
 This analysis underscores the interplay between event participation and medal success, offering actionable insights for Olympic planning and preparation.
 
-\subsection{Subtask --- Identifying the Most Important Sports for Various Countries}
+\subsection{Subtask 3.2 --- Identifying the Most Important Sports for Various Countries}
 
 This subtask aims to determine the most significant sports for different countries based on their historical performance in the Olympics. To achieve this, we develop a method to calculate the importance of each event and sport, both at the country level and globally. 
 
