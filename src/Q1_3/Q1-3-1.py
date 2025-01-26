@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from scipy.stats import pearsonr, spearmanr
+from scipy.stats import spearmanr
 
 # 数据加载
 data = pd.read_csv('Q1_3_1_data.csv')
@@ -15,53 +15,64 @@ print(data.describe())
 
 # 相关性分析
 tiers = data['Tier'].unique()
-correlation_matrix = pd.DataFrame(index=tiers, columns=['Pearson', 'Spearman'])
+correlation_matrix = pd.DataFrame(index=tiers, columns=['Spearman', 'p-value'])
 for tier in tiers:
     tier_data = data[data['Tier'] == tier]
-    pearson_corr, _ = pearsonr(tier_data['Eventcount'], tier_data['medalcount'])
-    spearman_corr, _ = spearmanr(tier_data['Eventcount'], tier_data['medalcount'])
-    correlation_matrix.loc[tier] = [pearson_corr, spearman_corr]
-    print(f'Tier {tier} - Pearson correlation: {pearson_corr}')
-    print(f'Tier {tier} - Spearman correlation: {spearman_corr}')
+    spearman_corr, p_value = spearmanr(tier_data['Eventcount'], tier_data['medalcount'])
+    correlation_matrix.loc[tier] = [spearman_corr, p_value]
+    print(f'Tier {tier} - Spearman correlation: {spearman_corr}, p-value: {p_value}')
 
-# # 相关性热力图
-# plt.figure(figsize=(10, 6))
-# sns.heatmap(correlation_matrix.astype(float), annot=True, cmap='coolwarm', center=0)
-# plt.title('Correlation Heatmap by Tier')
-# plt.xlabel('Correlation Type')
-# plt.ylabel('Tier')
-# plt.show()
+# 相关性分析柱状图和p-value散点图整合
+fig, ax1 = plt.subplots(figsize=(12, 8))
 
-# 为每个 tier 生成热力图
-for tier in tiers:
-    tier_data = data[data['Tier'] == tier]
-    correlation_matrix_tier = tier_data[['Eventcount', 'medalcount']].corr(method='pearson')
-    plt.figure(figsize=(6, 4))
-    sns.heatmap(correlation_matrix_tier, annot=True, cmap='coolwarm', center=0)
-    plt.title(f'Correlation Heatmap for Tier {tier}')
-    plt.show()
+# Spearman Correlation Coefficient Bar Plot
+color = '#1f77b4'
+ax1.set_xlabel('Tier')
+ax1.set_ylabel('Spearman Correlation Coefficient', color=color)
+ax1.bar(correlation_matrix.index, correlation_matrix['Spearman'], color=color, label='Spearman Correlation Coefficient')
+ax1.tick_params(axis='y', labelcolor=color)
+ax1.legend(loc='upper left')
 
-# 相关性分析柱状图
-correlation_matrix.plot(kind='bar', figsize=(10, 6))
-plt.title('Correlation Analysis by Tier')
-plt.xlabel('Tier')
-plt.ylabel('Correlation Coefficient')
-plt.legend(title='Correlation Type')
+# p-value Scatter Plot
+ax2 = ax1.twinx()
+color = '#ff7f0e'
+ax2.set_ylabel('p-value', color=color)
+ax2.scatter(correlation_matrix.index, correlation_matrix['p-value'], color=color, label='p-value')
+ax2.tick_params(axis='y', labelcolor=color)
+
+# Adding data labels for p-values
+for i, p_value in enumerate(correlation_matrix['p-value']):
+    ax2.text(i, p_value, f'{p_value:.2e}', color=color, ha='center', va='bottom')
+
+ax2.legend(loc='upper right')
+
+plt.title('Spearman Correlation Analysis by Tier')
+plt.grid(True)
+plt.tight_layout()
+plt.savefig('spearman_correlation_analysis_by_tier_combined.png')
 plt.show()
 
 # 可视化
 # 散点图
-sns.scatterplot(x='Eventcount', y='medalcount', hue='Tier', data=data)
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x='Eventcount', y='medalcount', hue='Tier', data=data, palette='viridis')
 plt.title('Event Count vs Medal Count')
 plt.xlabel('Event Count')
 plt.ylabel('Medal Count')
 plt.legend(title='Tier')
+plt.grid(True)
+plt.tight_layout()
+plt.savefig('event_count_vs_medal_count.png')
 plt.show()
 
 # 箱线图
+plt.figure(figsize=(10, 6))
 data['Eventcount_bins'] = pd.cut(data['Eventcount'], bins=5)
-sns.boxplot(x='Eventcount_bins', y='medalcount', data=data)
+sns.boxplot(x='Eventcount_bins', y='medalcount', data=data, palette='Set2')
 plt.title('Medal Count Distribution by Event Count Bins')
 plt.xlabel('Event Count Bins')
 plt.ylabel('Medal Count')
+plt.grid(True)
+plt.tight_layout()
+plt.savefig('medal_count_distribution_by_event_count_bins.png')
 plt.show()
