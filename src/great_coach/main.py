@@ -106,11 +106,11 @@ def analyze_coach_effect_impact(df, pairs, granularity='sport'):
         
         # Calculate absolute changes
         inc_data = df[(df['NOC'] == inc_country) & 
-                     (df[granularity] == sport_or_event) &
+                     (df[granularity] == sport_or_event) & 
                      (df['Year'] >= overlap_start) & 
                      (df['Year'] <= overlap_end)]
         dec_data = df[(df['NOC'] == dec_country) & 
-                     (df[granularity] == sport_or_event) &
+                     (df[granularity] == sport_or_event) & 
                      (df['Year'] >= overlap_start) & 
                      (df['Year'] <= overlap_end)]
         
@@ -151,14 +151,25 @@ def analyze_coach_effect_impact(df, pairs, granularity='sport'):
     return avg_impacts
 
 def plot_tier_impacts(avg_impacts, granularity):
-    """Plot the average impacts across tiers"""
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
-    
+    """Plot the average impacts across tiers and save to CSV"""
     tiers = list(avg_impacts.keys())
     increases = [avg_impacts[t]['avg_increase'] for t in tiers]
     decreases = [avg_impacts[t]['avg_decrease'] for t in tiers]
     rel_increases = [avg_impacts[t]['avg_relative_increase'] for t in tiers]
     rel_decreases = [avg_impacts[t]['avg_relative_decrease'] for t in tiers]
+    
+    # Save to CSV
+    impact_df = pd.DataFrame({
+        'Tier': tiers,
+        'Average_Increase': increases,
+        'Average_Decrease': decreases,
+        'Relative_Increase_Percent': rel_increases,
+        'Relative_Decrease_Percent': rel_decreases
+    })
+    impact_df.to_csv(f'tier_impacts_{granularity}.csv', index=False)
+    
+    # Create plots
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
     
     x = np.arange(len(tiers))
     width = 0.35
@@ -183,6 +194,44 @@ def plot_tier_impacts(avg_impacts, granularity):
     
     plt.tight_layout()
     plt.savefig(f'coach_effect_impact_{granularity}.png', dpi=300, bbox_inches='tight')
+    plt.show()
+
+def plot_tier_impacts_from_csv(csv_path, granularity):
+    """Plot the average impacts across tiers from CSV"""
+    impact_df = pd.read_csv(csv_path)
+    
+    tiers = impact_df['Tier']
+    increases = impact_df['Average_Increase']
+    decreases = impact_df['Average_Decrease']
+    rel_increases = impact_df['Relative_Increase_Percent']
+    rel_decreases = impact_df['Relative_Decrease_Percent']
+    
+    # Create plots
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
+    
+    x = np.arange(len(tiers))
+    width = 0.35
+    
+    # Absolute changes plot
+    ax1.bar(x - width/2, increases, width, label='Average Increase', color='green', alpha=0.6)
+    ax1.bar(x + width/2, decreases, width, label='Average Decrease', color='red', alpha=0.6)
+    ax1.set_ylabel('Absolute Medal Count Change')
+    ax1.set_title(f'Absolute Impact by Tier ({granularity} level)')
+    ax1.set_xticks(x)
+    ax1.set_xticklabels([f'Tier {t}' for t in tiers])
+    ax1.legend()
+    
+    # Relative changes plot
+    ax2.bar(x - width/2, rel_increases, width, label='Relative Increase (%)', color='green', alpha=0.6)
+    ax2.bar(x + width/2, rel_decreases, width, label='Relative Decrease (%)', color='red', alpha=0.6)
+    ax2.set_ylabel('Relative Change (%)')
+    ax2.set_title(f'Relative Impact by Tier ({granularity} level)')
+    ax2.set_xticks(x)
+    ax2.set_xticklabels([f'Tier {t}' for t in tiers])
+    ax2.legend()
+    
+    plt.tight_layout()
+    plt.savefig(f'coach_effect_impact_{granularity}_from_csv.png', dpi=300, bbox_inches='tight')
     plt.show()
 
 def analyze_great_coach_effect_by_sport(csv_path):
@@ -327,5 +376,6 @@ def main(min_granularity):
         analyze_great_coach_effect_by_event(csv_path)
 
 if __name__ == "__main__":
-    main(min_granularity='sport')
+    # main(min_granularity='sport')
+    plot_tier_impacts_from_csv('tier_impacts_Sport.csv', 'Sport')
 
