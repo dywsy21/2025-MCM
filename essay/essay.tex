@@ -118,10 +118,15 @@ Due to the limitation of usable dataset, we cannot explore many of the aforement
 % 3. event name ambiguity, e.g. 500+ events named "Men" and "Women"
 \subsection{Data Washing}
 \subsubsection{Early Attempts: Athlete-based Prediction}
-Firstly, we negated the method of making prediction based on the historical data of total medals of countries, which is logically unreasonable and too crude. As the most concrete data offered is all individual Olympic competitors with sport, event and result, it is a quite natural thought to predict the medal counts based on every individual athletes.
+First of all, we negated the method of making prediction based on the historical data of total medals of countries, which is logically unreasonable and too crude. As the most concrete data offered is all individual Olympic competitors with sport, event and result, it is a quite natural thought to predict the medal counts based on every individual athletes participating in certain event.
+
+To put it lucidly, we added a column named "ID" which concatenated Name and Event with a "\_", which categorized the data in every individual and event. Then it's easier to create a time series of medal data out of it and apply certain method to predict the medal counts in the next Olympics.
+
+The first problem that came to us is that team events may result in repeated count of medals for each member in the prediction. So we used a python script to make a list of events and added a column of "Team\_size" to fix the problem, naming it "Events.csv", which will be used as a dictionary of team size. Then we added "Gold", "Silver", "Bronze" columns to summerOly_athletes.csv, and marked medal counts using Excel formula with conditional statements, converting the string "Medal" into numbers which fits model training. After that, we used a python script to divide the raw medal count with team size to normalize the data.
+
 
 \subsubsection{Sport/Event Oriented Data Preprocessing}
-
+% City_NOC.csv
 
 
 \section{Establishing the Model}
