@@ -117,11 +117,10 @@ Due to the limitation of usable dataset, we cannot explore many of the aforement
 % 1. event/sport name changed over the course of time
 % 2. some special years like 1906, when an unofficial Olympic Games was held. We need to exclude this year from our analysis.
 % 3. event name ambiguity, e.g. 500+ events named "Men" and "Women"
-\subsection{Data Washing}
-\subsubsection{Early Attempts: Athlete-based Prediction}
+\subsection{Early Attempts: Athlete-based Prediction}
 Firstly, we negated the method of making prediction based on the historical data of total medals of countries, which is logically unreasonable and too crude. As the most concrete data offered is all individual Olympic competitors with sport, event and result, it is a quite natural thought to predict the medal counts based on every individual athletes.
 
-\subsubsection{Sport/Event Oriented Data Preprocessing}
+\subsection{Current Method: Sport/Event Oriented Data Preprocessing}
 
 
 
@@ -365,7 +364,6 @@ We further polish the program used in the identification step to calculate the m
 \end{table}
 
 This figure clearly shows the impact of the Great Coach Effect on different tiers of countries, highlighting the potential for significant performance improvements under the guidance of elite coaches. We can see that the positive and negative impact of the Great Coach Effect(namely, the moving in and out of great coaches) on absolute medal changes has remained constant among different tiers of countries, while its impact on relative medal changes decreases as the tier goes up. This is an expected phenomenon because countries with better overall power already do well in sports across a wide range of fields, so the arrival or departure of one specific coach won't have much effect relative to the total medal count. By quantifying the magnitude and percentage of the effect, we can better understand the strategic value of investing in high-caliber coaching talent and its implications for national Olympic success.
-
 
 \subsection{Exemplification}
 By analyzing the performance trends in specific sports, we identified notable cases where the transfer of a coach coincided with a sharp increase in performance of one country and a decline or stagnation for another, allowing for the cross-verification of our algorithms. Below are three exemplifications of the Great Coach Effect based on historical Olympic data and their correlations with our results.\
