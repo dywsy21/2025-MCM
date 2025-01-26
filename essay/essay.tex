@@ -98,8 +98,8 @@ Due to the limitation of usable dataset, we cannot explore many of the aforement
 
 \begin{enumerate}
     \item A two-stage model that first predicts the number of medals won by each country in each sport, then aggregates these predictions to estimate the total medal count.
-    \item Train and evaluate multiple models with different underlying algorithms on the same dataset, and use the best-performing model for prediction.
-    \item Separates different countries into multiple clusters based on their historical performance (in which their comprehensive national power is also embodied \cite{7}), allowing for more accurate predictions for countries with similar characteristics.
+    \item Trains and evaluates multiple models with different underlying algorithms on the same dataset, and use the best-performing model for prediction.
+    \item Separates different countries into multiple clusters based on their historical medal counts (in which their comprehensive national power is also embodied \cite{7}), allowing for more accurate predictions for countries with similar overall strengths.
     \item A sensitivity analysis that assesses the impact of different factors on medal counts and identifies key drivers of success. 
 \end{enumerate}
 
@@ -112,12 +112,19 @@ Due to the limitation of usable dataset, we cannot explore many of the aforement
 
 
 \section{Data Preprocessing}
+% remember to mention some details
+% 1. event/sport name changed over the course of time
+% 2. some special years like 1906, when an unofficial Olympic Games was held. We need to exclude this year from our analysis.
+% 3. event name ambiguity, e.g. 500+ events named "Men" and "Women"
+
+
+
 
 \section{Establishing the Model}
 
-\section{Task1}
+\section{Task1 --- Predicting Medal Counts for the 2028 Los Angeles Olympics}
 
-\section{Task2}
+\section{Task2 --- }
 
 \section{Task3}
 
@@ -127,7 +134,7 @@ The Great Coach Effect is a phenomenon where the presence of a highly skilled co
 
 \subsection{Identification}
 
-We reckon that the Great Coach Effect can be identified by comparing the performance of athletes under the same coach across different countries. It should, by nature, cause one country to have a sharp increase in their medal count in specific sports, and one other country to go through a gradual-to-sharp decrease in their medal count in the same sports. This is because the coach is likely to focus on one country at a time, and the athletes from the other country would not receive the same level of training and support.
+We reckon that the Great Coach Effect can be identified by comparing the performance of athletes under the same coach across different countries. It should, by nature, cause one country to have a sharp increase in their medal count in specific sports (otherwise this coach wouldn't be that great), and one other country to go through a gradual-to-sharp decrease in their medal count in the same sports. This is because the coach basically can only focus on coaching one country simultaneously, and the athletes from the other country would not receive the same level of training and support.
 
 Again, due to the inherent limitation of usable dataset, we can only seek to identify the Great Coach Effect from this characteristic, rather than other methods such as relying on coach information to deduce the effect.
 
