@@ -8,4 +8,4 @@ To run the code:
 
 1. Clone the repository
 2. Run `pip install -r requirements.txt`
-3. run `python src/main.py`
+3. run `python src/sport_oriented/main.py`

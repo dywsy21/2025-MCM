@@ -7,3 +7,5 @@ scores_of_2024.csv
 # **/*.pdf
 sport_oriented*.csv
 **/*.gz
+**/essay.pdf
+analysis_result.txt
