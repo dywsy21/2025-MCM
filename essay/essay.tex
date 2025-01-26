@@ -131,9 +131,159 @@ Firstly, we negated the method of making prediction based on the historical data
 
 \section{Establishing the Model}
 
+In this section, we outline the process of developing a regression-based model to predict medal counts (Gold, Silver and Bronze medals) for each country(especially the top 10(???) country) in the Los Angeles 2028 Summer Olympics. Our methodology accounts for historical performance, and hosting effects. The proposed approach includes estimates of uncertainty, prediction intervals, and measures of model performance. Additionally, we assess potential improvements or declines in medal counts for individual countries.
+
+\subsection{Methodology}
+
+To address the problem of predicting medal counts, we adopt a tier-based modeling strategy, aligning with the classification established in Task 1 - Subtask 3. Countries are grouped into five tiers based on their historical performance. Separate regression models are trained for each tier to capture the unique dynamics of countries within the same tier. The methodology involves the following steps:
+
+\subsubsection{Data Loading \& Transformation}
+
+\begin{itemize}
+    \item \textbf{Loading:} We use data from the most recent eight Olympic Games, including information on hosting nations and medal counts (Gold, Silver, and Bronze) for each participating country.
+    \item \textbf{Transformation:} Hosting nation information is one-hot encoded to introduce categorical variables. To address class imbalance, the SMOTE (Synthetic Minority Oversampling Technique) algorithm is applied, generating synthetic samples for underrepresented classes and balancing the dataset.
+\end{itemize}
+
+\begin{wrapfigure}{r}{8cm}  %这是图文混排的环境
+    \centering
+    \includegraphics[width=0.9\linewidth,height=6cm]{pics/Multi-Agent_Optimization_Algorithm.jpg}
+    \caption{Ranking of sports by global importance based on aggregated event importance values across all countries.}
+    \label{fig:metaheuristic_algorithm}
+\end{wrapfigure}
+
+\subsubsection{Feature Engineering}
+
+Features are selected and optimized using metaheuristic algorithms to determine the most effective combinations. Like the image showed, this process involves transforming the feature selection problem into a binary optimization problem, where:
+\begin{itemize}
+    \item A value of 0 indicates the exclusion of a feature.
+    \item A value of 1 indicates the inclusion of a feature.
+\end{itemize}
+A random forest model is trained iteratively with different feature combinations, and the performance of each combination is evaluated. Among all algorithms tested, the Sparrow Search Algorithm (SSA) achieved the best results for feature selection in Tier 1 Gold medal prediction.
+
+
+\subsubsection{Data Splitting}
+
+Given the relatively small dataset size, we adopt k-fold cross-validation to split the data into training, validation, and testing subsets. This approach ensures that the model is evaluated robustly across multiple splits of the data.
+
+\subsubsection{Model Training}
+
+We train several regression models on the training set, including:
+\begin{itemize}
+    \item LSBoost
+    \item XGBoost
+    \item Multivariate Linear Regression
+    \item Gaussian Regression
+    \item Decision Tree
+    \item Random Forest
+\end{itemize}
+
+Each model is trained using the training set and evaluated on the validation set to determine the optimal hyperparameters.
+
+\subsubsection{Model Evaluation}
+
+The performance of each model is assessed on the test set using the following metrics:
+\begin{itemize}
+    \item Mean Absolute Error (MAE)
+    \item Mean Absolute Percentage Error (MAPE)
+    \item Mean Squared Error (MSE)
+    \item Root Mean Squared Error (RMSE)
+    \item Coefficient of Determination ($R^2$)
+\end{itemize}
+
+\subsubsection{Model Selection}
+
+The best-performing model is selected using the TOPSIS (Technique for Order Preference by Similarity to Ideal Solution) method. This approach ensures a balanced evaluation by simultaneously considering models with:
+\begin{itemize}
+    \item Smaller values of MAE, MAPE, MSE, and RMSE.
+    \item Larger values of $R^2$ (closer to 1 indicates better fit).
+\end{itemize}
+In the Tier 1 Gold medal prediction model, XGBoost exhibited the best performance after evaluation.
+
+\subsubsection{Model Optimization}
+
+We apply various optimization algorithms to enhance model performance further. The algorithms tested include:
 SSA \cite{8}, DBO \cite{9}, SCA \cite{10}, SA \cite{11}, PSO \cite{12}, SO \cite{13}, POA \cite{14},  
 GWO \cite{15}, IGWO \cite{16}, AVOA \cite{17}, CSA \cite{18}, GTO \cite{19}, NGO \cite{20},  
 WSO \cite{21}, CGO \cite{22}, INFO \cite{23}, COA \cite{24}, RIME \cite{25}, KOA \cite{26}, RUN \cite{27}.
+
+As an example, SSA algorithm demonstrated the best results for optimizing the Tier 1 Gold medal prediction model, and the following figure shows the optimization outcome.
+
+\begin{figure}[htbp]
+    \centering
+    % First row
+    \begin{minipage}[t]{0.3\textwidth}
+        \centering
+        \includegraphics[width=2.2in, keepaspectratio]{pics/1.eps}
+        \label{fig:image1}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\textwidth}
+        \centering
+        \includegraphics[width=2.2in, keepaspectratio]{pics/3.eps}
+        \label{fig:image2}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\textwidth}
+        \centering
+        \includegraphics[width=2.2in, keepaspectratio]{pics/5.eps}
+        \label{fig:image3}
+    \end{minipage}
+    
+    \vspace{0.4cm} % Space between rows
+    
+    % Second row
+    \begin{minipage}[t]{0.3\textwidth}
+        \centering
+        \includegraphics[width=2.2in, keepaspectratio]{pics/2.eps}
+        \label{fig:image4}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\textwidth}
+        \centering
+        \includegraphics[width=2.2in, keepaspectratio]{pics/4.eps}
+        \label{fig:image5}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\textwidth}
+        \centering
+        \includegraphics[width=2.2in, keepaspectratio]{pics/6.eps}
+        \label{fig:image6}
+    \end{minipage}
+    
+    \caption{Six smaller EPS images arranged in two rows and three columns, resized to fit the page.}
+    \label{fig:smaller_eps_images}
+\end{figure}
+
+
+    
+
+\subsubsection{Uncertainty Quantification and Prediction Intervals}
+
+To quantify the uncertainty in model predictions, we use Gaussian Probability Interval Prediction. This method calculates prediction intervals, providing upper and lower bounds for the estimated medal counts. The intervals represent the range within which the actual medal counts are expected to fall with a specified confidence level.
+\begin{figure}
+    \centering
+    \includegraphics[width=3.33in, keepaspectratio]{pics/Gaussian Probability Interval Prediction.eps}  
+\end{figure}
+\subsection{Projection for the 2028 Los Angeles Olympics}
+
+Using the optimized models for each tier, we project the medal table for the 2028 Summer Olympics. The projections include:
+\begin{itemize}
+    \item Predicted Gold and total medal counts for each country.
+    \item Prediction intervals representing the uncertainty in the projections.
+    \item Insights into potential improvements or declines in performance compared to 2024.
+\end{itemize}
+
+\subsubsection{Identifying Trends and Insights}
+
+\begin{itemize}
+    \item \textbf{Countries Likely to Improve:} Projections indicate that countries with increasing trends in medal counts over recent Olympics and consistent improvements in performance metrics are likely to perform better.
+    \item \textbf{Countries Likely to Decline:} Nations showing a decline in recent performance or with reduced investments in sports infrastructure may see a drop in medal counts.
+\end{itemize}
+
+\subsection{Conclusion}
+
+The tier-based regression modeling approach provides a structured and efficient framework for predicting Olympic medal counts. By incorporating historical performance, host nation effects, and optimization techniques, the model achieves robust performance and reliable projections. The results offer actionable insights for countries aiming to improve their Olympic performance.
+
 
 \section{Task1 --- Predicting Medal Counts for the 2028 Los Angeles Olympics}
 \subsection{Subtask --- Exploring the Relationship Between Event Count and Medal Count}
