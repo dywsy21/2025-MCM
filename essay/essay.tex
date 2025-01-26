@@ -100,17 +100,20 @@ Due to the limitation of usable dataset, we cannot explore many of the aforement
 \begin{enumerate}
     \item A two-stage model that first predicts the number of medals won by each country in each sport, then aggregates these predictions to estimate the total medal count.
     \item Trains and evaluates multiple models with different underlying algorithms on the same dataset, and use the best-performing model for prediction.
-    \item Separates different countries into multiple clusters based on their historical medal counts (in which their comprehensive national power is also embodied \cite{7}), allowing for more accurate predictions for countries with similar overall strengths.
+    \item Separates different countries into multiple clusters based on their historical medal counts (in which their comprehensive national power is also embodied \cite{2}), allowing for more accurate predictions for countries with similar overall strengths.
     \item A sensitivity analysis that assesses the impact of different factors on medal counts and identifies key drivers of success. 
 \end{enumerate}
 
-\section{Assumptions and Justifications} 
+\section{Assumptions and Justifications}
+
+Here are the assumptions that underpin our model and the justifications for each:
 
 \begin{enumerate}
-    \item \textbf{Homogeneity of Athletes}: We assume that athletes within the same country are homogeneous in terms of training, resources, and performance. This assumption simplifies the model by treating all athletes from a country as a single entity, ignoring individual variations.
-    \item \textbf{Event Independence}: We assume that the outcomes of different events are independent of each other. This assumption allows us to model each event separately without considering potential correlations between them.
-    \item \textbf{Historical Consistency}: We assume that historical trends in medal counts are consistent with future performance. This assumption underlies our prediction model, which relies on past data to forecast future outcomes.
-    \item \textbf{Host Country Advantage}: We assume that host countries have a competitive advantage due to factors such as home crowd support and familiarity with the venues. This assumption is supported by previous research on the impact of hosting the Olympics on medal counts.
+    \item \textbf{Historical Consistency}: We assume that historical trends in medal counts are consistent with future performance. This assumption underlies our prediction model, which relies on past data to forecast future outcomes. This assumption is at the heart of our model and is supported by previous research on the predictability of Olympic medal counts \cite{4,5,7}.
+    \item \textbf{Comprehensive national power's great impact on medal count}: It's been widely acknowledged that a country's comprehensive national power, including economic, political, and social factors, has a significant impact on its Olympic performance \cite{1,2,3,7}. Because the provided dataset doesn't include the detailed information of these factors like GDP, we manually categorizes countries into different tiers based on their historical medal counts, which is a good proxy for their comprehensive national power. For more detail, see Data Preprocessing part.
+    \item \textbf{Host Country Advantage}: We assume that host countries have a competitive advantage due to factors such as home crowd support and familiarity with the venues.
+    \item \textbf{Time Proximity}: We assume that only the recent Olympic data is relevant for predicting future medal counts. This assumption is based on the idea that recent performance trends and current athlete conditions are more indicative of future outcomes than older data, and at the same time, only the most recent data can embody the current comprehensive power of countries. Therefore, our model primarily focuses on the last few Olympic Games to ensure the predictions are based on the most relevant and up-to-date information.
+    \item \textbf{Sport as minimal granularity}: We assume that using sport as the minimal granularity of data is the best for predicting medal counts, namely, we predict the medal outcome of each sport and sum them up to obtain the projected medal count for each country. This is justified by our trial-and-error process, which found that using event or individual athlete as the minimal granularity of data leads to overfitting and poor generalization.  Granularity too small leads to higher randomness and fewer samples for each unit, and neither of them are beneficial for the accurate prediction of medal counts in the next Olympic Games. Therefore, we use sport as the minimal granularity of data in our model.
     
 \end{enumerate}
 
@@ -440,7 +443,8 @@ bibliography cite use \cite{1}
     \bibitem{4} Forrest, D., Sanz, I., \& Tena, J. D. (2010). Forecasting national team medal totals at the Summer Olympic Games. International Journal of Forecasting, 26, 576–588.
     \bibitem{5} Schlembach, C., Schmidt, S. L., Schreyer, D., \& Wunderlich, L. (2022). Forecasting the Olympic medal distribution – A socioeconomic machine learning model. Technological Forecasting \& Social Change, 175, 121314.
     \bibitem{6} Tcha, M., \& Pershin, V. (2003). Reconsidering performance at the Summer Olympics and revealed comparative advantage. Journal of Sports Economics, 4, 216–239.
-    \bibitem{7} Bernard A B, Busse M R. Who wins the Olympic Games: Economic resources and medal totals[J]. Review of economics and statistics, 2004, 86(1): 413-417.
+    \bibitem{7} Radicchi F. Universality, limits and predictability of gold-medal performances at the Olympic Games[J]. PloS one, 2012, 7(7): e40335.
+    \bibitem{8} Andreff W. Economic development as major determinant of Olympic medal wins: predicting performances of Russian and Chinese teams at Sochi Games[J]. International Journal of Economic Policy in Emerging Economies, 2013, 6(4): 314-340.
 
 \end{thebibliography}
 

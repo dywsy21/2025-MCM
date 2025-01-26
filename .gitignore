@@ -9,5 +9,7 @@ analysis_result*.txt
 **/*.aux
 **/*.log
 **/*.out
+**/*.fls
+**/*.xdv
 **/*.synctex*
 **/*.toc
