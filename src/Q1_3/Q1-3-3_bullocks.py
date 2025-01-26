@@ -3,6 +3,10 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+from matplotlib import rcParams
+
+# 设置字体为Charters
+rcParams['font.family'] = 'Charter'
 sns.set(style="whitegrid")
 
 def get_events_by_year(df, country):
@@ -87,6 +91,14 @@ def main():
         ('ITA', 1960),
         ('MEX', 1968),
         ('CAN', 1976),
+        ('AUS', 1956),
+        ('FIN', 1952),
+        ('GBR', 1948),
+        ('GER', 1936),
+        ('USA', 1932),
+        ('NED', 1928),
+        ('FRA', 1924),
+        ('BEL', 1920)
     ], key=lambda x: x[1])
     new_zscores = []
     existing_zscores = []
@@ -122,6 +134,16 @@ def main():
     
     plt.tight_layout()
     plt.savefig('host_country_zscores.png')
+    
+    # 导出所有数据为csv
+    output_df = pd.DataFrame({
+        'Country': [country for country, year in hosts],
+        'Year': [year for country, year in hosts],
+        'New Events Z-Score': new_zscores,
+        'Dominant Events Z-Score': existing_zscores,
+        'Normal Events Z-Score': weak_zscores
+    })
+    output_df.to_csv('host_country_zscores_data.csv', index=False)
 
 if __name__ == "__main__":
     main()
