@@ -123,7 +123,55 @@ Due to the limitation of usable dataset, we cannot explore many of the aforement
 \section{Establishing the Model}
 
 \section{Task1 --- Predicting Medal Counts for the 2028 Los Angeles Olympics}
+\subsection{Subtask1 --- Exploring the Relationship Between Event Count and Medal Count}
+In this subtask, we investigate the relationship between the number and types of events a country participates in and the number of medals it earns. The analysis is performed using data from the 2024 Olympics, focusing on three primary aspects: visualization, correlation analysis, and interpretation of results.
 
+\subsubsection{Visualization}
+To better understand the relationship between event count and medal count, we employed two visualization methods:
+\begin{itemize}
+    \item \textbf{Scatter Plot}: A scatter plot was created to display the relationship between the number of events a country participates in (event count) and the number of medals it earns (medal count).  
+    \item \textbf{Box Plot}: To further analyze the distribution of medal counts across different event count intervals, a box plot was used. This visualization captures the median, interquartile range (IQR), and outliers of medal counts for countries grouped into event count bins. The box plot reveals that countries with higher event participation tend to have a wider distribution of medal counts, suggesting greater variability.
+\end{itemize}
+
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{ccc}
+    \toprule
+    \textbf{Tier} & \textbf{Spearman Correlation} & \textbf{p-value} \\
+    \midrule
+    1 & 0.38 & $2.16 \times 10^{-5}$ \\
+    2 & 0.39 & 0.01 \\
+    3 & 0.61 & $4.99 \times 10^{-5}$ \\
+    4 & 0.57 & 0.13 \\
+    5 & 0.98 & 0.02 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Spearman correlation and p-values across different tiers.}
+    \label{tab:spearman_tiers}
+    \end{table}
+    
+    \begin{figure}[htbp]
+        \begin{minipage}[t]{0.5\textwidth}
+            \centering
+            \includegraphics[width=0.8\textwidth]{pics/event_count_vs_medal_count.png}
+        \end{minipage}
+        \begin{minipage}[t]{0.5\textwidth}
+            \centering
+            \includegraphics[width=0.8\textwidth]{pics/medal_count_distribution_by_event_count_bins.png}
+        \end{minipage}
+        \caption{Visualizations: (Left) Scatter plot showing the correlation; (Right) Box plot depicting the distributions.}
+    \end{figure}
+    
+    To better understand the relationship between event count and medal count, countries were grouped into five distinct tiers based on their competitive performance using the K-means clustering algorithm. This method allowed for the segmentation of countries into groups with similar competition characteristics, providing a more nuanced analysis of the underlying relationships.
+
+    The decision to use K-means clustering was motivated by the scatter plot observations, which suggested heterogeneous patterns in the event count and medal count relationship across different types of countries. The clustering process was informed by previous medal achievements(first gold medals, then total medals), ensuring that the grouping reflected meaningful competitive distinctions.
+    
+    Once the countries were assigned to tiers, we conducted separate correlation analyses within each tier. This approach allowed for a targeted examination of the relationship between event count and medal count, accounting for the differences in competitive capabilities and strategies across tiers. Spearman's correlation coefficient was used to measure the strength and direction of the relationship, as it is well-suited for non-parametric data and can handle potential non-linearities.
+
+    
+\subsection{Subtask2}
+\subsection{Subtask3}
 \section{Task2 --- }
 
 \section{Task3}
