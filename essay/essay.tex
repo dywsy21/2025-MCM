@@ -116,7 +116,11 @@ Due to the limitation of usable dataset, we cannot explore many of the aforement
 % 1. event/sport name changed over the course of time
 % 2. some special years like 1906, when an unofficial Olympic Games was held. We need to exclude this year from our analysis.
 % 3. event name ambiguity, e.g. 500+ events named "Men" and "Women"
+\subsection{Data Washing}
+\subsubsection{Early Attempts: Athlete-based Prediction}
+Firstly, we negated the method of making prediction based on the historical data of total medals of countries, which is logically unreasonable and too crude. As the most concrete data offered is all individual Olympic competitors with sport, event and result, it is a quite natural thought to predict the medal counts based on every individual athletes.
 
+\subsubsection{Sport/Event Oriented Data Preprocessing}
 
 
 
@@ -277,13 +281,6 @@ The program identifies two overlapping periods: 1992-2004 and 2004-2012. In both
 Looking at Lang Ping's coaching career spanning over 20 years, we can also discover the distinct influence of a capable coach. During her first tenure with China (1995-2005), the team achieved notable successes, including a Gold medal in 2004. After transitioning to coach the U.S. team (2005-2013) which had won few medals in history, U.S. quickly surpassed China and won 2 consecutive Silver medals. When Lang Ping returned to coach China in 2013, the Chinese team quickly regained its dominance with a Gold in 2016. This fluctuation in performance underscores her unique ability to transform teams and highlights the strategic importance of securing top-tier coaching talent.
 
 % These examples illustrate how the transfer of elite coaches can create significant shifts in medal performance across countries, substantiating the Great Coach Effect. The patterns not only validate the causality between coaching expertise and medal counts but also provide insights for national Olympic committees to consider investing in high-caliber coaching for sustained success.
-\subsubsection{Cross Validation with Program-based Data}
-- Event: Synchronized Swimming Women's Team, Overlap Years [2008-2012], Increase: CHN(slope=0.125) / Decrease: ESP(slope=-0.250)
-- Event: Gymnastics Women's Team All-Around, Overlap Years [2000-2008], Increase: USA(slope=0.125) / Decrease: ROU(slope=-0.250)
-- Event: Volleyball Women's Volleyball, Overlap Years [1992-2004], Increase: CHN(slope=0.175) / Decrease: USA(slope=-0.075)
-- Event: Volleyball Women's Volleyball, Overlap Years [2004-2012], Increase: USA(slope=0.250) / Decrease: CHN(slope=-0.375)
-
-
 
 \subsection{Recommendation}
 
