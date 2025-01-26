@@ -1,11 +1,8 @@
 **/build
 **/__pycache__
 prompt.md
-projected_medals_of_2024.csv
+*.csv
 **/*.exe
-scores_of_2024.csv
-# **/*.pdf
-sport_oriented*.csv
 **/*.gz
 **/essay.pdf
-analysis_result.txt
+analysis_result*.txt
