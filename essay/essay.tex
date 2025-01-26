@@ -51,6 +51,7 @@
  
 \usepackage{indentfirst}  %首行缩进，注释掉，首行就不再缩进。
 \usepackage{lipsum}
+\usepackage{wrapfig} % 图文绕排
 \title{Mathematical Model for Prediction of Olympic Medal Counts}
 \author{\small \href{https://www.latexstudio.net/}
   {\includegraphics[width=7cm]{mcmthesis-logo}}}
@@ -103,10 +104,15 @@ Due to the limitation of usable dataset, we cannot explore many of the aforement
     \item A sensitivity analysis that assesses the impact of different factors on medal counts and identifies key drivers of success. 
 \end{enumerate}
 
-\subsection{Other Assumptions}
+\section{Assumptions and Justifications} 
 
-
-\section{Assumptions and Justifications}
+\begin{enumerate}
+    \item \textbf{Homogeneity of Athletes}: We assume that athletes within the same country are homogeneous in terms of training, resources, and performance. This assumption simplifies the model by treating all athletes from a country as a single entity, ignoring individual variations.
+    \item \textbf{Event Independence}: We assume that the outcomes of different events are independent of each other. This assumption allows us to model each event separately without considering potential correlations between them.
+    \item \textbf{Historical Consistency}: We assume that historical trends in medal counts are consistent with future performance. This assumption underlies our prediction model, which relies on past data to forecast future outcomes.
+    \item \textbf{Host Country Advantage}: We assume that host countries have a competitive advantage due to factors such as home crowd support and familiarity with the venues. This assumption is supported by previous research on the impact of hosting the Olympics on medal counts.
+    
+\end{enumerate}
 
 \section{Notations and Definitions}
 
@@ -125,8 +131,8 @@ To put it lucidly, we added a column named "ID" which concatenated Name and Even
 The first problem that came to us is that team events may result in repeated count of medals for each member in the prediction. So we used a python script to make a list of events and added a column of "Team\_size" to fix the problem, naming it "Events.csv", which will be used as a dictionary of team size. Then we added "Gold", "Silver", "Bronze" columns to summerOly_athletes.csv, and marked medal counts using Excel formula with conditional statements, converting the string "Medal" into numbers which fits model training. After that, we used a python script to divide the raw medal count with team size to normalize the data.
 
 
-\subsubsection{Sport/Event Oriented Data Preprocessing}
-% City_NOC.csv
+\subsection{Current Method: Sport/Event Oriented Data Preprocessing}
+
 
 
 \section{Establishing the Model}
@@ -195,14 +201,95 @@ The results of this analysis demonstrate the critical importance of event partic
 \end{itemize}
 This analysis underscores the interplay between event participation and medal success, offering actionable insights for Olympic planning and preparation.
 
-\subsection{Subtask}
+\subsection{Subtask --- Identifying the Most Important Sports for Various Countries}
+
+This subtask aims to determine the most significant sports for different countries based on their historical performance in the Olympics. To achieve this, we develop a method to calculate the importance of each event and sport, both at the country level and globally. 
+
+\subsubsection{Notations and Definitions}
+Let us define the following notations for the analysis:
+\subsubsection{Notations and Definitions}
+
+To facilitate the analysis, we define the key notations in Table~\ref{tab:notations}:
+
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{@{}ll@{}}
+        \toprule
+        \textbf{Notation} & \textbf{Definition} \\ 
+        \midrule
+        $C_i$ & Country $i$, $i \in \{1, 2, \ldots, N\}$; $N$: total number of countries. \\
+        $E_j$ & Event $j$, $j \in \{1, 2, \ldots, M\}$; $M$: total number of events. \\
+        $S_k$ & Sport $k$, composed of related events $E_j$, \\
+             & $k \in \{1, 2, \ldots, L\}$; $L$: total number of sports. \\
+        $m_{i,j}$ & Medals won by country $C_i$ in event $E_j$ from 2012 to 2024. \\
+        $M_i$ & Total medals won by country $C_i$, \\
+             & $M_i = \sum_{j=1}^M m_{i,j}.$ \\
+        $w_{i,j}$ & Importance of event $E_j$ for country $C_i$, \\
+             & $w_{i,j} = \frac{m_{i,j}}{M_i}.$ \\
+        $W_j$ & Global importance of event $E_j$, \\
+             & $W_j = \sum_{i=1}^N w_{i,j}.$ \\
+        $W_k$ & Global importance of sport $S_k$, \\
+             & $W_k = \sum_{j \in S_k} W_j.$ \\
+        \bottomrule
+    \end{tabular}
+    \caption{Notations and their definitions for sports importance analysis.}
+    \label{tab:notations}
+\end{table}
+
+\subsubsection{Methodology}
+To answer the question of which sports are most important for various countries, we proceed with the following steps:
+
+\paragraph{Step 1}
+
+For each country $C_i$ and each event $E_j$, we compute the event importance value $w_{i,j}$ as follows:
+\[
+w_{i,j} = \frac{m_{i,j}}{M_i}.
+\]
+This ensures that the sum of importance values for all events for a given country satisfies $\sum_{j=1}^M w_{i,j} = 1$.
+
+\paragraph{Step 2}
+For each event $E_j$, we calculate its global importance value $W_j$ as the sum of its importance values across all countries:
+\[
+W_j = \sum_{i=1}^N w_{i,j}.
+\]
+This metric captures the relative importance of the event across all countries, regardless of individual country performance.
+
+\paragraph{Step 3}
+For each sport $S_k$, we compute its global importance $W_k$ by aggregating the global importance values $W_j$ of all events $E_j$ under the sport:
+\[
+W_k = \sum_{j \in S_k} W_j.
+\]
+This step provides an overall measure of the importance of each sport for all countries collectively.
+
+\newpage
+
+\begin{wrapfigure}{r}{8cm}  %这是图文混排的环境
+    \centering
+    \includegraphics[width=0.9\linewidth,height=5cm]{pics/sport_influence_whole.png}
+    \caption{Ranking of sports by global importance based on aggregated event importance values across all countries.}
+    \label{fig:sport_importance}
+\end{wrapfigure}
+
+
+
+\paragraph{Step 4}
+The sports are then ranked based on their global importance values $W_k$. A visualization of the rankings illustrates that athletics, boxing, and wrestling are the top three most important sports globally, where athletics has the abosolute highest(more than twice of the second place) importance value.
+
+\subsubsection{Results and Insights}
+The analysis reveals that the importance of sports varies significantly across countries. The ranking of sports based on global importance highlights sports such as athletics, swimming, and gymnastics as the most influential globally. These sports typically feature a larger number of events and offer more medal opportunities, which contributes to their higher global importance.
+
+\subsubsection{Discussion and Recommendations}
+\begin{itemize}
+    \item Countries with limited resources should focus on events with higher importance values $w_{i,j}$ for their specific contexts, as these events offer the best return on investment for medal performance.
+    \item Policies that encourage diversification in participation could help countries improve their standings in globally important sports.
+    \item Further analysis can include regional comparisons or investigate the temporal trends of sport importance over multiple Olympic cycles.
+\end{itemize}
+
 
 \subsection{Subtask}
-\section{Task2 --- }
 
-\section{Task3}
-
-\section{Task4 --- The Great Coach Effect: its identification and impact}
+\section{Task2 --- The Great Coach Effect: its identification and impact}
 
 The Great Coach Effect is a phenomenon where the presence of a highly skilled coach significantly improves the performance of athletes. Due to the fact that coaches are not bound to a specific country, they can have a significant impact on the medal counts of multiple nations. Identifying the Great Coach Effect and quantifying its impact on medal counts is crucial for predicting Olympic success.
 
@@ -286,7 +373,6 @@ We further polish the program used in the identification step to calculate the m
 
 This figure clearly shows the impact of the Great Coach Effect on different tiers of countries, highlighting the potential for significant performance improvements under the guidance of elite coaches. We can see that the positive and negative impact of the Great Coach Effect(namely, the moving in and out of great coaches) on absolute medal changes has remained constant among different tiers of countries, while its impact on relative medal changes decreases as the tier goes up. This is an expected phenomenon because countries with better overall power already do well in sports across a wide range of fields, so the arrival or departure of one specific coach won't have much effect relative to the total medal count. By quantifying the magnitude and percentage of the effect, we can better understand the strategic value of investing in high-caliber coaching talent and its implications for national Olympic success.
 
-
 \subsection{Exemplification}
 By analyzing the performance trends in specific sports, we identified notable cases where the transfer of a coach coincided with a sharp increase in performance of one country and a decline or stagnation for another, allowing for the cross-verification of our algorithms. Below are three exemplifications of the Great Coach Effect based on historical Olympic data and their correlations with our results.\
 
@@ -329,6 +415,14 @@ In the Quantification part, we represented that the Great Coach Effect has a con
 Therefore, we recommend that national Olympic committees prioritize recruiting and retaining top-tier coaches for tier 2 countries. Tier 1 countries usually have too tight a budget to afford the cost of coaches with great expertise, while it won't be really necessary for tier 3~5 countries to do so because of the low relative effect.
 
 To determine which three tier 2 countries can benefit the most from the Great Coach Effect, we use the python code from Quantification part and modifies it to find the 3 countries with the highest potential for performance improvement. 
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{pics/tier2_top10_absolute_gain.png}
+    \caption{Quantification of The Great Coach Effect}
+\end{figure}
+
+From the figure above, we recommend the top 3 countries with the highest potential for performance improvement: ISR (Israel), BRN (Bahrain), and VEN (Venezuela), with respective projected medal gain of 5.5, 3.9 and 3.9.
 
 \section{Sensitivity Analysis}
 

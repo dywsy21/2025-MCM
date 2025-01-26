@@ -368,6 +368,58 @@ def analyze_great_coach_effect_by_event(csv_path):
     
     return possible_increases, possible_decreases, pairs, avg_impacts
 
+def calculate_and_plot_tier2_gains():
+    df = pd.read_csv("data/generated_training_data/sport_oriented/Training_data_tier.csv")
+    df['TotalMedals'] = df['Gold']*3 + df['Silver']*2 + df['Bronze']
+
+    # Filter tier 2 countries
+    tier2 = df[df['Tier'] == 2].copy()
+
+    # Group by NOC and Year, sum total medals
+    grouped = tier2.groupby(['NOC', 'Year'])['TotalMedals'].sum().reset_index()
+
+    # Find earliest and latest year totals for each country
+    earliest_totals = grouped.groupby('NOC').first().reset_index()
+    latest_totals = grouped.groupby('NOC').last().reset_index()
+
+    # Calculate absolute & relative gains
+    results = []
+    for noc in earliest_totals['NOC'].unique():
+        earliest_val = earliest_totals[earliest_totals['NOC'] == noc]['TotalMedals'].values[0]
+        latest_val = latest_totals[latest_totals['NOC'] == noc]['TotalMedals'].values[0]
+        absolute_gain = latest_val - earliest_val
+        relative_gain = (absolute_gain / earliest_val * 100) if earliest_val else 0
+        results.append((noc, absolute_gain, relative_gain))
+
+    # Sort and pick top 10 by absolute gain
+    sorted_abs = sorted(results, key=lambda x: x[1], reverse=True)[:10]
+    # Sort and pick top 10 by relative gain
+    sorted_rel = sorted(results, key=lambda x: x[2], reverse=True)[:10]
+
+    # Plot top 10 absolute gains
+    noc_abs = [r[0] for r in sorted_abs]
+    abs_vals = [r[1] / 2 for r in sorted_abs]
+    plt.figure(figsize=(10, 5))
+    plt.bar(noc_abs, abs_vals, color='skyblue')
+    plt.title('Top 10 Tier 2 Countries by Absolute Medal Gain')
+    plt.ylabel('Absolute Gain')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.savefig('tier2_top10_absolute_gain.png', dpi=300)
+    plt.show()
+
+    # Plot top 10 relative gains
+    noc_rel = [r[0] for r in sorted_rel]
+    rel_vals = [r[2] for r in sorted_rel]
+    plt.figure(figsize=(10, 5))
+    plt.bar(noc_rel, rel_vals, color='orange')
+    plt.title('Top 10 Tier 2 Countries by Relative Medal Gain (%)')
+    plt.ylabel('Relative Gain (%)')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.savefig('tier2_top10_relative_gain.png', dpi=300)
+    plt.show()
+
 def main(min_granularity):
     csv_path = "data/generated_training_data/sport_oriented/Training_data_tier.csv"
     if min_granularity == 'sport':
@@ -377,5 +429,7 @@ def main(min_granularity):
 
 if __name__ == "__main__":
     # main(min_granularity='sport')
-    plot_tier_impacts_from_csv('tier_impacts_Sport.csv', 'Sport')
-
+    # plot_tier_impacts_from_csv('tier_impacts_Sport.csv', 'Sport')
+    
+    calculate_and_plot_tier2_gains()
+    
