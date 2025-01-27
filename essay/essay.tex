@@ -322,7 +322,7 @@ The tier-based regression modeling approach provides a structured and efficient 
 
 \subsection{Subtask 1 --- Predicting Medal Counts for the 2028 Los Angeles Olympics}
 
-We tested the established model to predict medal counts for the 2028 Los Angeles Olympics. The resulting medal table is as follows:
+We tested the established model to predict medal counts for the 2028 Los Angeles Olympics. The resulting medal table is as follows: (results rounded to one decimal place, and the prediction intervals attached are calculated at a 95\% confidence level)
 
 \begin{table}[htbp]
     \centering
@@ -380,10 +380,54 @@ We tested the established model to predict medal counts for the 2028 Los Angeles
 \end{table}
 
 %! TODO: WHICH COUNTRIES IMPROVED OR DECLINED?
+In terms of improvements or declines in medal counts, we define \textit{"improvement"} and \textit{"decline"} as follows (in order to separate them from normal fluctuations):
+
+\begin{itemize}
+    \item \textbf{Improvement:} If the predicted medal count for a country in 2028 is higher than its medal count from the previous Olympics more than a constant \textit{X} percent (\textbf{Condition 1}) or for every type of medal, the count doesn't decrease and at least one type of medal shows increase in count (\textbf{Condition 2}), we consider it an improvement.
+    \item \textbf{Decline:} If the predicted medal count for a country in 2028 is lower than its medal count from the previous Olympics more than a constant \textit{X} percent (\textbf{Condition 1}) or for every type of medal, the count doesn't increase and at least one type of medal shows decrease in count (\textbf{Condition 2}), we consider it a decline.
+\end{itemize}
+
+With \textit{X} set to 15\%, we identified the following countries that are expected to improve or decline in medal counts at the 2028 Los Angeles Olympics:
 
 
-
-
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        NOC & Change & Conditions Met \\
+        \hline
+        ARG & Imp & 1, 2 \\
+        AZE & Imp & 1, 2 \\
+        BEL & Imp & 1 \\
+        CHN & Imp & 2 \\
+        CUB & Imp & 1 \\
+        DEN & Imp & 1, 2 \\
+        ETH & Imp & 1 \\
+        GBR & Imp & 1, 2 \\
+        GEO & Imp & 1 \\
+        INA & Imp & 1 \\
+        JAM & Imp & 1, 2 \\
+        JPN & Imp & 1, 2 \\
+        KAZ & Imp & 1, 2 \\
+        LTU & Imp & 1 \\
+        SUI & Imp & 1, 2 \\
+        SVK & Imp & 1 \\
+        UKR & Imp & 1, 2 \\
+        USA & Imp & 2 \\
+        HUN & Dec & 1 \\
+        IND & Dec & 1 \\
+        KOR & Dec & 1 \\
+        MAR & Dec & 1 \\
+        NOR & Dec & 1 \\
+        POR & Dec & 1 \\
+        ROU & Dec & 1 \\
+        TUR & Dec & 2 \\
+        UZB & Dec & 1 \\
+        \hline
+    \end{tabular}
+    \caption{Countries with Predicted Changes in Medal Counts for the 2028 Los Angeles Olympics}
+    \label{tab:medal_changes}
+\end{table}
 
 
 
