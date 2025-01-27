@@ -53,6 +53,9 @@
 \usepackage{lipsum}
 \usepackage{wrapfig} % 图文绕排
 \usepackage{enumitem} % 列表间距
+\usepackage{caption}
+\captionsetup[figure]{justification=centering}
+
 \setenumerate[1]{itemsep=1pt,partopsep=0pt,parsep=\parskip,topsep=2pt}
 \setitemize[1]{itemsep=1pt,partopsep=0pt,parsep=\parskip,topsep=2pt}
 
@@ -103,10 +106,11 @@ Despite significant progress, predicting Olympic medals remains a complex task d
 Due to the limitation of usable dataset, we cannot explore many of the aforementioned factors in detail. Instead, we focus on developing a model that predicts Olympic medal counts based on historical data and sport-specific information. Our model has the following features:
 
 \begin{enumerate}
+    \item A tier-based modeling strategy that classifies countries into five tiers based on their historical performance, allowing for more accurate predictions for countries with similar overall strengths.
     \item A two-stage model that first predicts the number of medals won by each country in each sport, then aggregates these predictions to estimate the total medal count.
-    \item Trains and evaluates multiple models with different underlying algorithms on the same dataset, and use the best-performing model for prediction.
-    \item Separates different countries into multiple clusters based on their historical medal counts (in which their comprehensive national power is also embodied \cite{7}), allowing for more accurate predictions for countries with similar overall strengths.
-    \item A sensitivity analysis that assesses the impact of different factors on medal counts and identifies key drivers of success. 
+    \item Trains and evaluates multiple models on the same dataset, and uses the best-performing model for prediction.
+    \item Quantifies the uncertainty in model predictions using Gaussian Probability Interval Prediction, providing upper and lower bounds for the estimated medal counts.
+    \item A sensitivity analysis that assesses the impact of different factors on medal counts and identifies key drivers of success.
 \end{enumerate}
 
 \section{Assumptions and Justifications} 
@@ -132,12 +136,14 @@ Due to the limitation of usable dataset, we cannot explore many of the aforement
         $S_k$ & Sport $k$, composed of related events $E_j$, \\
              & $k \in \{1, 2, \ldots, L\}$; $L$: total number of sports. \\
         $m_{i,j}$ & Medals won by country $C_i$ in event $E_j$ from 2012 to 2024. \\
-        $M_i$ & Total medals won by country $C_i$, $M_i = \sum_{j=1}^M m_{i,j}.$ \\
-        $w_{i,j}$ & Importance of event $E_j$ for country $C_i$, $w_{i,j} = \frac{m_{i,j}}{M_i}.$ \\
-        $W_j$ & Global importance of event $E_j$, $W_j = \sum_{i=1}^N w_{i,j}.$ \\
-        $I_k$ & Global importance of sport $S_k$,$I_k = \sum_{j \in S_k} W_j.$ \\
-        $\bar{x}$ & Sample mean of variable $x$. \\
-        $S_{xx}$ & Sum of squared deviations of the variable $x$. \\
+        $M_i$ & Total medals won by country $C_i$, \\
+             & $M_i = \sum_{j=1}^M m_{i,j}.$ \\
+        $w_{i,j}$ & Importance of event $E_j$ for country $C_i$, \\
+             & $w_{i,j} = \frac{m_{i,j}}{M_i}.$ \\
+        $W_j$ & Global importance of event $E_j$, \\
+             & $W_j = \sum_{i=1}^N w_{i,j}.$ \\
+        $I_k$ & Global importance of sport $S_k$, \\
+             & $I_k = \sum_{j \in S_k} W_j.$ \\
         \bottomrule
     \end{tabular}
 
@@ -182,7 +188,7 @@ In this section, we outline the process of developing a regression-based model t
 
 Thanks to the nature of this problem being inherently correlated to chronological projection and the provided data being complete with regard of countries, sports, events and individual athletes, we adopt time series analysis and regression models to predict medal counts for the 2028 Los Angeles Olympics.
 
-To specify, we adopt a tier-based modeling strategy, aligning with the classification to be established in Task 1 - Subtask 3. Countries are grouped into five tiers based on their historical performance (Tier 1 - Tier 5, from the worst ones to the best ones). Separate regression models are trained for each tier to capture the unique dynamics of countries within the same tier. The methodology involves the following steps:
+To specify, we adopt a tier-based modeling strategy, aligning with the classification to be established in Task 1 - Subtask 3. Countries are grouped into five tiers based on their historical performance. Separate regression models are trained for each tier to capture the unique dynamics of countries within the same tier. The methodology involves the following steps:
 
 \subsection{Data Loading \& Transformation}
 
@@ -205,7 +211,7 @@ Features are selected and optimized using metaheuristic algorithm to determine t
     \item A value of 0 indicates the exclusion of a feature.
     \item A value of 1 indicates the inclusion of a feature.
 \end{itemize}
-Regression model is trained iteratively with different feature combinations, and the performance of each combination is evaluated. 
+A random forest model is trained iteratively with different feature combinations, and the performance of each combination is evaluated. 
 
 
 \subsection{Data Splitting}
@@ -214,13 +220,12 @@ Given the relatively small dataset size, we adopt k-fold cross-validation to spl
 
 \subsection{Model Training}
 
-We train several regression models on the training set, including: LSBoost, XGBoost, Multivariate Linear Regression, Gaussian Regression, Decision Tree and Random Forest.
-
-Each model is trained using the training set and evaluated on the validation set to determine the optimal hyperparameters.
+We train several regression models on the training set, including:LSBoost,XGBoost,
+Multivariate Linear Regression,Gaussian Regression,Decision Tree,Random Forest. Each model is trained using the training set and evaluated on the validation set to determine the optimal hyperparameters.
 
 \subsection{Model Evaluation}
 
-The performance of each model is assessed on the test set using the following metrics: Mean Absolute Error (MAE),Mean Absolute Percentage Error (MAPE), Mean Squared Error (MSE), Root Mean Squared Error (RMSE), Coefficient of Determination ($R^2$)
+The performance of each model is assessed on the test set using the following metrics:Mean Absolute Error (MAE),Mean Absolute Percentage Error (MAPE),Mean Squared Error (MSE),Root Mean Squared Error (RMSE),Coefficient of Determination ($R^2$)
 
 The evaluation result is stated as below. From the result we can see that each medal type can have very different best models. This phenomenon also vouches for the veracity of our tier-based modeling strategy.
 
@@ -376,7 +381,7 @@ As an example, SSA algorithm demonstrated the best results for optimizing the Ti
 \end{wrapfigure}
 \subsection{Uncertainty Quantification and Prediction Intervals}
 
-To quantify the uncertainty in model predictions, we use Gaussian Probability Interval Prediction. This method calculates prediction intervals, providing upper and lower bounds for the estimated medal counts. The intervals represent the range within which the actual medal counts are expected to fall within at a specified confidence level.
+To quantify the uncertainty in model predictions, we use Gaussian Probability Interval Prediction. This method calculates prediction intervals, providing upper and lower bounds for the estimated medal counts. The intervals represent the range within which the actual medal counts are expected to fall with a specified confidence level.
 % \begin{figure}[htbp]
 %     \centering
 %     \includegraphics[width=3.33in, keepaspectratio]{pics/Gaussian Probability Interval Prediction.eps}  
@@ -573,7 +578,7 @@ To better understand the relationship between event count and medal count, we em
     %! TODO: Add the clustering result figure here
     
     
-    Once the countries were assigned to tiers, we conducted separate correlation analyses within each tier. Spearman's correlation coefficient was used to measure the strength and direction of the relationship, as it is well-suited for non-parametric data and can handle potential non-linearities. The results are shown in \textit{Table~\ref{tab1}}.
+    Once the countries were assigned to tiers, we conducted separate correlation analyses within each tier. Spearman's correlation coefficient was used to measure the strength and direction of the relationship, as it is well-suited for non-parametric data and can handle potential non-linearities. The results are shown in following Table~\ref{tab1}.
 
 
 
@@ -609,6 +614,7 @@ The analysis indicates that for most tiers (1, 2, 4, and 5), there is a statisti
 
 % This subtask aims to determine the most significant sports for different countries based on their historical performance in the Olympics. To achieve this, we develop a method to calculate the importance of each event and sport, both at the country level and globally. 
 
+
 \subsubsection{Methodology}
 To answer the question of which sports are most important for various countries, we proceed with the following steps:
 
@@ -628,7 +634,7 @@ The sports are then ranked based on their global importance values $I_k$. A visu
 
 \begin{wrapfigure}{r}{8cm}  %这是图文混排的环境
     \centering
-    \includegraphics[width=0.9\linewidth,height=8cm]{pics/sport_influence_whole.png}
+    \includegraphics[width=0.9\linewidth,height=9cm]{pics/sport_influence_whole.png}
     \caption{Ranking of sports by global importance based on aggregated event importance values across all countries.}
     \label{fig:sport_importance}
 \end{wrapfigure}
@@ -666,7 +672,7 @@ Events are categorized into three types:
     \item \textbf{Normal Events:} All remaining events that do not fall into the above categories.
 \end{itemize}
 
-\paragraph{\textbf{\underline{Analysis of Event Performance}}}
+\paragraph{Analysis of Event Performance}
 
 For each event type:
 \begin{itemize}
@@ -677,7 +683,7 @@ For each event type:
     \item Determine if $Z > 1.96$, indicating statistical significance.
 \end{itemize}
 
-\paragraph{\textbf{\underline{Application to Multiple Host Countries}}}
+\paragraph{Application to Multiple Host Countries}
 
 Applied the algorithm above to various host countries. Z-scores for new, dominant, and normal events are calculated for each host country to identify patterns in performance.
 
@@ -761,7 +767,7 @@ These two aspects, especially the percentage of medal change to the total medal 
 
 \subsubsection{Implementation}
 
-We further optimize the program used in the identification step to calculate the magnitude and percentage of the Great Coach Effect, adding an additional 0.23k LOC. The program categorizes countries based on their tier value, calculates the average increase/decrease in medal count, and computes the average percentage of this change relative to the total medal count of the country. These metrics provide a comprehensive view of the Great Coach Effect's potential impact on different countries and sports.
+We further polish the program used in the identification step to calculate the magnitude and percentage of the Great Coach Effect, adding an additional 0.23k LOC. The program categorizes countries based on their tier value, calculates the average increase/decrease in medal count, and computes the average percentage of this change relative to the total medal count of the country. These metrics provide a comprehensive view of the Great Coach Effect's potential impact on different countries and sports.
 
 \begin{figure}[htbp]
     \centering
@@ -828,9 +834,9 @@ Looking at Lang Ping's coaching career spanning over 20 years, we can also disco
 
 \subsection{Recommendation}
 
-In the Quantification part, we demonstrated that the Great Coach Effect has a consistent impact on the absolute medal count changes across different tiers of countries, while its impact on relative medal count changes decreases as the tier goes up. This suggests that investing in elite coaching talent can yield substantial performance improvements, particularly for countries with lower historical medal counts(represented by low tier).
+In the Quantification part, we represented that the Great Coach Effect has a consistent impact on the absolute medal count changes across different tiers of countries, while its impact on relative medal count changes decreases as the tier goes up. This suggests that investing in elite coaching talent can yield substantial performance improvements, particularly for countries with lower historical medal counts(represented by low tier).
 
-Therefore, we recommend that national Olympic committees prioritize recruiting and retaining top-tier coaches for tier 2 countries. Tier 1 countries usually have a budget too constained to afford the cost of coaches with great expertise, while it won't be really necessary for tier 3-5 countries to do so because of the low relative effect.
+Therefore, we recommend that national Olympic committees prioritize recruiting and retaining top-tier coaches for tier 2 countries. Tier 1 countries usually have too tight a budget to afford the cost of coaches with great expertise, while it won't be really necessary for tier 3~5 countries to do so because of the low relative effect.
 
 To determine which three tier 2 countries can benefit the most from the Great Coach Effect, we use the python code from Quantification part and modifies it to find the 3 countries with the highest potential for performance improvement. 
 
@@ -890,7 +896,7 @@ Through our initial attempt at using individual athletes as the smallest granula
 
 In our initial attempt at using individual athletes as the smallest granularity, we found that the model's prediction performance was significantly affected by the high randomness and variability in individual athlete performance, making it defective.
 
-This also reflects the real-world scenario, where allocating training resources to individual athletes is challenging due to the high uncertainty and variability in individual performance. Over-investing in a single project or athlete does not necessarily guarantee a return on investment, but in the meantime, taking part in more sports, as shown in the model(effective for tier 1, 2, 4 and 5 countries), can steadily increase the chances of winning medals.
+This also reflects the real-world scenario, where allocating training resources to individual athletes is challenging due to the high uncertainty and variability in individual performance. Over-investing in a single project or athlete does not necessarily guarantee a return on investment, but in the meantime, taking part in more sports, as shown in the model, can steadily increase the chances of winning medals.
 
 Therefore, we recommend that national Olympic committees focus on diversifying their participation in various sports to maximize their chances of winning medals. This strategy can help mitigate the risks associated with investing heavily in individual athletes and improve the overall performance of the country in the Olympics.
 
@@ -927,6 +933,7 @@ We compare each tested value against a baseline model where\texttt{n\_estimators
 We can see from the resulting figure that the change in the number of estimators has a minor impact on the results overall, with the largest impact of them being only 7.5\%, and most of them around 2.5\%. This suggests that the model is relatively stable with respect to this hyperparameter, and the prediction performance is not significantly affected by the model parameters within the tested range.
 
 \section{Conclusion}
+In our work, we developed a comprehensive model to analyze and predict Olympic medal counts, mainly focusing on historical performance, host country, and elite coaching. We quantified the "Great Coach Effect" and demonstrated its significant influence on medal counts. Our analysis revealed that investing in top-tier coaching talent can yield substantial performance improvements. Additionally, we examined the phenomenon of host countries experiencing a peak in medal counts during the hosting year, using Z-score analysis to quantify this effect. Our findings may provide valuable insights for national Olympic committees to strategically allocate resources and enhance their chances of success in future Olympic Games.
 
 
 
