@@ -53,9 +53,6 @@
 \usepackage{lipsum}
 \usepackage{wrapfig} % 图文绕排
 \usepackage{enumitem} % 列表间距
-\usepackage{caption}
-\captionsetup[figure]{justification=centering}
-
 \setenumerate[1]{itemsep=1pt,partopsep=0pt,parsep=\parskip,topsep=2pt}
 \setitemize[1]{itemsep=1pt,partopsep=0pt,parsep=\parskip,topsep=2pt}
 
@@ -106,11 +103,10 @@ Despite significant progress, predicting Olympic medals remains a complex task d
 Due to the limitation of usable dataset, we cannot explore many of the aforementioned factors in detail. Instead, we focus on developing a model that predicts Olympic medal counts based on historical data and sport-specific information. Our model has the following features:
 
 \begin{enumerate}
-    \item A tier-based modeling strategy that classifies countries into five tiers based on their historical performance, allowing for more accurate predictions for countries with similar overall strengths.
     \item A two-stage model that first predicts the number of medals won by each country in each sport, then aggregates these predictions to estimate the total medal count.
-    \item Trains and evaluates multiple models on the same dataset, and uses the best-performing model for prediction.
-    \item Quantifies the uncertainty in model predictions using Gaussian Probability Interval Prediction, providing upper and lower bounds for the estimated medal counts.
-    \item A sensitivity analysis that assesses the impact of different factors on medal counts and identifies key drivers of success.
+    \item Trains and evaluates multiple models with different underlying algorithms on the same dataset, and use the best-performing model for prediction.
+    \item Separates different countries into multiple clusters based on their historical medal counts (in which their comprehensive national power is also embodied \cite{7}), allowing for more accurate predictions for countries with similar overall strengths.
+    \item A sensitivity analysis that assesses the impact of different factors on medal counts and identifies key drivers of success. 
 \end{enumerate}
 
 \section{Assumptions and Justifications} 
@@ -136,14 +132,10 @@ Due to the limitation of usable dataset, we cannot explore many of the aforement
         $S_k$ & Sport $k$, composed of related events $E_j$, \\
              & $k \in \{1, 2, \ldots, L\}$; $L$: total number of sports. \\
         $m_{i,j}$ & Medals won by country $C_i$ in event $E_j$ from 2012 to 2024. \\
-        $M_i$ & Total medals won by country $C_i$, \\
-             & $M_i = \sum_{j=1}^M m_{i,j}.$ \\
-        $w_{i,j}$ & Importance of event $E_j$ for country $C_i$, \\
-             & $w_{i,j} = \frac{m_{i,j}}{M_i}.$ \\
-        $W_j$ & Global importance of event $E_j$, \\
-             & $W_j = \sum_{i=1}^N w_{i,j}.$ \\
-        $I_k$ & Global importance of sport $S_k$, \\
-             & $I_k = \sum_{j \in S_k} W_j.$ \\
+        $M_i$ & Total medals won by country $C_i$, $M_i = \sum_{j=1}^M m_{i,j}.$ \\
+        $w_{i,j}$ & Importance of event $E_j$ for country $C_i$, $w_{i,j} = \frac{m_{i,j}}{M_i}.$ \\
+        $W_j$ & Global importance of event $E_j$, $W_j = \sum_{i=1}^N w_{i,j}.$ \\
+        $I_k$ & Global importance of sport $S_k$,$I_k = \sum_{j \in S_k} W_j.$ \\
         \bottomrule
     \end{tabular}
 
@@ -310,7 +302,7 @@ The best-performing model is selected using the TOPSIS (Technique for Order Pref
     \item Smaller values of MAE, MAPE, MSE, and RMSE.
     \item Larger values of $R^2$ (closer to 1 indicates better fit).
 \end{itemize}
-Among the Tier 1 Gold medal prediction models, for instance, XGBoost exhibited the best performance after evaluation.
+Among the Tier 1 Gold medal prediction models, XGBoost exhibited the best performance after evaluation.
 
 \subsection{Model Optimization}
 
@@ -633,7 +625,7 @@ The sports are then ranked based on their global importance values $I_k$. A visu
 
 \begin{wrapfigure}{r}{8cm}  %这是图文混排的环境
     \centering
-    \includegraphics[width=0.9\linewidth,height=9cm]{pics/sport_influence_whole.png}
+    \includegraphics[width=0.9\linewidth,height=8cm]{pics/sport_influence_whole.png}
     \caption{Ranking of sports by global importance based on aggregated event importance values across all countries.}
     \label{fig:sport_importance}
 \end{wrapfigure}
