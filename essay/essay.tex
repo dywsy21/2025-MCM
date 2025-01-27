@@ -216,9 +216,8 @@ Given the relatively small dataset size, we adopt k-fold cross-validation to spl
 
 \subsection{Model Training}
 
-We train several regression models on the training set, including:LSBoost,XGBoost,Multivariate Linear Regression,Gaussian Regression,Decision Tree,Random Forest.
-
-Each model is trained using the training set and evaluated on the validation set to determine the optimal hyperparameters.
+We train several regression models on the training set, including:LSBoost,XGBoost,
+Multivariate Linear Regression,Gaussian Regression,Decision Tree,Random Forest. Each model is trained using the training set and evaluated on the validation set to determine the optimal hyperparameters.
 
 \subsection{Model Evaluation}
 
@@ -610,7 +609,6 @@ The analysis indicates that for most tiers (1, 2, 4, and 5), there is a statisti
 
 % This subtask aims to determine the most significant sports for different countries based on their historical performance in the Olympics. To achieve this, we develop a method to calculate the importance of each event and sport, both at the country level and globally. 
 
-\subsubsection{Notations and Definitions}
 
 \subsubsection{Methodology}
 To answer the question of which sports are most important for various countries, we proceed with the following steps:
@@ -625,17 +623,24 @@ For each event $E_j$, we calculate its global importance value $W_j = \sum_{i=1}
 \paragraph{Step 3}
 For each sport $S_k$, we compute its global importance $I_k = \sum_{j \in S_k} W_j$.It is completed through aggregating the global importance values $W_j$ of all events $E_j$ under the sport, providing an overall measure of the importance of each sport for all countries collectively.
 
+\paragraph{Step 4}
+The sports are then ranked based on their global importance values $I_k$. A visualization of the rankings illustrates that athletics, boxing, and wrestling are the top three most important sports globally, where athletics has the abosolute highest(more than twice of the second place) importance value.
+
+
 \begin{wrapfigure}{r}{8cm}  %这是图文混排的环境
     \centering
-    \includegraphics[width=0.9\linewidth,height=10cm]{pics/sport_influence_whole.png}
+    \includegraphics[width=0.9\linewidth,height=9cm]{pics/sport_influence_whole.png}
     \caption{Ranking of sports by global importance based on aggregated event importance values across all countries.}
     \label{fig:sport_importance}
 \end{wrapfigure}
+% \newpage
+% \begin{wrapfigure}[12]{r}{0.5\textwidth} % Adjusted height and width
+%     \centering
+%     \includegraphics[width=0.48\textwidth]{pics/sport_influence_whole.png} % Reduced width for better fit
+%     \caption{Ranking of sports by global importance based on aggregated event importance values across all countries.}
+%     \label{fig:sport_importance}
+% \end{wrapfigure}
 
-
-
-\paragraph{Step 4}
-The sports are then ranked based on their global importance values $I_k$. A visualization of the rankings illustrates that athletics, boxing, and wrestling are the top three most important sports globally, where athletics has the abosolute highest(more than twice of the second place) importance value.
 
 \subsubsection{Results and Insights}
 The analysis reveals that the importance of sports varies significantly across countries. The ranking of sports based on global importance highlights sports such as athletics, swimming, and gymnastics as the most influential globally. These sports typically feature a larger number of events and offer more medal opportunities, which contributes to their higher global importance.
