@@ -179,3 +179,52 @@ def prepare_prediction_features(df, target_year, n_matches):
     features = features.fillna(0)
     
     return pd.DataFrame(features)
+
+def plot_sensitivity_analysis(csv_path='sensitivity_analysis_results.csv'):
+    """
+    Create an elegant visualization of sensitivity analysis results.
+    """
+    import matplotlib.pyplot as plt
+    import pandas as pd
+    import seaborn as sns
+
+    # Read the results
+    df = pd.read_csv(csv_path)
+
+    # Set style
+    sns.set_style('whitegrid')
+    sns.set_palette("husl")
+
+    # Create figure
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    # Create scatter plot
+    scatter = ax.scatter(
+        df['Inner_param_change_proportion'],
+        df['Result_change_proportion'],
+        c=df['Result_change_proportion'],
+        cmap='viridis',
+        s=100,
+        alpha=0.7,
+        edgecolors='w',
+        linewidth=0.5
+    )
+
+    # Add color bar
+    cbar = plt.colorbar(scatter)
+    cbar.set_label('Result Change Proportion')
+
+    # Add labels and title
+    ax.set_xlabel('Inner Parameter Change Proportion')
+    ax.set_ylabel('Result Change Proportion')
+    ax.set_title('Sensitivity Analysis Results')
+
+    # Set y-axis range
+    ax.set_ylim(-0.1, 0.1)
+
+    # Add grid
+    ax.grid(True, linestyle='--', alpha=0.6)
+
+    # Show plot
+    plt.tight_layout()
+    plt.show()

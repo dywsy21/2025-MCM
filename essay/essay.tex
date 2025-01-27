@@ -52,6 +52,10 @@
 \usepackage{indentfirst}  %首行缩进，注释掉，首行就不再缩进。
 \usepackage{lipsum}
 \usepackage{wrapfig} % 图文绕排
+\usepackage{enumitem} % 列表间距
+\setenumerate[1]{itemsep=1pt,partopsep=0pt,parsep=\parskip,topsep=2pt}
+\setitemize[1]{itemsep=1pt,partopsep=0pt,parsep=\parskip,topsep=2pt}
+
 \title{Mathematical Model for Prediction of Olympic Medal Counts}
 \author{\small \href{https://www.latexstudio.net/}
   {\includegraphics[width=7cm]{mcmthesis-logo}}}
@@ -107,14 +111,39 @@ Due to the limitation of usable dataset, we cannot explore many of the aforement
 \section{Assumptions and Justifications} 
 
 \begin{enumerate}
-    \item \textbf{Homogeneity of Athletes}: We assume that athletes within the same country are homogeneous in terms of training, resources, and performance. This assumption simplifies the model by treating all athletes from a country as a single entity, ignoring individual variations.
-    \item \textbf{Event Independence}: We assume that the outcomes of different events are independent of each other. This assumption allows us to model each event separately without considering potential correlations between them.
-    \item \textbf{Historical Consistency}: We assume that historical trends in medal counts are consistent with future performance. This assumption underlies our prediction model, which relies on past data to forecast future outcomes.
-    \item \textbf{Host Country Advantage}: We assume that host countries have a competitive advantage due to factors such as home crowd support and familiarity with the venues. This assumption is supported by previous research on the impact of hosting the Olympics on medal counts.
-    
+    \item \textbf{Historical Consistency}: We assume that historical trends in medal counts are consistent with future performance. This assumption underlies our prediction model, which relies on past data to forecast future outcomes. This assumption is at the heart of our model and is supported by previous research on the predictability of Olympic medal counts \cite{4,5,7}.
+    \item \textbf{Comprehensive national power's great impact on medal count}: It's been widely acknowledged that a country's comprehensive national power, including economic, political, and social factors, has a significant impact on its Olympic performance \cite{1,2,3,7}. Because the provided dataset doesn't include the detailed information of these factors like GDP, we manually categorizes countries into different tiers based on their historical medal counts, which is a good proxy for their comprehensive national power. For more detail, see Data Preprocessing part.
+    \item \textbf{Host Country Advantage}: We assume that host countries have a competitive advantage due to factors such as home crowd support and familiarity with the venues.
+    \item \textbf{Time Proximity}: We assume that only the recent Olympic data is relevant for predicting future medal counts. This assumption is based on the idea that recent performance trends and current athlete conditions are more indicative of future outcomes than older data, and at the same time, only the most recent data can embody the current comprehensive power of countries. Therefore, our model primarily focuses on the last few Olympic Games to ensure the predictions are based on the most relevant and up-to-date information.
+    \item \textbf{Sport as minimal granularity}: We assume that using sport as the minimal granularity of data is the best for predicting medal counts, namely, we predict the medal outcome of each sport and sum them up to obtain the projected medal count for each country. This is justified by our trial-and-error process, which found that using event or individual athlete as the minimal granularity of data leads to overfitting and poor generalization.  Granularity too small leads to higher randomness and fewer samples for each unit, and neither of them are beneficial for the accurate prediction of medal counts in the next Olympic Games. Therefore, we use sport as the minimal granularity of data in our model.
 \end{enumerate}
 
 \section{Notations and Definitions}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{ccc}
+        \toprule
+        \textbf{Notation} & \textbf{Definition} \\ 
+        \midrule
+        $C_i$ & Country $i$, $i \in \{1, 2, \ldots, N\}$; $N$: total number of countries. \\
+        $E_j$ & Event $j$, $j \in \{1, 2, \ldots, M\}$; $M$: total number of events. \\
+        $S_k$ & Sport $k$, composed of related events $E_j$, \\
+             & $k \in \{1, 2, \ldots, L\}$; $L$: total number of sports. \\
+        $m_{i,j}$ & Medals won by country $C_i$ in event $E_j$ from 2012 to 2024. \\
+        $M_i$ & Total medals won by country $C_i$, \\
+             & $M_i = \sum_{j=1}^M m_{i,j}.$ \\
+        $w_{i,j}$ & Importance of event $E_j$ for country $C_i$, \\
+             & $w_{i,j} = \frac{m_{i,j}}{M_i}.$ \\
+        $W_j$ & Global importance of event $E_j$, \\
+             & $W_j = \sum_{i=1}^N w_{i,j}.$ \\
+        $I_k$ & Global importance of sport $S_k$, \\
+             & $I_k = \sum_{j \in S_k} W_j.$ \\
+        \bottomrule
+    \end{tabular}
+
+    \label{tab:notations}
+\end{table}
 
 
 \section{Data Preprocessing}
@@ -150,7 +179,7 @@ Subsequently, we developed a Python script to calculate the year in which each c
 
 \section{Establishing the Model}
 
-In this section, we outline the process of developing a regression-based model to predict medal counts (Gold, Silver and Bronze medals) for each country in the Los Angeles 2028 Summer Olympics. Our methodology accounts for historical performance, and hosting effects. The proposed approach includes estimates of uncertainty, prediction intervals, and measures of model performance. Additionally, we assess potential improvements or declines in medal counts for individual countries.
+In this section, we outline the process of developing a regression-based model to predict medal counts (Gold, Silver and Bronze medals) for each country in the Los Angeles 2028 Summer Olympics. Our methodology accounts for historical performance, and hosting effects. The proposed approach includes estimates of uncertainty, prediction intervals, and measures of model performance.
 
 Thanks to the nature of this problem being inherently correlated to chronological projection and the provided data being complete with regard of countries, sports, events and individual athletes, we adopt time series analysis and regression models to predict medal counts for the 2028 Los Angeles Olympics.
 
@@ -186,64 +215,89 @@ Given the relatively small dataset size, we adopt k-fold cross-validation to spl
 
 \subsection{Model Training}
 
-We train several regression models on the training set, including:
-\begin{itemize}
-    \item LSBoost
-    \item XGBoost
-    \item Multivariate Linear Regression
-    \item Gaussian Regression
-    \item Decision Tree
-    \item Random Forest
-\end{itemize}
+We train several regression models on the training set, including:LSBoost,XGBoost,Multivariate Linear Regression,Gaussian Regression,Decision Tree,Random Forest.
 
 Each model is trained using the training set and evaluated on the validation set to determine the optimal hyperparameters.
 
 \subsection{Model Evaluation}
 
-The performance of each model is assessed on the test set using the following metrics:
-\begin{itemize}
-    \item Mean Absolute Error (MAE)
-    \item Mean Absolute Percentage Error (MAPE)
-    \item Mean Squared Error (MSE)
-    \item Root Mean Squared Error (RMSE)
-    \item Coefficient of Determination ($R^2$)
-\end{itemize}
+The performance of each model is assessed on the test set using the following metrics:Mean Absolute Error (MAE),Mean Absolute Percentage Error (MAPE),Mean Squared Error (MSE),Root Mean Squared Error (RMSE),Coefficient of Determination ($R^2$)
 
 The evaluation result is stated as below. From the result we can see that each medal type can have very different best models. This phenomenon also vouches for the veracity of our tier-based modeling strategy.
 
-\begin{lstlisting}
-    RandomForest - Bronze:
-    Prediction range: 2.14 to 7.84
-    Mean prediction: 4.43
-    Actual range: 2.00 to 9.00
-    Actual mean: 4.29
-    MSE: 11.1018
-    MAE: 2.4743
-    95% Prediction Interval: ±6.52
+%! TODO: insert the figure here
+% \begin{figure}[htbp]
+%     \centering
+%     % First row
+%     \begin{minipage}[t]{0.48\textwidth}
+%         \centering
+%         \includegraphics[width=2.2in, keepaspectratio]{pics/multi-regression-compare.eps}
+%         \label{fig:performance1}
+%     \end{minipage}
+%     \hfill
+
+%     \begin{minipage}[t]{0.48\textwidth}
+%         \centering
+%         \includegraphics[width=2.2in, keepaspectratio]{pics/multi-regression-compare-5.eps}
+%         \label{fig:performance3}
+%     \end{minipage}
     
-    GradientBoosting - Silver:
-    Prediction range: 0.96 to 7.34
-    Mean prediction: 4.39
-    Actual range: 0.00 to 8.00
-    Actual mean: 3.14
-    MSE: 7.3283
-    MAE: 2.0619
-    95% Prediction Interval: ±4.71
+%     \vspace{0.4cm} % Space between rows
     
-    XGBoost - Gold:
-    Prediction range: 1.01 to 6.13
-    Mean prediction: 3.15
-    Actual range: 0.00 to 4.00
-    Actual mean: 2.86
-    MSE: 3.4256
-    MAE: 1.6301
-    95% Prediction Interval: ±3.58
+%     % Second row
+%     \begin{minipage}[t]{0.48\textwidth}
+%         \centering
+%         \includegraphics[width=2.2in, keepaspectratio]{pics/multi-regression-compare-3.eps}
+%         \label{fig:performance4}
+%     \end{minipage}
+%     \hfill
+%     \begin{minipage}[t]{0.48\textwidth}
+%         \centering
+%         \includegraphics[width=2.2in, keepaspectratio]{pics/multi-regression-compare-2.eps}
+%         \label{fig:performance2}
+%     \end{minipage}
     
-    Best model for Bronze (MAE=2.4743): RandomForest
-    Best model for Silver (MAE=2.0619): GradientBoosting
-    Best model for Gold (MAE=1.6301): XGBoost
-\end{lstlisting}
+%     \caption{Performance comparison of different regression models for predicting Tier 1 Gold medal prediction model.}
+%     \label{fig:model_comparison}
+% \end{figure}
+\begin{figure}[!htbp]
+    \centering
+    % First row
+    \begin{minipage}[t]{0.58\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, keepaspectratio]{pics/multi-regression-compare-3.eps}
+        % \caption{(a)} % Subfigure label
+        % \label{fig:performance1}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, keepaspectratio]{pics/multi-regression-compare-5.eps}
+        % \caption{(b)} % Subfigure label
+        % \label{fig:performance3}
+    \end{minipage}
     
+    \vspace{0.2cm} % Space between rows
+
+    % Second row
+    \begin{minipage}[t]{0.52\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, keepaspectratio]{pics/multi-regression-compare.eps}
+        % \caption{(c)} % Subfigure label
+        % \label{fig:performance4}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.44\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, keepaspectratio]{pics/multi-regression-compare-2.eps}
+        % \caption{(d)} % Subfigure label
+        % \label{fig:performance2}
+    \end{minipage}
+    
+    \caption{Performance comparison of different regression models for predicting Tier 1 Gold medal prediction model. Subfigures illustrate different comparisons across models.}
+    \label{fig:model_comparison}
+\end{figure}
+
 
 \subsection{Model Selection}
 
@@ -252,7 +306,7 @@ The best-performing model is selected using the TOPSIS (Technique for Order Pref
     \item Smaller values of MAE, MAPE, MSE, and RMSE.
     \item Larger values of $R^2$ (closer to 1 indicates better fit).
 \end{itemize}
-In the Tier 1 Gold medal prediction model, XGBoost exhibited the best performance after evaluation.
+Among the Tier 1 Gold medal prediction models, XGBoost exhibited the best performance after evaluation.
 
 \subsection{Model Optimization}
 
@@ -304,7 +358,9 @@ As an example, SSA algorithm demonstrated the best results for optimizing the Ti
         \label{fig:image6}
     \end{minipage}
     
-    \caption{Six smaller EPS images arranged in two rows and three columns, resized to fit the page.}
+    \caption{Density plot and result of training set, validation set, and test set for Tier 1 Gold medal prediction model.}
+
+    
     \label{fig:smaller_eps_images}
 \end{figure}
 
@@ -318,6 +374,13 @@ To quantify the uncertainty in model predictions, we use Gaussian Probability In
     \centering
     \includegraphics[width=3.33in, keepaspectratio]{pics/Gaussian Probability Interval Prediction.eps}  
 \end{figure}
+% \begin{wrapfigure}{r}{8cm}  %这是图文混排的环境
+%     \centering
+%     % \includegraphics[width=0.9\linewidth,height=6cm]{pics/Multi-Agent_Optimization_Algorithm.jpg}
+%     \includegraphics[width=0.5\textwidth]{pics/Gaussian Probability Interval Prediction.eps}
+%     \caption{Comparison of Z-scores for new, dominant, and normal events across host countries.}
+%     \label{fig:Probability_Interval_Prediction}
+% \end{wrapfigure}
 
 \subsection{Conclusion}
 
@@ -435,13 +498,6 @@ With \textit{X} set to 15\%, we identified the following countries that are expe
     \label{tab:medal_changes}
 \end{table}
 
-
-
-
-
-
-
-
 \subsection{Subtask 2 --- Predicting the Number of Countries Winning Their First Medal}
 
 In this subtask, we aim to predict the number of countries that will win their first Olympic medal at the 2028 Los Angeles Olympics. This involves analyzing historical data to identify trends and factors that contribute to countries winning their first medals and applying these insights to make predictions for the upcoming Olympics.
@@ -484,29 +540,33 @@ In this subtask, we investigate the relationship between the number and types of
 \subsubsection{Visualization}
 To better understand the relationship between event count and medal count, we employed two visualization methods:
 \begin{itemize}
-    \item \textbf{Scatter Plot}: A scatter plot was created to display the relationship between the number of events a country participates in (event count) and the number of medals it earns (medal count).  
-    \item \textbf{Box Plot}: To further analyze the distribution of medal counts across different event count intervals, a box plot was used. This visualization captures the median, interquartile range (IQR), and outliers of medal counts for countries grouped into event count bins. The box plot reveals that countries with higher event participation tend to have a wider distribution of medal counts, suggesting greater variability.
+    \item \textbf{Scatter Plot}: Displays the relationship between event count and medal count.
+    \item \textbf{Box Plot}: Analyzes the distribution of medal counts across different event count intervals.
 \end{itemize}
 
     
-\begin{figure}[htbp]
+\begin{figure}[!h]
     \begin{minipage}[t]{0.5\textwidth}
         \centering
-        \includegraphics[width=0.8\textwidth]{pics/event_count_vs_medal_count.png}
+        \includegraphics[width=1\textwidth]{pics/event_count_vs_medal_count.png}
     \end{minipage}
     \begin{minipage}[t]{0.5\textwidth}
         \centering
-        \includegraphics[width=0.9\textwidth]{pics/medal_count_distribution_by_event_count_bins.png}
+        \includegraphics[width=1\textwidth]{pics/medal_count_distribution_by_event_count_bins.png}
     \end{minipage}
     \caption{Visualizations: (Left) Scatter plot showing the correlation; 
     (Right) Box plot depicting the distributions.}
 \end{figure}
 
-    To better understand the relationship between event count and medal count, countries were grouped into five distinct tiers based on their competitive performance using the K-means clustering algorithm. This method allowed for the segmentation of countries into groups with similar competition characteristics, providing a more nuanced analysis of the underlying relationships.
+    To better understand the relationship between event count and medal count, countries were grouped into five distinct tiers based on their competitive performance using the K-means clustering algorithm. 
 
     The decision to use K-means clustering was motivated by the scatter plot observations, which suggested heterogeneous patterns in the event count and medal count relationship across different types of countries. The clustering process was informed by previous medal achievements(first gold medals, then total medals), ensuring that the grouping reflected meaningful competitive distinctions.
     
-    Once the countries were assigned to tiers, we conducted separate correlation analyses within each tier. This approach allowed for a targeted examination of the relationship between event count and medal count, accounting for the differences in competitive capabilities and strategies across tiers. Spearman's correlation coefficient was used to measure the strength and direction of the relationship, as it is well-suited for non-parametric data and can handle potential non-linearities. The results are shown in following Table.
+    %! TODO: Add the clustering result figure here
+    
+    
+    Once the countries were assigned to tiers, we conducted separate correlation analyses within each tier. Spearman's correlation coefficient was used to measure the strength and direction of the relationship, as it is well-suited for non-parametric data and can handle potential non-linearities. The results are shown in following Table~\ref{tab1}.
+
 
 
 \begin{table}[h!]
@@ -516,10 +576,10 @@ To better understand the relationship between event count and medal count, we em
     \textbf{Tier} & \textbf{Spearman Correlation} & \textbf{p-value} \\
     \midrule
     1 & 0.38 & $2.16 \times 10^{-5}$ \\
-    2 & 0.39 & 0.01 \\
+    2 & 0.39 & $0.01$ \\
     3 & 0.61 & $4.99 \times 10^{-5}$ \\
-    4 & 0.57 & 0.13 \\
-    5 & 0.98 & 0.02 \\
+    4 & 0.57 & $0.13$ \\
+    5 & 0.98 & $0.02$ \\
     \bottomrule
     \end{tabular}
     \caption{Spearman correlation and p-values across different tiers.}
@@ -527,81 +587,34 @@ To better understand the relationship between event count and medal count, we em
 \end{table}
 
 \subsubsection{Interpretation of Results}
-The analysis indicates that for most tiers (1, 2, 4, and 5), there is a statistically significant positive relationship between event count and medal count ($p < 0.05$). This suggests that the number of events a country participates in positively impacts its medal count. For Tier 3, the $p$-value is greater than 0.05, indicating no statistically significant correlation between event count and medal count within this group. This anomaly could be due to specific factors such as high variability in event outcomes or unmeasured country-specific attributes.
+The analysis indicates that for most tiers (1, 2, 4, and 5), there is a statistically significant positive relationship between event count and medal count ($p < 0.05$). This suggests that the number of events a country participates in positively impacts its medal count. For Tier 3, the $p$-value is greater than 0.05, indicating no statistically significant correlation between event count and medal count within this group. This anomaly could be due to specific factors such as high variability in event outcomes or unmeasured country-specific attributes. However, the overall analysis aligns with the expectation that more competitive countries (higher tiers) are better equipped to convert event participation into medals due to superior resources, training, and athletes.
 
-The correlation coefficients also show a general trend where the relationship between event count and medal count strengthens as the tier increases. This aligns with the expectation that more competitive countries (higher tiers) are better equipped to convert event participation into medals due to superior resources, training, and athletes.
+% \subsubsection{Conclusions and Recommendations(Optional)}
+% \begin{itemize}
+%     \item \textbf{Strategic Participation}: Select events with competitive advantage.
+%     \item \textbf{Investment in Training and Resources}: Invest in infrastructure, coaching, and athlete preparation.
+%     \item \textbf{Focus on Key Events}: Optimize performance in key events and expand into new events.
+% \end{itemize}
 
-\subsubsection{Conclusions and Recommendations(Optional)}
-The results of this analysis demonstrate the critical importance of event participation in achieving higher medal counts. Based on these findings, we propose the following recommendations for countries aiming to improve their medal counts in the 2028 Los Angeles Olympics:
-\begin{itemize}
-    \item \textbf{Strategic Participation}: Countries should carefully select events where they have a competitive advantage and allocate resources to maximize medal potential.
-    \item \textbf{Investment in Training and Resources}: Especially for lower-tier countries, investing in infrastructure, coaching, and athlete preparation can increase their ability to perform well across a broader range of events.
-    \item \textbf{Focus on Key Events}: Higher-tier countries should focus on optimizing performance in key events where they historically perform well, while also expanding into new events with medal potential.
-\end{itemize}
-This analysis underscores the interplay between event participation and medal success, offering actionable insights for Olympic planning and preparation.
 
 \subsection{Subtask 3.2 --- Identifying the Most Important Sports for Various Countries}
 
-This subtask aims to determine the most significant sports for different countries based on their historical performance in the Olympics. To achieve this, we develop a method to calculate the importance of each event and sport, both at the country level and globally. 
+% This subtask aims to determine the most significant sports for different countries based on their historical performance in the Olympics. To achieve this, we develop a method to calculate the importance of each event and sport, both at the country level and globally. 
 
 \subsubsection{Notations and Definitions}
-Let us define the following notations for the analysis:
-\subsubsection{Notations and Definitions}
-
-To facilitate the analysis, we define the key notations in Table~\ref{tab:notations}:
-
-
-\begin{table}[h!]
-    \centering
-    \begin{tabular}{@{}ll@{}}
-        \toprule
-        \textbf{Notation} & \textbf{Definition} \\ 
-        \midrule
-        $C_i$ & Country $i$, $i \in \{1, 2, \ldots, N\}$; $N$: total number of countries. \\
-        $E_j$ & Event $j$, $j \in \{1, 2, \ldots, M\}$; $M$: total number of events. \\
-        $S_k$ & Sport $k$, composed of related events $E_j$, \\
-             & $k \in \{1, 2, \ldots, L\}$; $L$: total number of sports. \\
-        $m_{i,j}$ & Medals won by country $C_i$ in event $E_j$ from 2012 to 2024. \\
-        $M_i$ & Total medals won by country $C_i$, \\
-             & $M_i = \sum_{j=1}^M m_{i,j}.$ \\
-        $w_{i,j}$ & Importance of event $E_j$ for country $C_i$, \\
-             & $w_{i,j} = \frac{m_{i,j}}{M_i}.$ \\
-        $W_j$ & Global importance of event $E_j$, \\
-             & $W_j = \sum_{i=1}^N w_{i,j}.$ \\
-        $W_k$ & Global importance of sport $S_k$, \\
-             & $W_k = \sum_{j \in S_k} W_j.$ \\
-        \bottomrule
-    \end{tabular}
-    \caption{Notations and their definitions for sports importance analysis.}
-    \label{tab:notations}
-\end{table}
 
 \subsubsection{Methodology}
 To answer the question of which sports are most important for various countries, we proceed with the following steps:
 
 \paragraph{Step 1}
 
-For each country $C_i$ and each event $E_j$, we compute the event importance value $w_{i,j}$ as follows:
-\[
-w_{i,j} = \frac{m_{i,j}}{M_i}.
-\]
-This ensures that the sum of importance values for all events for a given country satisfies $\sum_{j=1}^M w_{i,j} = 1$.
+Compute the event importance value $w_{i,j} = \frac{m_{i,j}}{M_i}$, ensuring that the sum of importance values for all events for a given country satisfies $\sum_{j=1}^M w_{i,j} = 1$.
 
 \paragraph{Step 2}
-For each event $E_j$, we calculate its global importance value $W_j$ as the sum of its importance values across all countries:
-\[
-W_j = \sum_{i=1}^N w_{i,j}.
-\]
-This metric captures the relative importance of the event across all countries, regardless of individual country performance.
+For each event $E_j$, we calculate its global importance value $W_j = \sum_{i=1}^N w_{i,j}$ as the sum of its importance values across all countries, which captures the relative importance of the event across all countries, regardless of individual country performance.
 
 \paragraph{Step 3}
-For each sport $S_k$, we compute its global importance $W_k$ by aggregating the global importance values $W_j$ of all events $E_j$ under the sport:
-\[
-W_k = \sum_{j \in S_k} W_j.
-\]
-This step provides an overall measure of the importance of each sport for all countries collectively.
-
-\newpage
+For each sport $S_k$, we compute its global importance $I_k = \sum_{j \in S_k} W_j$.It is completed through aggregating the global importance values $W_j$ of all events $E_j$ under the sport, providing an overall measure of the importance of each sport for all countries collectively.
 
 \begin{wrapfigure}{r}{8cm}  %这是图文混排的环境
     \centering
@@ -613,20 +626,73 @@ This step provides an overall measure of the importance of each sport for all co
 
 
 \paragraph{Step 4}
-The sports are then ranked based on their global importance values $W_k$. A visualization of the rankings illustrates that athletics, boxing, and wrestling are the top three most important sports globally, where athletics has the abosolute highest(more than twice of the second place) importance value.
+The sports are then ranked based on their global importance values $I_k$. A visualization of the rankings illustrates that athletics, boxing, and wrestling are the top three most important sports globally, where athletics has the abosolute highest(more than twice of the second place) importance value.
 
 \subsubsection{Results and Insights}
 The analysis reveals that the importance of sports varies significantly across countries. The ranking of sports based on global importance highlights sports such as athletics, swimming, and gymnastics as the most influential globally. These sports typically feature a larger number of events and offer more medal opportunities, which contributes to their higher global importance.
 
-\subsubsection{Discussion and Recommendations}
+% \subsubsection{Discussion and Recommendations(Optional)}
+% \begin{itemize}
+%     \item Focus on events with higher importance values$w_{i,j}$ for specific contexts.
+%     \item Encourage diversification in participation.
+%     \item Further analysis can include regional comparisons or investigate temporal trends.
+% \end{itemize}
+
+
+\subsection{Subtask 3.3 --- Impact of Events Chosen by Host Countries on Olympic Results}
+
+
+Following these steps, we analyze the impact of events chosen by some major host countries on their Olympic results.
+
+\paragraph{Categorization of Events for a Country}
+
+Events are categorized into three types:
 \begin{itemize}
-    \item Countries with limited resources should focus on events with higher importance values $w_{i,j}$ for their specific contexts, as these events offer the best return on investment for medal performance.
-    \item Policies that encourage diversification in participation could help countries improve their standings in globally important sports.
-    \item Further analysis can include regional comparisons or investigate the temporal trends of sport importance over multiple Olympic cycles.
+    \item \textbf{New Events:} Events that the country participated in for the first time during the given Olympic Games. These are identified as events not entered by the country in the previous five cycles.
+    \item \textbf{Dominant Events:} Events in which the country earned medals in two consecutive previous Olympic Games.
+    \item \textbf{Normal Events:} All remaining events that do not fall into the above categories.
 \end{itemize}
 
+\paragraph{Analysis of Event Performance}
 
-\subsection{Subtask}
+For each event type:
+\begin{itemize}
+    \item Calculate the total number of events ($X$) and medals won ($Y$) in each year across a 16-year period.
+    \item Compute the yearly ratio as $\text{R} = Y / X$.
+    \item Derive the Z-score for the host year compared to neighboring years using:$Z = \frac{\text{R}_{\text{host year}} - \mu}{\sigma}$
+    where $\mu$ stands for mean ratio of neighboring years($\mu = \frac{\sum_{i=1}^{16} R_i}{16}$), and $\sigma$ stands for standard deviation($\sigma = \sqrt{\frac{\sum_{i=1}^{16} (R_i - \mu)^2}{16}}$).
+    \item Determine if $Z > 1.96$, indicating statistical significance.
+\end{itemize}
+
+\paragraph{Application to Multiple Host Countries}
+
+Applied the algorithm above to various host countries. Z-scores for new, dominant, and normal events are calculated for each host country to identify patterns in performance.
+
+\subsubsection{Results and Comparative Insights}
+
+
+\begin{wrapfigure}{r}{8cm}  %这是图文混排的环境
+    \centering
+    % \includegraphics[width=0.9\linewidth,height=6cm]{pics/Multi-Agent_Optimization_Algorithm.jpg}
+    \includegraphics[width=0.5\textwidth]{pics/host_country_zscores.png}
+    \caption{Comparison of Z-scores for new, dominant, and normal events across host countries.}
+    \label{fig:zscore_comparison}
+\end{wrapfigure}
+
+
+\paragraph{Overall Trends Across Hosts}
+
+Across 16 Olympic Games, the proportion of Z-scores exceeding 1.96 for each event category is:
+\begin{itemize}
+    \item \textbf{New Events:} 9 occurrences (56.25\%),
+    \item \textbf{Dominant Events:} 8 occurrences (50.00\%),
+    \item \textbf{Normal Events:} 11 occurrences (68.75\%).
+\end{itemize}
+
+\subsubsection{Conclusion}
+
+The findings demonstrate that host countries rely most heavily on normal events to enhance their medal counts, with new events providing additional opportunities. Dominant events, while important, tend to show smaller incremental impacts, likely due to the high level of competition.
+
 
 \section{Task2 --- The Great Coach Effect: its identification and impact}
 
@@ -765,25 +831,47 @@ From the figure above, we recommend the top 3 countries with the highest potenti
 
 
 \section{Task3 --- Original Insights revealed from the model}
-
-
-
-
-
-
-
+% 体育全球共有
+% Host Country 显著 -> regulation限制
+% NUMBER_OF_MATCHES 影响大 -> 时效性不好 -> ever changing
+% 不同时期增速不一致 -> 全球经济和政治状况 -> GDP/Total Medal
+% 尽可能更多项目 <- 颗粒度太小随机性很高 => 训练资源分配问题
 
 
 
 \section{Sensitivity Analysis}
+In order to evaluate how changes in a key hyperparameter affect the overall prediction performance,
+we perform a sensitivity analysis that varies the number of estimators for all the regression models we used.
+Specifically, we adjust the \texttt{n\_estimators} parameter (if the model supports it) in the range of 25 to 175 with the step of 5, while maintaining consistent data and procedural steps otherwise.
 
-\subsection{Strengths}
+We use 3-fold cross-validation on the same features and labels, and for each medal type
+(\textit{Gold, Silver, Bronze}), we select the best performing model just as in the Model Evaluation part.
+We compare each tested value against a baseline model where\texttt{n\_estimators}=100, calculating two proportions:
+\begin{enumerate}
+    \item \textbf{Inner\_param\_change\_proportion}: how much \texttt{n\_estimators} changes
+    relative to the baseline, i.e. \(\frac{n\_value - 100}{100}\).
+    \item \textbf{Result\_change\_proportion}: how much the average MAE changes
+    relative to the MAE of the baseline, i.e. \(\frac{\text{MAE}(n\_value) - \text{MAE}(100)}{\text{MAE}(100)}\).
+\end{enumerate}
 
-\subsection{How to cite?}
-bibliography cite use \cite{1}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{pics/sensitivity_analysis.png}
+    \caption{Sensitivity Analysis of the Number of Estimators}
+    \label{fig:sensitivity_analysis}
+\end{figure}
+
+We can see from the resulting figure that the change in the number of estimators has a minor impact on the results overall, with the largest impact of them being only 7.5\%, and most of them around 2.5\%. This suggests that the model is relatively stable with respect to this hyperparameter, and the prediction performance is not significantly affected by the model parameters within the tested range.
+
+\section{Conclusion}
+
+
+
+
+
+
 
 % AI cite use \AIcite{AI1,AI2,AI3}
-
 \begin{thebibliography}{99}
     
     \bibitem{1} Ball, D. W. (1972). Olympic Games competition: Structural correlates of national success. International Journal of Comparative Sociology, 15, 186–200.
