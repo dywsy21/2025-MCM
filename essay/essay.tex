@@ -20,7 +20,7 @@
         UprightFont = *,
         BoldFont = *b,
         ItalicFont = *i,
-        BoldItalicFont = *z
+          BoldItalicFont = *z
     ]
 
     \definecolor{bg}{rgb}{0.92,0.95,1.0} % Lighter blue fill
@@ -28,7 +28,7 @@
     \definecolor{commentcolor}{rgb}{0.4,0.85,0.4} % Softer green comment color
 
     \lstset{
-        basicstyle=\consolasfont,  % Changed to use Consolas
+        basicstyle=\consolasfont\footnotesize,  % Changed to use Consolas
         backgroundcolor=\color{bg},
         lineskip=1.5pt,
         frame=single,
@@ -175,7 +175,7 @@ To put it lucidly, we added a column named "ID" which concatenated Name and Even
 
 Furthermore, we aimed to incorporate the host country as a training feature by matching it to competing country, while the dataset only provided host city. Recognizing the National Olympic Committee (NOC) code as a standardized and uniform identifier for countries, we created a dataset named "City\_NOC.csv" to serve as a dictionary containing all Olympic host cities and their corresponding NOC codes. Using this dictionary, we developed a Python script to add a new column, "host\_NOC", to the dataset while removing the original "City" column. Additionally, we excluded all data from the 1906 Olympics, as it was an informal event and disrupted the four-year cycle traditionally followed by the Olympic Games.
 
-To further enhance data quality, we normalized medal counts by dividing them by their corresponding team sizes using a Python script. This normalization step ensured that the data accounted for the nature of team events, eliminating biases caused by repeated medal counts. We subsequently created a training dataset consisting of individual participants as rows and their corresponding medals earned and host NOC for each year as columns.
+To further enhance data quality, we normalized medal counts by dividing them by their corresponding team sizes \AIcite{AI2} using a Python script. This normalization step ensured that the data accounted for the nature of team events, eliminating biases caused by repeated medal counts. We subsequently created a training dataset consisting of individual participants as rows and their corresponding medals earned and host NOC for each year as columns.
 
 \subsection{Current Method: Sport/Event Oriented Data Preprocessing}
 
@@ -512,7 +512,7 @@ With \textit{X} set to 15\%, we identified the following countries that are expe
 In this subtask, we aim to predict the number of countries that will win their first Olympic medal at the 2028 Los Angeles Olympics. This involves analyzing historical data to identify trends and factors that contribute to countries winning their first medals and applying these insights to make predictions for the upcoming Olympics.
 
 \subsubsection{Analysis}
-Firstly, we calculated historical data on countries that have won their first Olympic medals in past Games, which is done in Data Preprocessing. The visualization of this dataset is shown in \textit{Figure~\ref{fig:cumulative_medal_winning_countries}}.
+Firstly, we calculated historical data on countries that have won their first Olympic medals in past Games, which is done in Data Preprocessing. The visualization of this dataset is shown in \textit{Figure~\ref{fig:cumulative_medal_winning_countries}} \AIcite{AI1}.
 
 \begin{figure}[htbp]
     \centering
@@ -930,13 +930,7 @@ We compare each tested value against a baseline model where\texttt{n\_estimators
 We can see from \textit{Figure~\ref{fig:sensitivity_analysis}} that the change in the number of estimators has a minor impact on the results overall, with the largest impact of them being only 7.5\%, and most of them around 2.5\%. This suggests that the model is relatively stable with respect to this hyperparameter, and the prediction performance is not significantly affected by the model parameters within the tested range.
 
 \section{Conclusion}
-In our work, we developed a comprehensive model to analyze and predict Olympic medal counts, mainly focusing on historical performance, host country, and elite coaching. We quantified the "Great Coach Effect" and demonstrated its significant influence on medal counts. Our analysis revealed that investing in top-tier coaching talent can yield substantial performance improvements. Additionally, we examined the phenomenon of host countries experiencing a peak in medal counts during the hosting year, using Z-score analysis to quantify this effect. Our findings may provide valuable insights for national Olympic committees to strategically allocate resources and enhance their chances of success in future Olympic Games.
-
-
-
-
-
-
+In our work, we developed a comprehensive model to analyze and predict medal counts of 2028 Los Angeles Olympic Games, mainly focusing on historical performance, host country, and elite coaching. We quantified the "Great Coach Effect" and demonstrated its significant influence on medal counts. Our analysis revealed that investing in top-tier coaching talent can yield substantial performance improvements. Additionally, we examined the phenomenon of host countries experiencing a peak in medal counts during the hosting year, using Z-score analysis to quantify this effect. Our findings may provide valuable insights for national Olympic committees to strategically allocate resources and enhance their chances of success in future Olympic Games.
 
 % AI cite use \AIcite{AI1,AI2,AI3}
 \begin{thebibliography}{99}
@@ -958,38 +952,178 @@ In our work, we developed a comprehensive model to analyze and predict Olympic m
     \bibitem{15} Mirjalili, S., Mirjalili, S. M., \& Lewis, A. (2014). Grey wolf optimizer. \textit{Advances in Engineering Software, 69}, 46-61.
     \bibitem{16} Nadimi-Shahraki, M. H., Taghian, S., \& Mirjalili, S. (2021). An improved grey wolf optimizer for solving engineering problems. \textit{Expert Systems with Applications, 166}, 113917.
     \bibitem{17} Abdollahzadeh, B., Gharehchopogh, F. S., \& Mirjalili, S. (2021). African vultures optimization algorithm: A new nature-inspired metaheuristic algorithm for global optimization problems. \textit{Computers \& Industrial Engineering, 158}, 107408.
-
-
 \end{thebibliography}
-
-\begin{appendices}
-
-\section{First appendix}
-
-% In addition, your report must include a letter to the Chief Financial Officer (CFO) of the Goodgrant Foundation, Mr. Alpha Chiang, that describes the optimal investment strategy, your modeling approach and major results, and a brief discussion of your proposed concept of a return-on-investment (ROI). This letter should be no more than two pages in length.
-
-\begin{letter}{Dear, Mr. Alpha Chiang}
-
-    \vspace{\parskip}
-
-    Sincerely yours,
-
-    Your friends
-
-\end{letter}
-
-\section{Second appendix}
-
-    % \lstinputlisting[language=C++]{./code/mcmthesis-sudoku.cpp}
-
-\end{appendices}
 
 % AI report begins here
 \AImatter
 \begin{ReportAiUse}{9}
 \bibitem{AI1}
+Github Copilot\\
+Query1: make one elaborate plot out of this data:
+1. add scatter points of year-countrycount
+2. for the last 8 years [1996-2024], add the linear regression line onto the plot.
 
+Output: I'll help you create a plot with scatter points and a linear regression line. Here's the solution step by step:
 
+1. Import required libraries (numpy, pandas, matplotlib)
+
+2. Read the CSV data
+
+3. Create scatter plot for all points
+
+4. Calculate and plot linear regression for the last 8 data points
+
+5. Add labels and styling
+
+Create a visualization script that plots the data with scatter points and regression line. [In main.py]
+
+\begin{lstlisting}[language=python]
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.linear_model import LinearRegression
+
+# Read the CSV file
+df = pd.read_csv('src/plot_1_2/summerOly_medal_country_count.csv')
+
+# Set style
+sns.set_style('whitegrid')
+sns.set_palette("husl")
+
+# Create figure
+plt.figure(figsize=(12, 8))
+
+# Plot all data points
+sns.scatterplot(data=df, x='Year', y='Countries having earned medals',
+                color='blue', alpha=0.6, label='Historical data')
+
+# Get last 8 data points for regression
+last_8 = df.tail(8)
+X = last_8['Year'].values.reshape(-1, 1)
+y = last_8['Countries having earned medals'].values
+
+# Perform linear regression
+reg = LinearRegression().fit(X, y)
+y_pred = reg.predict(X)
+
+# Create extended X range for prediction
+X_extended = np.array([[x] for x in range(X.min()-4, 2033)])  # Extend before and after
+y_extended = reg.predict(X_extended)
+
+# Plot extended regression line
+sns.lineplot(x=X_extended.flatten(), y=y_extended, color='red', linestyle='--',
+             label=f'Linear trend (1996-2024)\nR² = {reg.score(X, y):.4f}')
+
+# Add 2028 prediction point
+prediction_2028 = reg.predict([[2028]])[0]
+plt.scatter(2028, prediction_2028, color='red', s=35, zorder=5,
+           label=f'2028 Prediction: {prediction_2028:.0f}')
+
+# Customize the plot
+plt.title('Cumulative Medal-Winning Countries by Olympic Year', 
+          fontsize=18, pad=15)
+plt.xlabel('Year', fontsize=12)
+plt.ylabel('Number of Countries with Medals', fontsize=12)
+plt.grid(True, alpha=0.3)
+plt.legend(fontsize=10)
+
+# Add text showing the regression equation
+slope = reg.coef_[0]
+intercept = reg.intercept_
+equation = f'y = {slope:.2f}x {intercept:+.1f}'
+
+# Calculate middle point of the regression line for text placement
+mid_x = (X_extended.min() + X_extended.max()) / 2
+mid_y = reg.predict([[mid_x]])[0]
+
+# Place text horizontally above the regression line
+plt.text(mid_x - 10, mid_y + 10, equation, 
+         fontsize=18,
+         verticalalignment='bottom',
+         horizontalalignment='center',
+         bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
+
+plt.tight_layout()
+plt.show()
+
+\end{lstlisting}
+
+This script will create a plot showing:
+
+1.Blue scatter points for all historical data
+
+2.Red dashed line showing the linear regression for 1996-2024
+
+3.Grid, labels, and legend
+
+4.The regression equation and R² value
+
+5.Modern styling with seaborn
+
+6.The regression line will help visualize the trend in the number of countries earning medals in recent Olympics.
+
+\bibitem{AI2}
+Github Copilot
+
+Query1: Insert Team\_or\_not and Team\_size as another two columns in the data frame.
+Output: Sure, I can you with that. Here's the modified data frame:
+
+\begin{lstlisting}
+    Event, Team_or_not, Team_size
+    10m Air Pistol Men, false, 1
+    10m Air Pistol Mixed Team, true, 2
+    10m Air Pistol Women, false, 1
+    10m Air Rifle Men, false, 1
+    10m Air Rifle Mixed Team, true, 2
+    10m Air Rifle Women, false, 1
+    25m Pistol Women, false, 1
+    25m Rapid Fire Pistol Men, false, 1
+    4 x 400m Relay Mixed, true, 4
+    4 x 400m Relay Mixed Team, true, 4
+    50m Rifle 3 Positions Men, false, 1
+    50m Rifle 3 Positions Women, false, 1
+    Aeronautics Mixed Aeronautics, false, 1
+    Alpinism Mixed Alpinism, false, 1
+    "Archery Men's Au Chapelet, 33 metres", false, 1
+    "Archery Men's Au Chapelet, 50 metres", false, 1
+    "Archery Men's Au Cordon Dore, 33 metres", false, 1
+    "Archery Men's Au Cordon Dore, 50 metres", false, 1
+    Archery Men's Championnat Du Monde, false, 1
+    Archery Men's Continental Style, false, 1
+    Archery Men's Double American Round, false, 1
+    Archery Men's Double York Round, false, 1
+    Archery Men's Individual, false, 1
+    "Archery Men's Pole Archery, Large Birds, Individual", false, 1
+    "Archery Men's Pole Archery, Large Birds, Team", true, 4
+    "Archery Men's Pole Archery, Small Birds, Individual", false, 1
+    "Archery Men's Pole Archery, Small Birds, Team", true, 4
+    Archery Men's Sur La Perche a La Herse, false, 1
+    Archery Men's Sur La Perche a La Pyramide, false, 1
+    "Archery Men's Target Archery, 28 metres, Individual", false, 1
+    "Archery Men's Target Archery, 28 metres, Team", true, 4
+    "Archery Men's Target Archery, 33 metres, Individual", false, 1
+    "Archery Men's Target Archery, 33 metres, Team", true, 4
+    "Archery Men's Target Archery, 50 metres, Individual", false, 1
+    "Archery Men's Target Archery, 50 metres, Team", true, 4
+    Archery Men's Team, true, 4
+    Archery Men's Team Round, true, 4
+    Archery Men's Unknown Event, false, 1
+    Archery Women's Double Columbia Round, false, 1
+    Archery Women's Double National Round, false, 1
+    Archery Women's Individual, false, 1
+    ...
+    "Wrestling Men's Super-Heavyweight, Greco-Roman", false, 1
+    "Wrestling Men's Unlimited Class, Greco-Roman", false, 1
+    "Wrestling Men's Welterweight, Freestyle", false, 1
+    "Wrestling Men's Welterweight, Greco-Roman", false, 1
+    "Wrestling Women's Featherweight, Freestyle", false, 1
+    "Wrestling Women's Flyweight, Freestyle", false, 1
+    "Wrestling Women's Heavyweight, Freestyle", false, 1
+    "Wrestling Women's Light-Heavyweight, Freestyle", false, 1
+    "Wrestling Women's Lightweight, Freestyle", false, 1
+    "Wrestling Women's Middleweight, Freestyle", false, 1
+\end{lstlisting}
 
 \end{ReportAiUse}
 
