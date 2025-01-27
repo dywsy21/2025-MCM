@@ -505,14 +505,35 @@ In this subtask, we aim to predict the number of countries that will win their f
 \subsubsection{Analysis}
 Firstly, we calculated historical data on countries that have won their first Olympic medals in past Games, which is done in Data Preprocessing. The visualization of this dataset is shown below.
 
-%! TODO: Fig. Cumulative Medal-Winning Countries by Olympic Year
-
-\begin{figure}
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.8\textwidth]{pics/Cumulative Medal-Winning Countries by Olympic Year.png}
     \caption{Cumulative Medal-Winning Countries by Olympic Year}
     \label{fig:cumulative_medal_winning_countries}
 \end{figure}
+
+
+Looking at this figure we discovered that the data points of recent Olympics exhibit a strong linear relationship. Therefore, we applied linear regression to the data point of recent 8 Olympics (y represents the number of countries that have won their first Olympic medals in past Games, x represents year), the result was as follows.
+
+\subsubsection{Validation}
+\begin{Theorem}
+    The confidence interval for the regression function $\mu (x_0)=\hat{a}x_0+\hat{b}$ at a confidence level of $(1-\alpha)$ is
+    $$\bigg( \hat{a}x_0+\hat{b} \pm t_{\alpha /2,n-2}\cdot \sigma \sqrt{\frac{1}{n}+\frac{(x_0-\bar{x})^2}{S_{xx}}} \bigg)$$
+\end{Theorem}
+
+
+It's notable that $R^2=0.9935$, indicating a very high fit to the data, meaning the linear model is highly accurate for this dataset.
+
+Then the projection for number of countries that have won medals till 2028 (x=2028) is
+$$\hat{y}_{2028}=\hat{a}x+\hat{b}=161.86$$
+Therefore, the projection for new medal-winning countries in the next Olympics is
+$$\Delta y=\hat{y}_{2028}-y_{2024}=4.86$$
+
+
+Based on our calculations, the residual standard deviation $\sigma = 0.917$, and $S_{xx} = \sum_{k=1}^{8}(x_k - \bar{x})^2 = 672$. For a 70\% confidence level, we refer to the t-distribution table and find $t_{0.15,6} = 1.134$.
+
+Thus, we can conclude that the confidence interval for the number of new medal-winning countries, at a 70\% confidence level, is $(4.05, 5.67)$.
+
 
 \subsubsection{Results}
 
