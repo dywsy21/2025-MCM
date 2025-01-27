@@ -120,6 +120,31 @@ Due to the limitation of usable dataset, we cannot explore many of the aforement
 
 \section{Notations and Definitions}
 
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{@{}ll@{}}
+        \toprule
+        \textbf{Notation} & \textbf{Definition} \\ 
+        \midrule
+        $C_i$ & Country $i$, $i \in \{1, 2, \ldots, N\}$; $N$: total number of countries. \\
+        $E_j$ & Event $j$, $j \in \{1, 2, \ldots, M\}$; $M$: total number of events. \\
+        $S_k$ & Sport $k$, composed of related events $E_j$, \\
+             & $k \in \{1, 2, \ldots, L\}$; $L$: total number of sports. \\
+        $m_{i,j}$ & Medals won by country $C_i$ in event $E_j$ from 2012 to 2024. \\
+        $M_i$ & Total medals won by country $C_i$, \\
+             & $M_i = \sum_{j=1}^M m_{i,j}.$ \\
+        $w_{i,j}$ & Importance of event $E_j$ for country $C_i$, \\
+             & $w_{i,j} = \frac{m_{i,j}}{M_i}.$ \\
+        $W_j$ & Global importance of event $E_j$, \\
+             & $W_j = \sum_{i=1}^N w_{i,j}.$ \\
+        $I_k$ & Global importance of sport $S_k$, \\
+             & $I_k = \sum_{j \in S_k} W_j.$ \\
+        \bottomrule
+    \end{tabular}
+    \caption{Notations and their definitions for sports importance analysis.}
+    \label{tab:notations}
+\end{table}
+
 
 \section{Data Preprocessing}
 % remember to mention some details
@@ -557,34 +582,6 @@ The analysis indicates that for most tiers (1, 2, 4, and 5), there is a statisti
 
 \subsubsection{Notations and Definitions}
 
-To facilitate the analysis, we define the key notations in Table~\ref{tab:notations}:
-
-
-\begin{table}[h!]
-    \centering
-    \begin{tabular}{@{}ll@{}}
-        \toprule
-        \textbf{Notation} & \textbf{Definition} \\ 
-        \midrule
-        $C_i$ & Country $i$, $i \in \{1, 2, \ldots, N\}$; $N$: total number of countries. \\
-        $E_j$ & Event $j$, $j \in \{1, 2, \ldots, M\}$; $M$: total number of events. \\
-        $S_k$ & Sport $k$, composed of related events $E_j$, \\
-             & $k \in \{1, 2, \ldots, L\}$; $L$: total number of sports. \\
-        $m_{i,j}$ & Medals won by country $C_i$ in event $E_j$ from 2012 to 2024. \\
-        $M_i$ & Total medals won by country $C_i$, \\
-             & $M_i = \sum_{j=1}^M m_{i,j}.$ \\
-        $w_{i,j}$ & Importance of event $E_j$ for country $C_i$, \\
-             & $w_{i,j} = \frac{m_{i,j}}{M_i}.$ \\
-        $W_j$ & Global importance of event $E_j$, \\
-             & $W_j = \sum_{i=1}^N w_{i,j}.$ \\
-        $W_k$ & Global importance of sport $S_k$, \\
-             & $W_k = \sum_{j \in S_k} W_j.$ \\
-        \bottomrule
-    \end{tabular}
-    \caption{Notations and their definitions for sports importance analysis.}
-    \label{tab:notations}
-\end{table}
-
 \subsubsection{Methodology}
 To answer the question of which sports are most important for various countries, we proceed with the following steps:
 
@@ -596,7 +593,7 @@ Compute the event importance value $w_{i,j} = \frac{m_{i,j}}{M_i}$, ensuring tha
 For each event $E_j$, we calculate its global importance value $W_j = \sum_{i=1}^N w_{i,j}$ as the sum of its importance values across all countries, which captures the relative importance of the event across all countries, regardless of individual country performance.
 
 \paragraph{Step 3}
-For each sport $S_k$, we compute its global importance $W_k = \sum_{j \in S_k} W_j$.It is completed through aggregating the global importance values $W_j$ of all events $E_j$ under the sport, providing an overall measure of the importance of each sport for all countries collectively.
+For each sport $S_k$, we compute its global importance $I_k = \sum_{j \in S_k} W_j$.It is completed through aggregating the global importance values $W_j$ of all events $E_j$ under the sport, providing an overall measure of the importance of each sport for all countries collectively.
 
 \begin{wrapfigure}{r}{8cm}  %这是图文混排的环境
     \centering
@@ -608,7 +605,7 @@ For each sport $S_k$, we compute its global importance $W_k = \sum_{j \in S_k} W
 
 
 \paragraph{Step 4}
-The sports are then ranked based on their global importance values $W_k$. A visualization of the rankings illustrates that athletics, boxing, and wrestling are the top three most important sports globally, where athletics has the abosolute highest(more than twice of the second place) importance value.
+The sports are then ranked based on their global importance values $I_k$. A visualization of the rankings illustrates that athletics, boxing, and wrestling are the top three most important sports globally, where athletics has the abosolute highest(more than twice of the second place) importance value.
 
 \subsubsection{Results and Insights}
 The analysis reveals that the importance of sports varies significantly across countries. The ranking of sports based on global importance highlights sports such as athletics, swimming, and gymnastics as the most influential globally. These sports typically feature a larger number of events and offer more medal opportunities, which contributes to their higher global importance.
