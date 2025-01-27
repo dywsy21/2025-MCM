@@ -190,32 +190,88 @@ Given the relatively small dataset size, we adopt k-fold cross-validation to spl
 
 \subsection{Model Training}
 
-We train several regression models on the training set, including:
-\begin{itemize}
-    \item LSBoost
-    \item XGBoost
-    \item Multivariate Linear Regression
-    \item Gaussian Regression
-    \item Decision Tree
-    \item Random Forest
-\end{itemize}
+We train several regression models on the training set, including:LSBoost,XGBoost,Multivariate Linear Regression,Gaussian Regression,Decision Tree,Random Forest.
 
 Each model is trained using the training set and evaluated on the validation set to determine the optimal hyperparameters.
 
 \subsection{Model Evaluation}
 
-The performance of each model is assessed on the test set using the following metrics:
-\begin{itemize}
-    \item Mean Absolute Error (MAE)
-    \item Mean Absolute Percentage Error (MAPE)
-    \item Mean Squared Error (MSE)
-    \item Root Mean Squared Error (RMSE)
-    \item Coefficient of Determination ($R^2$)
-\end{itemize}
+The performance of each model is assessed on the test set using the following metrics:Mean Absolute Error (MAE),Mean Absolute Percentage Error (MAPE),Mean Squared Error (MSE),Root Mean Squared Error (RMSE),Coefficient of Determination ($R^2$)
 
 The evaluation result is stated as below. From the result we can see that each medal type can have very different best models. This phenomenon also vouches for the veracity of our tier-based modeling strategy.
 
 %! TODO: insert the figure here
+% \begin{figure}[htbp]
+%     \centering
+%     % First row
+%     \begin{minipage}[t]{0.48\textwidth}
+%         \centering
+%         \includegraphics[width=2.2in, keepaspectratio]{pics/multi-regression-compare.eps}
+%         \label{fig:performance1}
+%     \end{minipage}
+%     \hfill
+
+%     \begin{minipage}[t]{0.48\textwidth}
+%         \centering
+%         \includegraphics[width=2.2in, keepaspectratio]{pics/multi-regression-compare-5.eps}
+%         \label{fig:performance3}
+%     \end{minipage}
+    
+%     \vspace{0.4cm} % Space between rows
+    
+%     % Second row
+%     \begin{minipage}[t]{0.48\textwidth}
+%         \centering
+%         \includegraphics[width=2.2in, keepaspectratio]{pics/multi-regression-compare-3.eps}
+%         \label{fig:performance4}
+%     \end{minipage}
+%     \hfill
+%     \begin{minipage}[t]{0.48\textwidth}
+%         \centering
+%         \includegraphics[width=2.2in, keepaspectratio]{pics/multi-regression-compare-2.eps}
+%         \label{fig:performance2}
+%     \end{minipage}
+    
+%     \caption{Performance comparison of different regression models for predicting Tier 1 Gold medal prediction model.}
+%     \label{fig:model_comparison}
+% \end{figure}
+\begin{figure}[!htbp]
+    \centering
+    % First row
+    \begin{minipage}[t]{0.58\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, keepaspectratio]{pics/multi-regression-compare-3.eps}
+        % \caption{(a)} % Subfigure label
+        % \label{fig:performance1}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, keepaspectratio]{pics/multi-regression-compare-5.eps}
+        % \caption{(b)} % Subfigure label
+        % \label{fig:performance3}
+    \end{minipage}
+    
+    \vspace{0.2cm} % Space between rows
+
+    % Second row
+    \begin{minipage}[t]{0.52\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, keepaspectratio]{pics/multi-regression-compare.eps}
+        % \caption{(c)} % Subfigure label
+        % \label{fig:performance4}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.44\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, keepaspectratio]{pics/multi-regression-compare-2.eps}
+        % \caption{(d)} % Subfigure label
+        % \label{fig:performance2}
+    \end{minipage}
+    
+    \caption{Performance comparison of different regression models for predicting Tier 1 Gold medal prediction model. Subfigures illustrate different comparisons across models.}
+    \label{fig:model_comparison}
+\end{figure}
 
 
 \subsection{Model Selection}
@@ -225,7 +281,7 @@ The best-performing model is selected using the TOPSIS (Technique for Order Pref
     \item Smaller values of MAE, MAPE, MSE, and RMSE.
     \item Larger values of $R^2$ (closer to 1 indicates better fit).
 \end{itemize}
-In the Tier 1 Gold medal prediction model, XGBoost exhibited the best performance after evaluation.
+Among the Tier 1 Gold medal prediction models, XGBoost exhibited the best performance after evaluation.
 
 \subsection{Model Optimization}
 
@@ -277,7 +333,9 @@ As an example, SSA algorithm demonstrated the best results for optimizing the Ti
         \label{fig:image6}
     \end{minipage}
     
-    \caption{Six smaller EPS images arranged in two rows and three columns, resized to fit the page.}
+    \caption{Density plot and result of training set, validation set, and test set for Tier 1 Gold medal prediction model.}
+
+    
     \label{fig:smaller_eps_images}
 \end{figure}
 
@@ -448,14 +506,14 @@ To better understand the relationship between event count and medal count, we em
 \end{itemize}
 
     
-\begin{figure}[htbp]
+\begin{figure}[!h]
     \begin{minipage}[t]{0.5\textwidth}
         \centering
-        \includegraphics[width=0.8\textwidth]{pics/event_count_vs_medal_count.png}
+        \includegraphics[width=1\textwidth]{pics/event_count_vs_medal_count.png}
     \end{minipage}
     \begin{minipage}[t]{0.5\textwidth}
         \centering
-        \includegraphics[width=0.9\textwidth]{pics/medal_count_distribution_by_event_count_bins.png}
+        \includegraphics[width=1\textwidth]{pics/medal_count_distribution_by_event_count_bins.png}
     \end{minipage}
     \caption{Visualizations: (Left) Scatter plot showing the correlation; 
     (Right) Box plot depicting the distributions.}
@@ -463,7 +521,10 @@ To better understand the relationship between event count and medal count, we em
 
     To better understand the relationship between event count and medal count, countries were grouped into five distinct tiers based on their competitive performance using the K-means clustering algorithm. 
 
-    The decision to use K-means clustering was motivated by the scatter plot observations, which suggested heterogeneous patterns in the event count and medal count relationship across different types of countries. The clustering process was informed by previous medal achievements(first gold medals, then total medals), ensuring that the grouping reflected meaningful competitive distinctions.(TODO:add pic)
+    The decision to use K-means clustering was motivated by the scatter plot observations, which suggested heterogeneous patterns in the event count and medal count relationship across different types of countries. The clustering process was informed by previous medal achievements(first gold medals, then total medals), ensuring that the grouping reflected meaningful competitive distinctions.
+    
+    %! TODO: Add the clustering result figure here
+    
     
     Once the countries were assigned to tiers, we conducted separate correlation analyses within each tier. Spearman's correlation coefficient was used to measure the strength and direction of the relationship, as it is well-suited for non-parametric data and can handle potential non-linearities. The results are shown in following Table~\ref{tab1}.
 
