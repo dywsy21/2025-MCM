@@ -143,6 +143,11 @@ Moreover, we recognized "No Medal" as a potential indicator of a country's capab
 
 To enhance prediction accuracy, we planned to classify all participating countries into 5 tiers based on their historical medal counts. As a preparatory step, we preprocessed the data by summing historical medal counts from 2012 to 2024, which served as an indicator of a country's overall strength. Tier 5, the highest tier, comprised only the United States (USA) and China (CHN), which dominated in gold and total medal counts. Tier 4 and Tier 3 were identified based on a significant gap in gold medal counts, with Italy (38) marking the boundary between the two tiers and New Zealand (27) serving as the lower boundary of Tier 3. Tier 2 and Tier 1 were determined using total medal counts of 14 and 6, respectively. This tier-based categorization allowed for a more structured and nuanced analysis of countries' performance trends.
 
+\subsection{Cumulative Medal-Winning Countries by Olympic Year}
+Problem 1.2 requires projecting how many countries will earn their first medal in the next Olympics. To address this, we utilized the "summerOly\_medal\_norepeat.csv" dataset that was prepared earlier. A new column, "Medal", was added to the dataset, representing the sum of the "Gold", "Silver", and "Bronze" columns to indicate whether a given row corresponds to a medal-winning entry.
+
+Subsequently, we developed a Python script to calculate the year in which each country earned its first medal. For countries that have not yet won any medals, the "Year" column was assigned the value 2028 to reflect the next Olympic cycle. Following this, another Python script was created to calculate the cumulative number of countries that had won medals up to each Olympic year. This cumulative count served as the foundational data for time series projection.
+
 \section{Establishing the Model}
 
 In this section, we outline the process of developing a regression-based model to predict medal counts (Gold, Silver and Bronze medals) for each country in the Los Angeles 2028 Summer Olympics. Our methodology accounts for historical performance, and hosting effects. The proposed approach includes estimates of uncertainty, prediction intervals, and measures of model performance. Additionally, we assess potential improvements or declines in medal counts for individual countries.
