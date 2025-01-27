@@ -70,14 +70,14 @@
     \par 
     Our research develops a robust framework for predicting medal counts at the 2028 Los Angeles Summer Olympics, grounded in an extensive analysis of historical data. The research encompasses three key tasks: forecasting medal distribution, evaluating the influence of elite coaching, and uncovering novel insights into Olympic medal dynamics.
 
-    \textbf{Task 1} focuses on medal prediction through a tiered modeling approach. Using \textbf{K-means clustering}, we classified countries into five tiers based on historical performance, tailoring prediction models to the unique dynamics of each group. Regression techniques, including LSBoost, XGBoost, and random forests, as well as optimizing algorithms, including SSA \cite{8}, DBO \cite{9}, SCA \cite{10}, SA \cite{11}, PSO \cite{12}, were implemented with the TOPSIS method used to identify the most effective model and algorithm. Our framework predicts the emergence of new medal-winning nations and assesses the impact of host country advantages. Additionally, an analysis of the relationship between sports' global importance and medal distribution, using \textbf{Spearman's rank correlation coefficient}, confirmed the substantial benefits host countries derive, such as increased medal counts and event-specific advantages.
+    \textbf{Task 1} focuses on medal prediction through a \textbf{tier-based modeling approach}. Using \textbf{K-means clustering}, we classified countries into five tiers based on historical performance, tailoring prediction models to the unique dynamics of each group. With \textbf{metaheuristic} algorithm, we optimized feature selection process. \textbf{Regression techniques}, including LSBoost, XGBoost, and random forests, as well as optimizing algorithms, including SSA \cite{8}, DBO \cite{9}, SCA \cite{10} were implemented with the \textbf{TOPSIS} method used to identify the most effective model and algorithm. We also introduced \textbf{K-Fold algorithm} to split datasets into training, validating and testing sets. Additionally, an analysis of the relationship between sports' global importance and medal distribution, using \textbf{Spearman's rank correlation coefficient}, confirmed the substantial benefits host countries derive, such as increased medal counts and event-specific advantages.
     
     \textbf{Task 2} explores the "Great Coach Effect" wherein elite coaches significantly influence national Olympic success. By analyzing \textbf{coaching transfers} and \textbf{performance trends}, we quantified the impact of high-caliber coaching on medal counts. \textbf{Regression analysis} revealed that this effect is particularly pronounced in \textbf{lower-tier/underperforming countries}, where elite coaching can lead to substantial improvements. Based on these findings, we recommend prioritizing the recruitment of top-tier coaches in countries with the potential for notable performance gains.
     
     \textbf{Task 3} delves into the original insights revealed from our model. Firstly, we explored the concept of \textbf{Global Sports Equity}, highlighting the significant impact of elite coaching on low-tier countries and recommending the sharing of coaching expertise to foster a more equitable global sports landscape. Secondly, we analyzed the \textbf{Host Country Effect}, observing substantial increases in medal counts for host nations and suggesting regulations to mitigate this advantage. Thirdly, we identified a \textbf{Time-Sensitive Element} in our prediction model, emphasizing the importance of recent match data in optimizing performance. Lastly, we discussed the \textbf{Granularity Effect} in prediction models, recommending a diversified participation strategy to maximize medal-winning opportunities. Our \textbf{sensitivity analysis} further confirmed the model's stability with respect to the number of estimators, ensuring robust prediction performance.
     
 \begin{keywords}
-    keyword1; keyword2
+    Olympics Medal Precition; Regression Models; K-Fold; Optimizing Algorithm; Metaheuristic Algorithm
 \end{keywords}
 
 \end{abstract}
@@ -221,7 +221,7 @@ Features are selected and optimized using metaheuristic algorithm to determine t
     \item A value of 0 indicates the exclusion of a feature.
     \item A value of 1 indicates the inclusion of a feature.
 \end{itemize}
-A random forest model is trained iteratively with different feature combinations, and the performance of each combination is evaluated. 
+A regression model is trained iteratively with different feature combinations, and the performance of each combination is evaluated. 
 
 
 \subsection{Data Splitting}
