@@ -122,7 +122,7 @@ Due to the limitation of usable dataset, we cannot explore many of the aforement
 
 \begin{table}[h!]
     \centering
-    \begin{tabular}{@{}ll@{}}
+    \begin{tabular}{ccc}
         \toprule
         \textbf{Notation} & \textbf{Definition} \\ 
         \midrule
@@ -141,7 +141,7 @@ Due to the limitation of usable dataset, we cannot explore many of the aforement
              & $I_k = \sum_{j \in S_k} W_j.$ \\
         \bottomrule
     \end{tabular}
-    \caption{Notations and their definitions for sports importance analysis.}
+
     \label{tab:notations}
 \end{table}
 
@@ -179,7 +179,7 @@ Subsequently, we developed a Python script to calculate the year in which each c
 
 \section{Establishing the Model}
 
-In this section, we outline the process of developing a regression-based model to predict medal counts (Gold, Silver and Bronze medals) for each country in the Los Angeles 2028 Summer Olympics. Our methodology accounts for historical performance, and hosting effects. The proposed approach includes estimates of uncertainty, prediction intervals, and measures of model performance. Additionally, we assess potential improvements or declines in medal counts for individual countries.
+In this section, we outline the process of developing a regression-based model to predict medal counts (Gold, Silver and Bronze medals) for each country in the Los Angeles 2028 Summer Olympics. Our methodology accounts for historical performance, and hosting effects. The proposed approach includes estimates of uncertainty, prediction intervals, and measures of model performance.
 
 Thanks to the nature of this problem being inherently correlated to chronological projection and the provided data being complete with regard of countries, sports, events and individual athletes, we adopt time series analysis and regression models to predict medal counts for the 2028 Los Angeles Olympics.
 
