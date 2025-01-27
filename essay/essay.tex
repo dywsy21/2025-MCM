@@ -327,6 +327,7 @@ The tier-based regression modeling approach provides a structured and efficient 
 
 \subsection{Subtask 1 --- Predicting Medal Counts for the 2028 Los Angeles Olympics}
 
+\subsubsection{Prediction Results}
 We tested the established model to predict medal counts for the 2028 Los Angeles Olympics. The resulting medal table is as follows: (results rounded to one decimal place, and the prediction intervals attached are calculated at a 95\% confidence level)
 
 \begin{table}[htbp]
@@ -384,8 +385,9 @@ We tested the established model to predict medal counts for the 2028 Los Angeles
     \label{tab:medal_counts}
 \end{table}
 
-%! TODO: WHICH COUNTRIES IMPROVED OR DECLINED?
-In terms of improvements or declines in medal counts, we define \textit{"improvement"} and \textit{"decline"} as follows (in order to separate them from normal fluctuations):
+\subsubsection{Analysis of Prediction Results}
+
+In this section, we analyze the improvements or declines in medal counts. We define \textit{"improvement"} and \textit{"decline"} as follows in order to separate them from normal fluctuations:
 
 \begin{itemize}
     \item \textbf{Improvement:} If the predicted medal count for a country in 2028 is higher than its medal count from the previous Olympics more than a constant \textit{X} percent (\textbf{Condition 1}) or for every type of medal, the count doesn't decrease and at least one type of medal shows increase in count (\textbf{Condition 2}), we consider it an improvement.
@@ -393,7 +395,6 @@ In terms of improvements or declines in medal counts, we define \textit{"improve
 \end{itemize}
 
 With \textit{X} set to 15\%, we identified the following countries that are expected to improve or decline in medal counts at the 2028 Los Angeles Olympics:
-
 
 \begin{table}[htbp]
     \centering
@@ -741,10 +742,22 @@ To determine which three tier 2 countries can benefit the most from the Great Co
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.8\textwidth]{pics/tier2_top10_absolute_gain.png}
-    \caption{Quantification of The Great Coach Effect}
+    \caption{Quantification of The Great Coach Effect on Tier 2 Countries}
 \end{figure}
 
 From the figure above, we recommend the top 3 countries with the highest potential for performance improvement: ISR (Israel), BRN (Bahrain), and VEN (Venezuela), with respective projected medal gain of 5.5, 3.9 and 3.9.
+
+
+\section{Task3 --- Original Insights revealed from the model}
+
+
+
+
+
+
+
+
+
 
 \section{Sensitivity Analysis}
 
