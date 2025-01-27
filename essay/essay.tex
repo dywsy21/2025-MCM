@@ -640,17 +640,17 @@ The analysis indicates that for most tiers (1, 2, 4, and 5), there is a statisti
 \subsubsection{Methodology}
 To answer the question of which sports are most important for various countries, we proceed with the following steps:
 
-\paragraph{Step 1}
+\paragraph{\textbf{Step 1}}
 
 Compute the event importance value $w_{i,j} = \frac{m_{i,j}}{M_i}$, ensuring that the sum of importance values for all events for a given country satisfies $\sum_{j=1}^M w_{i,j} = 1$.
 
-\paragraph{Step 2}
+\paragraph{\textbf{Step 2}}
 For each event $E_j$, we calculate its global importance value $W_j = \sum_{i=1}^N w_{i,j}$ as the sum of its importance values across all countries, which captures the relative importance of the event across all countries, regardless of individual country performance.
 
-\paragraph{Step 3}
+\paragraph{\textbf{Step 3}}
 For each sport $S_k$, we compute its global importance $I_k = \sum_{j \in S_k} W_j$.It is completed through aggregating the global importance values $W_j$ of all events $E_j$ under the sport, providing an overall measure of the importance of each sport for all countries collectively.
 
-\paragraph{Step 4}
+\paragraph{\textbf{Step 4}}
 The sports are then ranked based on their global importance values $I_k$. A visualization of the rankings illustrates that athletics, boxing, and wrestling are the top three most important sports globally, where athletics has the absolute highest(more than twice of the second place) importance value. Result is shown in \textit{Figure~\ref{fig:sport_importance}}.
 
 \newpage
@@ -671,7 +671,7 @@ The sports are then ranked based on their global importance values $I_k$. A visu
 
 
 \subsubsection{Results and Insights}
-The analysis reveals that the importance of sports varies significantly across countries. The ranking of sports based on global importance highlights sports such as athletics, swimming, and gymnastics as the most influential globally. These sports typically feature a larger number of events and offer more medal opportunities, which contributes to their higher global importance.
+The analysis reveals that the importance of sports varies significantly across countries. The ranking of sports based on global importance highlights sports such as \textbf{athletics, swimming, and gymnastics} as the most influential globally. These sports typically feature a larger number of events and offer more medal opportunities, which contributes to their higher global importance.
 
 
 % \subsubsection{Discussion and Recommendations(Optional)}
@@ -686,7 +686,7 @@ The analysis reveals that the importance of sports varies significantly across c
 
 Following these steps, we analyze the impact of events chosen by some major host countries on their Olympic results.
 
-\paragraph{Categorization of Events for a Country}
+\paragraph{\textbf{Categorization of Events for a Country}}
 
 Events are categorized into three types:
 \begin{itemize}
@@ -695,7 +695,7 @@ Events are categorized into three types:
     \item \textbf{Normal Events:} All remaining events that do not fall into the above categories.
 \end{itemize}
 
-\paragraph{Analysis of Event Performance}
+\paragraph{\textbf{Analysis of Event Performance}}
 
 For each event type:
 \begin{itemize}
@@ -706,7 +706,7 @@ For each event type:
     \item Determine if $Z > 1.96$, indicating statistical significance.
 \end{itemize}
 
-\paragraph{Application to Multiple Host Countries}
+\paragraph{\textbf{Application to Multiple Host Countries}}
 
 Applied the algorithm above to various host countries. Z-scores for new, dominant, and normal events are calculated for each host country to identify patterns in performance.
 
@@ -722,7 +722,7 @@ Applied the algorithm above to various host countries. Z-scores for new, dominan
 \end{wrapfigure}
 
 
-\paragraph{Overall Trends Across Hosts}
+\paragraph{\textbf{Overall Trends Across Hosts}}
 
 Across 16 Olympic Games, the proportion of Z-scores exceeding 1.96 for each event category is:
 \begin{itemize}
@@ -734,7 +734,6 @@ Across 16 Olympic Games, the proportion of Z-scores exceeding 1.96 for each even
 \subsubsection{Conclusion}
 
 The findings demonstrate that host countries rely most heavily on normal events to enhance their medal counts, with new events providing additional opportunities. Dominant events, while important, tend to show smaller incremental impacts, likely due to the high level of competition.
-
 
 \section{Task2 --- The Great Coach Effect: its identification and impact}
 
@@ -872,7 +871,7 @@ To determine which three tier 2 countries can benefit the most from the Great Co
     \label{fig:tier2_top10_absolute_gain}
 \end{figure}
 
-As is shown in \textit{Figure~\ref{fig:tier2_top10_absolute_gain}}, we recommend the top 3 countries with the highest potential for performance improvement: ISR (Israel), BRN (Bahrain), and VEN (Venezuela), with respective projected medal gain of 5.5, 3.9 and 3.9.
+As is shown in \textit{Figure~\ref{fig:tier2_top10_absolute_gain}}, we recommend the top 3 countries with the highest potential for performance improvement: \textbf{ISR (Israel), BRN (Bahrain), and VEN (Venezuela)}, with respective projected medal gain of 5.5, 3.9 and 3.9.
 
 
 \section{Task3 --- Original Insights revealed from the model}
@@ -933,7 +932,7 @@ Specifically, we adjust the \texttt{n\_estimators} parameter (if the model suppo
 
 We use 3-fold cross-validation on the same features and labels, and for each medal type
 (\textit{Gold, Silver, Bronze}), we select the best performing model just as in the Model Evaluation part.
-We compare each tested value against a baseline model where\texttt{n\_estimators}=100, calculating two proportions:
+We compare each tested value against a baseline model where \texttt{n\_estimators}=100, calculating two proportions:
 \begin{enumerate}
     \item \textbf{Inner\_param\_change\_proportion}: how much \texttt{n\_estimators} changes
     relative to the baseline, i.e. \(\frac{n\_value - 100}{100}\).
@@ -1086,62 +1085,62 @@ This script will create a plot showing:
 Github Copilot
 
 Query1: Insert Team\_or\_not and Team\_size as another two columns in the data frame.
-Output: Sure, I can you with that. Here's the modified data frame:
+Output: Sure, I can help you with that. Here's the modified data frame:
 
 \begin{lstlisting}
-    Event, Team_or_not, Team_size
-    10m Air Pistol Men, false, 1
-    10m Air Pistol Mixed Team, true, 2
-    10m Air Pistol Women, false, 1
-    10m Air Rifle Men, false, 1
-    10m Air Rifle Mixed Team, true, 2
-    10m Air Rifle Women, false, 1
-    25m Pistol Women, false, 1
-    25m Rapid Fire Pistol Men, false, 1
-    4 x 400m Relay Mixed, true, 4
-    4 x 400m Relay Mixed Team, true, 4
-    50m Rifle 3 Positions Men, false, 1
-    50m Rifle 3 Positions Women, false, 1
-    Aeronautics Mixed Aeronautics, false, 1
-    Alpinism Mixed Alpinism, false, 1
-    "Archery Men's Au Chapelet, 33 metres", false, 1
-    "Archery Men's Au Chapelet, 50 metres", false, 1
-    "Archery Men's Au Cordon Dore, 33 metres", false, 1
-    "Archery Men's Au Cordon Dore, 50 metres", false, 1
-    Archery Men's Championnat Du Monde, false, 1
-    Archery Men's Continental Style, false, 1
-    Archery Men's Double American Round, false, 1
-    Archery Men's Double York Round, false, 1
-    Archery Men's Individual, false, 1
-    "Archery Men's Pole Archery, Large Birds, Individual", false, 1
-    "Archery Men's Pole Archery, Large Birds, Team", true, 4
-    "Archery Men's Pole Archery, Small Birds, Individual", false, 1
-    "Archery Men's Pole Archery, Small Birds, Team", true, 4
-    Archery Men's Sur La Perche a La Herse, false, 1
-    Archery Men's Sur La Perche a La Pyramide, false, 1
-    "Archery Men's Target Archery, 28 metres, Individual", false, 1
-    "Archery Men's Target Archery, 28 metres, Team", true, 4
-    "Archery Men's Target Archery, 33 metres, Individual", false, 1
-    "Archery Men's Target Archery, 33 metres, Team", true, 4
-    "Archery Men's Target Archery, 50 metres, Individual", false, 1
-    "Archery Men's Target Archery, 50 metres, Team", true, 4
-    Archery Men's Team, true, 4
-    Archery Men's Team Round, true, 4
-    Archery Men's Unknown Event, false, 1
-    Archery Women's Double Columbia Round, false, 1
-    Archery Women's Double National Round, false, 1
-    Archery Women's Individual, false, 1
-    ...
-    "Wrestling Men's Super-Heavyweight, Greco-Roman", false, 1
-    "Wrestling Men's Unlimited Class, Greco-Roman", false, 1
-    "Wrestling Men's Welterweight, Freestyle", false, 1
-    "Wrestling Men's Welterweight, Greco-Roman", false, 1
-    "Wrestling Women's Featherweight, Freestyle", false, 1
-    "Wrestling Women's Flyweight, Freestyle", false, 1
-    "Wrestling Women's Heavyweight, Freestyle", false, 1
-    "Wrestling Women's Light-Heavyweight, Freestyle", false, 1
-    "Wrestling Women's Lightweight, Freestyle", false, 1
-    "Wrestling Women's Middleweight, Freestyle", false, 1
+Event, Team_or_not, Team_size
+10m Air Pistol Men, false, 1
+10m Air Pistol Mixed Team, true, 2
+10m Air Pistol Women, false, 1
+10m Air Rifle Men, false, 1
+10m Air Rifle Mixed Team, true, 2
+10m Air Rifle Women, false, 1
+25m Pistol Women, false, 1
+25m Rapid Fire Pistol Men, false, 1
+4 x 400m Relay Mixed, true, 4
+4 x 400m Relay Mixed Team, true, 4
+50m Rifle 3 Positions Men, false, 1
+50m Rifle 3 Positions Women, false, 1
+Aeronautics Mixed Aeronautics, false, 1
+Alpinism Mixed Alpinism, false, 1
+"Archery Men's Au Chapelet, 33 metres", false, 1
+"Archery Men's Au Chapelet, 50 metres", false, 1
+"Archery Men's Au Cordon Dore, 33 metres", false, 1
+"Archery Men's Au Cordon Dore, 50 metres", false, 1
+Archery Men's Championnat Du Monde, false, 1
+Archery Men's Continental Style, false, 1
+Archery Men's Double American Round, false, 1
+Archery Men's Double York Round, false, 1
+Archery Men's Individual, false, 1
+"Archery Men's Pole Archery, Large Birds, Individual", false, 1
+"Archery Men's Pole Archery, Large Birds, Team", true, 4
+"Archery Men's Pole Archery, Small Birds, Individual", false, 1
+"Archery Men's Pole Archery, Small Birds, Team", true, 4
+Archery Men's Sur La Perche a La Herse, false, 1
+Archery Men's Sur La Perche a La Pyramide, false, 1
+"Archery Men's Target Archery, 28 metres, Individual", false, 1
+"Archery Men's Target Archery, 28 metres, Team", true, 4
+"Archery Men's Target Archery, 33 metres, Individual", false, 1
+"Archery Men's Target Archery, 33 metres, Team", true, 4
+"Archery Men's Target Archery, 50 metres, Individual", false, 1
+"Archery Men's Target Archery, 50 metres, Team", true, 4
+Archery Men's Team, true, 4
+Archery Men's Team Round, true, 4
+Archery Men's Unknown Event, false, 1
+Archery Women's Double Columbia Round, false, 1
+Archery Women's Double National Round, false, 1
+Archery Women's Individual, false, 1
+...
+"Wrestling Men's Super-Heavyweight, Greco-Roman", false, 1
+"Wrestling Men's Unlimited Class, Greco-Roman", false, 1
+"Wrestling Men's Welterweight, Freestyle", false, 1
+"Wrestling Men's Welterweight, Greco-Roman", false, 1
+"Wrestling Women's Featherweight, Freestyle", false, 1
+"Wrestling Women's Flyweight, Freestyle", false, 1
+"Wrestling Women's Heavyweight, Freestyle", false, 1
+"Wrestling Women's Light-Heavyweight, Freestyle", false, 1
+"Wrestling Women's Lightweight, Freestyle", false, 1
+"Wrestling Women's Middleweight, Freestyle", false, 1
 \end{lstlisting}
 
 \end{ReportAiUse}
