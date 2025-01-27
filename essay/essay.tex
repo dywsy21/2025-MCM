@@ -53,12 +53,25 @@
 \usepackage{lipsum}
 \usepackage{wrapfig} % 图文绕排
 \usepackage{enumitem} % 列表间距
-\usepackage{caption}
+\usepackage{caption} 
+
 \captionsetup[figure]{justification=centering}
 \captionsetup[table]{justification=centering}
+ 
+% 设置全局段间距
+\setlength{\parskip}{0.25em}
 
 \setenumerate[1]{itemsep=1pt,partopsep=0pt,parsep=\parskip,topsep=2pt}
 \setitemize[1]{itemsep=1pt,partopsep=0pt,parsep=\parskip,topsep=2pt}
+
+% 调整浮动体参数
+\setcounter{topnumber}{6}% 每页顶部最大浮动体数量
+\setcounter{bottomnumber}{3}% 每页底部最大浮动体数量
+\setcounter{totalnumber}{6}% 每页浮动体总数量
+\renewcommand{\topfraction}{0.95}% 页面顶部浮动体比例
+\renewcommand{\bottomfraction}{0.5}% 页面底部浮动体比例
+\renewcommand{\floatpagefraction}{0.9}% 浮动体页比例
+\renewcommand{\textfraction}{0.05}% 正文比例
 
 \title{Mathematical Model for Prediction of Olympic Medal Counts}
 \author{\small \href{https://www.latexstudio.net/}
@@ -68,16 +81,16 @@
 \begin{document}
 \begin{abstract}
     \par 
-    Our research develops a robust framework for predicting medal counts at the 2028 Los Angeles Summer Olympics, grounded in an extensive analysis of historical data. The research encompasses three key tasks: forecasting medal distribution, evaluating the influence of elite coaching, and uncovering novel insights into Olympic medal dynamics.
+    Our research develops a robust framework for predicting medal counts at the 2028 Los Angeles Summer Olympics, grounded in an extensive analysis of historical data, and addresses three key tasks: forecasting medal distribution, evaluating the influence of elite coaching, and uncovering novel insights into Olympic medal dynamics.
 
-    \textbf{Task 1} focuses on medal prediction through a \textbf{tier-based modeling approach}. Using \textbf{K-means clustering}, we classified countries into five tiers based on historical performance, tailoring prediction models to the unique dynamics of each group. With \textbf{metaheuristic} algorithm, we optimized feature selection process. \textbf{Regression techniques}, including LSBoost, XGBoost, and random forests, as well as optimizing algorithms, including SSA \cite{8}, DBO \cite{9}, SCA \cite{10} were implemented with the \textbf{TOPSIS} method used to identify the most effective model and algorithm. We also introduced \textbf{K-Fold algorithm} to split datasets into training, validating and testing sets. Additionally, an analysis of the relationship between sports' global importance and medal distribution, using \textbf{Spearman's rank correlation coefficient}, confirmed the substantial benefits host countries derive, such as increased medal counts and event-specific advantages.
+    \textbf{Task 1} focuses on medal prediction through a \textbf{tier-based modeling approach}. Using \textbf{K-means clustering}, we classified countries into five tiers based on recent historical performance, tailoring prediction models to the unique dynamics of each group. With a \textbf{metaheuristic} algorithm, we optimized the feature selection process. \textbf{Regression techniques}, including LSBoost, XGBoost, random forests, etc., as well as optimizing algorithms, including SSA \cite{8}, DBO \cite{9}, SCA \cite{10}, etc., were implemented with the \textbf{TOPSIS} method used to identify the most effective model and algorithm. We also introduced \textbf{K-Fold algorithm} to split datasets into training, validating, and testing sets. Additionally, an analysis of the relationship between sports' global importance and medal distribution, using \textbf{Spearman's rank correlation coefficient}, confirmed the substantial benefits host countries derive, such as increased medal counts and event-specific advantages.
     
     \textbf{Task 2} explores the "Great Coach Effect" wherein elite coaches significantly influence national Olympic success. By analyzing \textbf{coaching transfers} and \textbf{performance trends}, we quantified the impact of high-caliber coaching on medal counts. \textbf{Regression analysis} revealed that this effect is particularly pronounced in \textbf{lower-tier/underperforming countries}, where elite coaching can lead to substantial improvements. Based on these findings, we recommend prioritizing the recruitment of top-tier coaches in countries with the potential for notable performance gains.
     
     \textbf{Task 3} delves into the original insights revealed from our model. Firstly, we explored the concept of \textbf{Global Sports Equity}, highlighting the significant impact of elite coaching on low-tier countries and recommending the sharing of coaching expertise to foster a more equitable global sports landscape. Secondly, we analyzed the \textbf{Host Country Effect}, observing substantial increases in medal counts for host nations and suggesting regulations to mitigate this advantage. Thirdly, we identified a \textbf{Time-Sensitive Element} in our prediction model, emphasizing the importance of recent match data in optimizing performance. Lastly, we discussed the \textbf{Granularity Effect} in prediction models, recommending a diversified participation strategy to maximize medal-winning opportunities. Our \textbf{sensitivity analysis} further confirmed the model's stability with respect to the number of estimators, ensuring robust prediction performance.
     
 \begin{keywords}
-    Olympics Medal Precition; Regression Models; K-Fold; Optimizing Algorithm; Metaheuristic Algorithm
+    Olympics Medal Prediction; Regression Models; K-Fold; Optimizing Algorithm; Metaheuristic Algorithm
 \end{keywords}
 
 \end{abstract}
@@ -89,52 +102,63 @@
 \subsection{Problem Background}
 The Olympic medal table is a key focus for nations and fans, reflecting athletic success and national pride. Predicting medal counts is challenging due to complex factors like event types, host country advantages, and new competitors. This problem requires models based on provided datasets, including historical medal tables, event breakdowns, and athlete performance.
 
-Traditional forecasting methods, like OLS regression and Poisson models, often lack accuracy, especially when the precise data of participants and events is absent. This problem emphasizes predicting medal breakthroughs for introduction of new algorithms and projection strategy based on historical trends.
+Traditional forecasting methods, like OLS regression and Poisson models, often lack accuracy, especially when the precise data of participants and events is absent. This problem emphasizes predicting medal breakthroughs for the introduction of new algorithms and projection strategies based on historical trends.
 
-Moreover, the dynamic nature of sports, with evolving rules, emerging talents, and varying levels of investment in different countries, adds another layer of complexity. Our approach incorporates machine learning techniques and tier-based modeling to address these challenges, aiming to provide more accurate and insightful predictions. By considering factors such as the Great Coach Effect and the impact of host country advantages, our model strives to capture the multifaceted influences on Olympic performance, offering a comprehensive tool for forecasting future medal counts.
+Meanwhile, the dynamic nature of sports, with evolving rules, emerging talents, and varying levels of investment in different countries, adds another layer of complexity. Our approach incorporates regression model techniques and tier-based modeling to address these challenges, aiming to provide more accurate and insightful predictions. Our model strives to capture the multifaceted influences on Olympic performance, offering a comprehensive tool for forecasting future medal counts.
 
 \subsection{Literature Review}
 
-Predicting Olympic medal counts has been a topic of interest for researchers across various fields, including economics, sociology, and sports science. Early studies, such as those by Ball (1972) and Grimes et al. (1974), \cite{1} focused on identifying fundamental socioeconomic and demographic factors that influence a nation's medal count. These studies emphasized the importance of population size and economic resources in determining Olympic success. Subsequent research, including work by Bernard and Busse (2004) and Xun Bian (2005) \cite{2}, further explored the impact of political systems and hosting advantages on medal counts, finding that hosting the Games and having a centrally-planned economy can significantly enhance a country's performance.
+Predicting Olympic medal counts has been a topic of interest for researchers across various fields, including economics, sociology, and sports science. Early studies, such as those by Ball (1972)\cite{1}, focused on identifying fundamental socioeconomic and demographic factors that influence a nation's medal count. Subsequent research, including work by Bernard and Busse (2004) and Xun Bian (2005) \cite{2, 3}, further explored the impact of political systems and hosting advantages on medal counts, finding that hosting the Games and having a centrally-planned economy can significantly enhance a country's performance. Recent advancements in statistical and machine learning techniques have led to more sophisticated models for predicting Olympic medals. Forrest et al. (2010) \cite{4} enhanced traditional regression-based models by including additional regressors such as public spending on recreation and the effects of future hosts.
 
-Recent advancements in statistical and machine learning techniques have led to more sophisticated models for predicting Olympic medals. Schlembach et al. (2022) \cite{5} applied a two-staged Random Forest model, incorporating a wide range of socioeconomic variables, including GDP, population, and public health indicators. This approach outperformed traditional models and naïve forecasts, demonstrating the potential of machine learning to improve prediction accuracy. Similarly, Forrest et al. (2010) \cite{4} enhanced traditional regression-based models by including additional regressors such as public spending on recreation and the effects of future hosts. These studies highlight the importance of considering multiple factors, including public health crises like COVID-19, in predicting Olympic performance.
-
-Despite significant progress, predicting Olympic medals remains a complex task due to the interplay of numerous factors. It's recommended that future research should focus on incorporating more granular data, such as individual athlete performance and training conditions, to enhance prediction accuracy. Additionally, the use of panel data and advanced machine learning techniques, such as neural networks and ensemble methods, could provide further insights into the determinants of Olympic success. It's also deemed important to address the exogeneity of the total number of medals available and considering cultural factors, such as political freedom and gender equality. Overall, the field has evolved from simple correlation-based models to sophisticated machine learning algorithms, with traditional socioeconomic factors remaining significant predictors of Olympic success.
+Despite significant progress, predicting Olympic medals remains a complex task due to the interplay of numerous factors. Overall, the field has evolved from simple correlation-based models to sophisticated machine learning algorithms, with traditional socioeconomic factors remaining significant predictors of Olympic success.
 
 \subsection{Our Work}
+
+Our entire workflow is demonstrated in \textit{Figure~\ref{fig:ourwork}}.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=1\textwidth]{pics/ourwork.png}
-    % \caption{Cumulative Medal-Winning Countries by Olympic Year}
-    % \label{fig:cumulative_medal_winning_countries}
+    \caption{Our entire workflow}
+    \label{fig:ourwork}
 \end{figure}
 
-As can be seen from the figure above, we have meticulously designed the model structure to seamlessly integrate various tasks and derive effective and sound conclusions.
+% As can be seen from the figure above, we have meticulously designed the model structure to seamlessly integrate various tasks and derive effective and sound conclusions.
 
-Due to the limitation of usable dataset, we cannot explore many of the aforementioned factors in detail. Instead, we focus on developing a model that predicts Olympic medal counts based on historical data and sport-specific information. Our model has the following features:
+% Due to the limitation of usable dataset, we cannot explore many of the aforementioned factors in detail. Instead, we focus on developing a model that predicts Olympic medal counts based on historical data and sport-specific information. Our model has the following features:
 
-\begin{enumerate}
-    \item A tier-based modeling strategy that classifies countries into five tiers based on their historical performance, allowing for more accurate predictions for countries with similar overall strengths.
-    \item A two-stage model that first predicts the number of medals won by each country in each sport, then aggregates these predictions to estimate the total medal count.
-    \item Trains and evaluates multiple models on the same dataset, and uses the best-performing model for prediction.
-    \item Quantifies the uncertainty in model predictions using Gaussian Probability Interval Prediction, providing upper and lower bounds for the estimated medal counts.
-    \item A sensitivity analysis that assesses the impact of different factors on medal counts and identifies key drivers of success.
-\end{enumerate}
+% \begin{enumerate}
+%     \item A tier-based modeling strategy that classifies countries into five tiers based on their historical performance, allowing for more accurate predictions for countries with similar overall strengths.
+%     \item A two-stage model that first predicts the number of medals won by each country in each sport, then aggregates these predictions to estimate the total medal count.
+%     \item Trains and evaluates multiple models on the same dataset, and uses the best-performing model for prediction.
+%     \item Quantifies the uncertainty in model predictions using Gaussian Probability Interval Prediction, providing upper and lower bounds for the estimated medal counts.
+%     \item A sensitivity analysis that assesses the impact of different factors on medal counts and identifies key drivers of success.
+% \end{enumerate}
 
 \section{Assumptions and Justifications} 
 
-\begin{enumerate}
-    \item \textbf{Historical Consistency}: We assume that historical trends in medal counts are consistent with future performance. This assumption underlies our prediction model, which relies on past data to forecast future outcomes. This assumption is at the heart of our model and is supported by previous research on the predictability of Olympic medal counts \cite{4,5,7}.
-    \item \textbf{Comprehensive national power's great impact on medal count}: It's been widely acknowledged that a country's comprehensive national power, including economic, political, and social factors, has a significant impact on its Olympic performance \cite{1,2,3,7}. Because the provided dataset doesn't include the detailed information of these factors like GDP, we manually categorizes countries into different tiers based on their historical medal counts, which is a good proxy for their comprehensive national power. For more detail, see Data Preprocessing part.
-    \item \textbf{Host Country Advantage}: We assume that host countries have a competitive advantage due to factors such as home crowd support and familiarity with the venues.
-    \item \textbf{Time Proximity}: We assume that only the recent Olympic data is relevant for predicting future medal counts. This assumption is based on the idea that recent performance trends and current athlete conditions are more indicative of future outcomes than older data, and at the same time, only the most recent data can embody the current comprehensive power of countries. Therefore, our model primarily focuses on the last few Olympic Games to ensure the predictions are based on the most relevant and up-to-date information.
-    \item \textbf{Sport as minimal granularity}: We assume that using sport as the minimal granularity of data is the best for predicting medal counts, namely, we predict the medal outcome of each sport and sum them up to obtain the projected medal count for each country. This is justified by our trial-and-error process, which found that using event or individual athlete as the minimal granularity of data leads to overfitting and poor generalization.  Granularity too small leads to higher randomness and fewer samples for each unit, and neither of them are beneficial for the accurate prediction of medal counts in the next Olympic Games. Therefore, we use sport as the minimal granularity of data in our model.
-\end{enumerate}
+\subsection{Historical Consistency}
+    
+    We assume that historical trends in medal counts are consistent with future performance. This assumption is at the heart of our model and is supported by previous research on the predictability of Olympic medal counts \cite{4,5,7}.
+\subsection{Comprehensive national power's great impact on medal count}
+    
+    It's been widely acknowledged that a country's comprehensive national power, including economic, political, and social factors, has a significant impact on its Olympic performance \cite{1,2,3,7}. Because the provided dataset doesn't include the detailed information of these factors like GDP, we manually categorize countries into different tiers based on their historical medal counts, which is a good proxy for their comprehensive national power. For more detail, see Data Preprocessing part.
+\subsection{Host Country Advantage}
+    
+    We assume that host countries have a competitive advantage due to factors such as home crowd support and familiarity with the venues.
+\subsection{Time Proximity}
+    
+    We assume that only the recent Olympic data is relevant for predicting future medal counts. This assumption is based on the idea that recent performance trends and current athlete conditions are more indicative of future outcomes than older data. Therefore, our model primarily focuses on the last few Olympic Games to ensure the predictions are based on the most relevant and up-to-date information.
+\subsection{Sport as minimal granularity}
+    
+    We assume that using sport as the minimal granularity of data is the best for predicting medal counts, namely, we predict the medal outcome of each sport and sum them up to obtain the projected medal count for each country. This is justified by our trial-and-error process, which found that using event or individual athlete as the minimal granularity of data leads to overfitting and poor generalization. Granularity too small leads to higher randomness and fewer samples for each unit, and neither of them are beneficial for the accurate prediction of medal counts in the next Olympic Games. Therefore, we use sport as the minimal granularity of data in our model.
 
 \section{Notations and Definitions}
 
-Here are the notations and definitions used in our model and the solution of the tasks:
+Our model employs a range of notations and definitions to facilitate the analysis and prediction of Olympic medal counts. These notations are summarized in \textit{Table~\ref{tab:notations}}.
+
+\newpage
+
 \begin{table}[h!]
     \centering
     \begin{tabular}{ccc}
@@ -146,17 +170,14 @@ Here are the notations and definitions used in our model and the solution of the
         $S_k$ & Sport $k$, composed of related events $E_j$, \\
              & $k \in \{1, 2, \ldots, L\}$; $L$: total number of sports. \\
         $m_{i,j}$ & Medals won by country $C_i$ in event $E_j$ from 2012 to 2024. \\
-        $M_i$ & Total medals won by country $C_i$, \\
-             & $M_i = \sum_{j=1}^M m_{i,j}.$ \\
-        $w_{i,j}$ & Importance of event $E_j$ for country $C_i$, \\
-             & $w_{i,j} = \frac{m_{i,j}}{M_i}.$ \\
-        $W_j$ & Global importance of event $E_j$, \\
-             & $W_j = \sum_{i=1}^N w_{i,j}.$ \\
-        $I_k$ & Global importance of sport $S_k$, \\
-             & $I_k = \sum_{j \in S_k} W_j.$ \\
+        $M_i$ & Total medals won by country $C_i$, $M_i = \sum_{j=1}^M m_{i,j}.$ \\
+        $w_{i,j}$ & Importance of event $E_j$ for country $C_i$, $w_{i,j} = \frac{m_{i,j}}{M_i}.$ \\
+        $W_j$ & Global importance of event $E_j$, $W_j = \sum_{i=1}^N w_{i,j}.$ \\
+        $I_k$ & Global importance of sport $S_k$, $I_k = \sum_{j \in S_k} W_j.$ \\
+        $S_{xx}$ & Sum of square deviation of $x$, $S_{xx} = \sum_{i=1}^n (x_i - \bar{x})^2.$ \\
         \bottomrule
     \end{tabular}
-
+    \caption{Summary of notations and definitions}
     \label{tab:notations}
 \end{table}
 
@@ -169,11 +190,7 @@ Here are the notations and definitions used in our model and the solution of the
 \subsection{Early Attempts: Athlete-based Prediction}
 First, we ruled out the approach of predicting medal counts based solely on the historical total medal data of countries, as this method is both logically flawed and overly simplistic. Given that the most detailed dataset provided includes information on individual Olympic competitors, their respective sports, events, and results, it is a natural and more precise approach to base medal predictions on the performance of individual athletes participating in specific events.
 
-To facilitate this, we introduced a new column named "ID", which concatenates the athlete's name and event using an underscore ("\_"). This categorization enables us to construct a time series of medal data for each athlete and event, providing a robust foundation for applying predictive methods to estimate medal counts in future Olympics.
-
-To put it lucidly, we added a column named "ID" which concatenated Name and Event with a "\_", which categorized the data in every individual and event. Then it's easier to create a time series of medal data out of it and apply certain method to predict the medal counts in the next Olympics.
-
-Furthermore, we aimed to incorporate the host country as a training feature by matching it to competing country, while the dataset only provided host city. Recognizing the National Olympic Committee (NOC) code as a standardized and uniform identifier for countries, we created a dataset named "City\_NOC.csv" to serve as a dictionary containing all Olympic host cities and their corresponding NOC codes. Using this dictionary, we developed a Python script to add a new column, "host\_NOC", to the dataset while removing the original "City" column. Additionally, we excluded all data from the 1906 Olympics, as it was an informal event and disrupted the four-year cycle traditionally followed by the Olympic Games.
+Furthermore, we aimed to incorporate the host country as a training feature by matching it to the competing country, while the dataset only provided the host city. Recognizing the National Olympic Committee (NOC) code as a standardized and uniform identifier for countries, we created a dataset named "City\_NOC.csv" to serve as a dictionary containing all Olympic host cities and their corresponding NOC codes. Using this dictionary, we developed a Python script to add a new column, "host\_NOC", to the dataset while removing the original "City" column. Additionally, we excluded all data from the 1906 Olympics, as it was an informal event and disrupted the four-year cycle traditionally followed by the Olympic Games.
 
 To further enhance data quality, we normalized medal counts by dividing them by their corresponding team sizes \AIcite{AI2} using a Python script. This normalization step ensured that the data accounted for the nature of team events, eliminating biases caused by repeated medal counts. We subsequently created a training dataset consisting of individual participants as rows and their corresponding medals earned and host NOC for each year as columns.
 
@@ -210,7 +227,7 @@ To specify, we adopt a tier-based modeling strategy, aligning with the classific
 \begin{wrapfigure}{r}{8cm}  %这是图文混排的环境
     \centering
     \includegraphics[width=0.9\linewidth,height=6cm]{pics/Multi-Agent_Optimization_Algorithm.jpg}
-    \caption{mechanism of metaheuristic algorithm}
+    \caption{Mechanism of metaheuristic algorithm}
     \label{fig:metaheuristic_algorithm}
 \end{wrapfigure}
 
@@ -230,12 +247,11 @@ Given the relatively small dataset size, we adopt k-fold cross-validation to spl
 
 \subsection{Model Training}
 
-We train several regression models on the training set, including:LSBoost,XGBoost,
-Multivariate Linear Regression,Gaussian Regression,Decision Tree,Random Forest. Each model is trained using the training set and evaluated on the validation set to determine the optimal hyperparameters.
+We train several regression models on the training set, including: LSBoost, XGBoost, Multivariate Linear Regression, Gaussian Regression, Decision Tree, Random Forest. Each model is trained using the training set and evaluated on the validation set to determine the optimal hyperparameters.
 
 \subsection{Model Evaluation}
 
-The performance of each model is assessed on the test set using the following metrics:Mean Absolute Error (MAE),Mean Absolute Percentage Error (MAPE),Mean Squared Error (MSE),Root Mean Squared Error (RMSE),Coefficient of Determination ($R^2$)
+The performance of each model is assessed on the test set using the following metrics:Mean Absolute Error (MAE), Mean Absolute Percentage Error (MAPE), Mean Squared Error (MSE), Root Mean Squared Error (RMSE), Coefficient of Determination ($R^2$)
 
 The evaluation result is shown in \textit{Figure~\ref{fig:model_comparison}}. From the result we can see that each medal type can have very different best models. This phenomenon also vouches for the veracity of our tier-based modeling strategy.
 
@@ -328,7 +344,7 @@ It's also shown later in practice that each medal type can have very different b
 
 We apply various optimization algorithms to enhance model performance further. The algorithms tested include:
 SSA \cite{8}, DBO \cite{9}, SCA \cite{10}, SA \cite{11}, PSO \cite{12}, SO \cite{13}, POA \cite{14},  
-GWO \cite{15}, IGWO \cite{16}, AVOA \cite{17}.
+GWO \cite{15}.
 
 As an example, SSA algorithm demonstrated the best results for optimizing the Tier 1 Gold medal prediction model, and the optimization outcome is shown in \textit{Figure~\ref{fig:smaller_eps_images}}.
 
@@ -384,7 +400,7 @@ As an example, SSA algorithm demonstrated the best results for optimizing the Ti
     \centering
     % \includegraphics[width=0.9\linewidth,height=6cm]{pics/Multi-Agent_Optimization_Algorithm.jpg}
     \includegraphics[width=0.5\textwidth]{pics/Gaussian Probability Interval Prediction.eps}
-    \caption{Gaussian Probability Interval Prodiction.}
+    \caption{Gaussian Probability Interval Prediction.}
     \label{fig:Probability_Interval_Prediction}
 \end{wrapfigure}
 \subsection{Uncertainty Quantification and Prediction Intervals}
@@ -462,45 +478,30 @@ We tested the established model to predict medal counts for the 2028 Los Angeles
 In this section, we analyze the improvements or declines in medal counts. We define \textit{"improvement"} and \textit{"decline"} as follows in order to separate them from normal fluctuations:
 
 \begin{itemize}
-    \item \textbf{Improvement:} If the predicted medal count for a country in 2028 is higher than its medal count from the previous Olympics more than a constant \textit{X} percent (\textbf{Condition 1}) or for every type of medal, the count doesn't decrease and at least one type of medal shows increase in count (\textbf{Condition 2}), we consider it an improvement.
-    \item \textbf{Decline:} If the predicted medal count for a country in 2028 is lower than its medal count from the previous Olympics more than a constant \textit{X} percent (\textbf{Condition 1}) or for every type of medal, the count doesn't increase and at least one type of medal shows decrease in count (\textbf{Condition 2}), we consider it a decline.
+    \item \textbf{Improvement:} If the predicted medal count for a country in 2028 is higher than its medal count from the previous Olympics more than a constant \textit{X} percent (\textbf{Condition 1}) or for every type of medal, the count doesn't decrease and at least one type of medal shows an increase in count (\textbf{Condition 2}), we consider it an improvement.
+    \item \textbf{Decline:} If the predicted medal count for a country in 2028 is lower than its medal count from the previous Olympics more than a constant \textit{X} percent (\textbf{Condition 1}) or for every type of medal, the count doesn't increase and at least one type of medal shows a decrease in count (\textbf{Condition 2}), we consider it a decline.
 \end{itemize}
 
 With \textit{X} set to 15\%, we identified the following countries that are expected to improve or decline in medal counts at the 2028 Los Angeles Olympics shown in \textit{Table~\ref{tab:medal_changes}}.
 
 \begin{table}[htbp]
     \centering
-    \begin{tabular}{|c|c|c|}
+    \begin{tabular}{|c|c|c||c|c|c|}
         \hline
-        NOC & Change & Conditions Met \\
+        NOC & Change & Conditions Met & NOC & Change & Conditions Met \\
         \hline
-        ARG & $\uparrow$ & 1, 2 \\
-        AZE & $\uparrow$ & 1, 2 \\
-        BEL & $\uparrow$ & 1 \\
-        CHN & $\uparrow$ & 2 \\
-        CUB & $\uparrow$ & 1 \\
-        DEN & $\uparrow$ & 1, 2 \\
-        ETH & $\uparrow$ & 1 \\
-        GBR & $\uparrow$ & 1, 2 \\
-        GEO & $\uparrow$ & 1 \\
-        INA & $\uparrow$ & 1 \\
-        JAM & $\uparrow$ & 1, 2 \\
-        JPN & $\uparrow$ & 1, 2 \\
-        KAZ & $\uparrow$ & 1, 2 \\
-        LTU & $\uparrow$ & 1 \\
-        SUI & $\uparrow$ & 1, 2 \\
-        SVK & $\uparrow$ & 1 \\
-        UKR & $\uparrow$ & 1, 2 \\
-        USA & $\uparrow$ & 2 \\
-        HUN & $\downarrow$ & 1 \\
-        IND & $\downarrow$ & 1 \\
-        KOR & $\downarrow$ & 1 \\
-        MAR & $\downarrow$ & 1 \\
-        NOR & $\downarrow$ & 1 \\
-        POR & $\downarrow$ & 1 \\
-        ROU & $\downarrow$ & 1 \\
-        TUR & $\downarrow$ & 2 \\
-        UZB & $\downarrow$ & 1 \\
+        ARG & $\uparrow$ & 1, 2 & KAZ & $\uparrow$ & 1, 2 \\
+        AZE & $\uparrow$ & 1, 2 & SUI & $\uparrow$ & 1, 2 \\
+        BEL & $\uparrow$ & 1 & SVK & $\uparrow$ & 1 \\
+        CHN & $\uparrow$ & 2 & UKR & $\uparrow$ & 1, 2 \\
+        CUB & $\uparrow$ & 1 & USA & $\uparrow$ & 2 \\
+        DEN & $\uparrow$ & 1, 2 & HUN & $\downarrow$ & 1 \\
+        ETH & $\uparrow$ & 1 & IND & $\downarrow$ & 1 \\
+        GBR & $\uparrow$ & 1, 2 & KOR & $\downarrow$ & 1 \\
+        GEO & $\uparrow$ & 1 & MAR & $\downarrow$ & 1 \\
+        INA & $\uparrow$ & 1 & NOR & $\downarrow$ & 1 \\
+        JAM & $\uparrow$ & 1, 2 & POR & $\downarrow$ & 1 \\
+        JPN & $\uparrow$ & 1, 2 & ROU & $\downarrow$ & 1 \\
         \hline
     \end{tabular}
     \caption{Countries with Predicted Changes in Medal Counts for the 2028 Los Angeles Olympics}
@@ -532,16 +533,13 @@ Looking at this figure we discovered that the data points of recent Olympics exh
 
 It's notable that $R^2=0.9935$, indicating a very high fit to the data, meaning the linear model is highly accurate for this dataset.
 
-Then the projection for number of countries that have won medals till 2028 (x=2028) is
-$$\hat{y}_{2028}=\hat{a}x+\hat{b}=161.86$$
+Then the projection for number of countries that have won medals till 2028 (x=2028) 
+$\hat{y}_{2028}=\hat{a}x+\hat{b}=161.86$.
 Therefore, the projection for new medal-winning countries in the next Olympics is
-$$\Delta y=\hat{y}_{2028}-y_{2024}=4.86$$
+$\Delta y=\hat{y}_{2028}-y_{2024}=4.86$.
 
 
 Based on our calculations, the residual standard deviation $\sigma = 0.917$, and $S_{xx} = \sum_{k=1}^{8}(x_k - \bar{x})^2 = 672$. For a 70\% confidence level, we refer to the t-distribution table and find $t_{0.15,6} = 1.134$.
-
-Thus, we can conclude that the confidence interval for the number of new medal-winning countries, at a 70\% confidence level, is $(4.05, 5.67)$.
-
 
 \subsubsection{Results}
 
@@ -580,26 +578,48 @@ To better understand the relationship between event count and medal count, we em
     %! TODO: Add the clustering result figure here
     
     
-    Once the countries were assigned to tiers, we conducted separate correlation analyses within each tier. Spearman's correlation coefficient was used to measure the strength and direction of the relationship, as it is well-suited for non-parametric data and can handle potential non-linearities. The results are shown in following Table~\ref{tab1}.
+    Once the countries were assigned to tiers, we conducted separate correlation analyses within each tier. Spearman's correlation coefficient was used to measure the strength and direction of the relationship, as it is well-suited for non-parametric data and can handle potential non-linearity. The results are shown in following Table~\ref{tab1}.
 
 
+%     \begin{wrapfigure}{r}{8cm}  %这是图文混排的环境
+%         \centering
+%         \includegraphics[width=0.9\linewidth,height=9cm]{pics/sport_influence_whole.png}
+%         \caption{Ranking of sports by global importance based on aggregated event importance values across all countries.}
+%         \label{fig:sport_importance}
+%     \end{wrapfigure}
+% \begin{table}[h!]
+%     \centering
+%     \begin{tabular}{ccc}
+%     \toprule
+%     \textbf{Tier} & \textbf{Spearman Correlation} & \textbf{p-value} \\
 
-\begin{table}[h!]
+%     1 & 0.38 & $2.16 \times 10^{-5}$ \\
+%     2 & 0.39 & $0.01$ \\
+%     3 & 0.61 & $4.99 \times 10^{-5}$ \\
+%     4 & 0.57 & $0.13$ \\
+%     5 & 0.98 & $0.02$ \\
+%     \bottomrule
+%     \end{tabular}
+%     \caption{Spearman correlation and p-values across different tiers.}
+%     \label{tab1}
+% \end{table}
+
+\begin{wraptable}{r}{8cm}  %这是图文混排的环境
     \centering
     \begin{tabular}{ccc}
     \toprule
-    \textbf{Tier} & \textbf{Spearman Correlation} & \textbf{p-value} \\
+    \textbf{Tier} & \textbf{Spearman Correlation} & \textbf{p-value} \\ 
     \midrule
-    1 & 0.38 & $2.16 \times 10^{-5}$ \\
-    2 & 0.39 & $0.01$ \\
-    3 & 0.61 & $4.99 \times 10^{-5}$ \\
-    4 & 0.57 & $0.13$ \\
-    5 & 0.98 & $0.02$ \\
+    1 & 0.38 & $2.16 \times 10^{-5}$ \\ 
+    2 & 0.39 & $0.01$ \\ 
+    3 & 0.61 & $4.99 \times 10^{-5}$ \\ 
+    4 & 0.57 & $0.13$ \\ 
+    5 & 0.98 & $0.02$ \\ 
     \bottomrule
     \end{tabular}
-    \caption{Spearman correlation and p-values across different tiers.}
+    \caption{Table \thetable: Spearman correlation and p-values across different tiers.}
     \label{tab1}
-\end{table}
+\end{wraptable}
 
 \subsubsection{Interpretation of Results}
 The analysis indicates that for most tiers (1, 2, 4, and 5), there is a statistically significant positive relationship between event count and medal count ($p < 0.05$). This suggests that the number of events a country participates in positively impacts its medal count. For Tier 3, the $p$-value is greater than 0.05, indicating no statistically significant correlation between event count and medal count within this group. This anomaly could be due to specific factors such as high variability in event outcomes or unmeasured country-specific attributes. However, the overall analysis aligns with the expectation that more competitive countries (higher tiers) are better equipped to convert event participation into medals due to superior resources, training, and athletes.
@@ -631,8 +651,9 @@ For each event $E_j$, we calculate its global importance value $W_j = \sum_{i=1}
 For each sport $S_k$, we compute its global importance $I_k = \sum_{j \in S_k} W_j$.It is completed through aggregating the global importance values $W_j$ of all events $E_j$ under the sport, providing an overall measure of the importance of each sport for all countries collectively.
 
 \paragraph{Step 4}
-The sports are then ranked based on their global importance values $I_k$. A visualization of the rankings illustrates that athletics, boxing, and wrestling are the top three most important sports globally, where athletics has the abosolute highest(more than twice of the second place) importance value. Result is shown in \textit{Figure~\ref{fig:sport_importance}}.
+The sports are then ranked based on their global importance values $I_k$. A visualization of the rankings illustrates that athletics, boxing, and wrestling are the top three most important sports globally, where athletics has the absolute highest(more than twice of the second place) importance value. Result is shown in \textit{Figure~\ref{fig:sport_importance}}.
 
+\newpage
 
 \begin{wrapfigure}{r}{8cm}  %这是图文混排的环境
     \centering
@@ -651,6 +672,7 @@ The sports are then ranked based on their global importance values $I_k$. A visu
 
 \subsubsection{Results and Insights}
 The analysis reveals that the importance of sports varies significantly across countries. The ranking of sports based on global importance highlights sports such as athletics, swimming, and gymnastics as the most influential globally. These sports typically feature a larger number of events and offer more medal opportunities, which contributes to their higher global importance.
+
 
 % \subsubsection{Discussion and Recommendations(Optional)}
 % \begin{itemize}
@@ -740,7 +762,6 @@ We implemented the data filtering logic in Python with 0.23k LOC. The program re
 The program then pairs countries with overlapping trends in the same sport, checking the overlap period to ensure it spans at least four years and does not exceed a defined gap (OVERLAP\_GAP\_UPPER). Paired trends suggest the transfer of coaching expertise from one country to another.
 
 By carefully calibrating the thresholds and gaps, we can effectively identify the Great Coach Effect and quantify its impact on national performances. We present the visual representation of the potential occurrences of the Great Coach Effect from both sport level and event level in \textit{Figure~\ref{fig:great_coach_effect}}.
-
 \begin{figure}[htbp]
     \begin{minipage}[t]{0.5\textwidth}
         \centering
@@ -813,7 +834,7 @@ It is worth mentioning that the data generated by the program above provides pai
 
 This piece of data generated by the program reveals a significant overlap in performance trends between China (CHN) and Spain (ESP) during the period from 2008 to 2012. China's positive slope (0.125) and Spain's negative slope (-0.250) aligns well with Ana Tarré's transition from coaching Spain to China in 2012.
 
-As we gather the data of a longer period, Ana Tarré's influence as a coach is clearly reflected in the medal trends for synchronized swimming. During her tenure with Spain (1996–2012), the team gradually improved, earning higher medals, peaking with a Silver medal in 2008 and a Bronze in 2012. However, after she transitioned to coaching China in 2012, Spain had dropped out of the podium positions since then until 2024, while China experienced a gradual rise, achieving a series of Silver medals and finnaly a Gold medal in 2024. This shift strongly aligns with the Great Coach Effect, as her expertise and strategies appear to have propelled China's team to the top while Spain struggled without her guidance.
+During Ana Tarré's tenure with Spain (1996–2012), the team gradually improved, earning higher medals, peaking with a Silver medal in 2008 and a Bronze in 2012. However, after she transitioned to coaching China in 2012, Spain had dropped out of the podium positions since then until 2024, while China experienced a gradual rise, achieving a series of Silver medals and finally a Gold medal in 2024, strongly aligning with the Great Coach Effect.
 
 \subsubsection{Gymnastics Women's Team All-Around: Béla Károlyi}
 \begin{lstlisting}
@@ -822,7 +843,7 @@ As we gather the data of a longer period, Ana Tarré's influence as a coach is c
 
 According to the program data, the overlap period between Romania (ROU) and the United States (USA) spans from 2000 to 2008. During this time, Romania exhibited a steep negative slope (-0.250), whereas the United States showed a positive one (0.125), which matches the historical narrative of Béla Károlyi's influence.
 
-Béla Károlyi's legendary coaching career demonstrates a clear pattern of the Great Coach Effect. While coaching Romania (1974–1981), he elevated the team to global prominence, culminating in Silver medals in 1976 and 1980. After moving to coach the United States (1981–2016), Romania's performance declined, while the U.S. women's gymnastics team emerged as a dominant force, securing multiple Gold medals, including in 1996, 2012, and 2016. The sharp contrast in medal trends between the two nations during and after his coaching periods highlights his pivotal role in shaping team success.
+Béla Károlyi's legendary coaching career demonstrates a clear pattern of the Great Coach Effect. While coaching Romania (1974–1981), he elevated the team to global prominence, culminating in Silver medals in 1976 and 1980. After moving to coach the United States (1981–2016), Romania's performance declined, while the U.S. women's gymnastics team emerged as a dominant force.
 
 \subsubsection{Women's Volleyball: Lang Ping}
 \begin{lstlisting}
@@ -832,7 +853,7 @@ Béla Károlyi's legendary coaching career demonstrates a clear pattern of the G
 
 The program identifies two overlapping periods: 1992-2004 and 2004-2012. In both periods, one of CHN/USA rises and the other falls, which closely corresponds to Lang Ping's coaching career.
 
-Looking at Lang Ping's coaching career spanning over 20 years, we can also discover the distinct influence of a capable coach. During her first tenure with China (1995-2005), the team achieved notable successes, including a Gold medal in 2004. After transitioning to coach the U.S. team (2005-2013) which had won few medals in history, U.S. quickly surpassed China and won 2 consecutive Silver medals. When Lang Ping returned to coach China in 2013, the Chinese team quickly regained its dominance with a Gold in 2016. This fluctuation in performance underscores her unique ability to transform teams and highlights the strategic importance of securing top-tier coaching talent.
+Looking at Lang Ping's coaching career spanning over 20 years, we can also discover the distinct influence of a capable coach. During her first tenure with China (1995-2005), the team achieved notable successes, including a Gold medal in 2004. After transitioning to coach the U.S. team (2005-2013) which had won few medals in history, U.S. quickly surpassed China and won 2 consecutive Silver medals. When Lang Ping returned to coach China in 2013, the Chinese team quickly regained its dominance with a Gold in 2016.
 
 % These examples illustrate how the transfer of elite coaches can create significant shifts in medal performance across countries, substantiating the Great Coach Effect. The patterns not only validate the causality between coaching expertise and medal counts but also provide insights for national Olympic committees to consider investing in high-caliber coaching for sustained success.
 
@@ -950,8 +971,6 @@ In our work, we developed a comprehensive model to analyze and predict medal cou
     \bibitem{13} Hashim, F. A., \& Hussien, A. G. (2022). Snake Optimizer: A novel meta-heuristic optimization algorithm. \textit{Knowledge-Based Systems, 242}, 108320.
     \bibitem{14} Trojovský, P., \& Dehghani, M. (2022). Pelican optimization algorithm: A novel nature-inspired algorithm for engineering applications. \textit{Sensors, 22}(3), 855.
     \bibitem{15} Mirjalili, S., Mirjalili, S. M., \& Lewis, A. (2014). Grey wolf optimizer. \textit{Advances in Engineering Software, 69}, 46-61.
-    \bibitem{16} Nadimi-Shahraki, M. H., Taghian, S., \& Mirjalili, S. (2021). An improved grey wolf optimizer for solving engineering problems. \textit{Expert Systems with Applications, 166}, 113917.
-    \bibitem{17} Abdollahzadeh, B., Gharehchopogh, F. S., \& Mirjalili, S. (2021). African vultures optimization algorithm: A new nature-inspired metaheuristic algorithm for global optimization problems. \textit{Computers \& Industrial Engineering, 158}, 107408.
 \end{thebibliography}
 
 % AI report begins here
@@ -960,7 +979,7 @@ In our work, we developed a comprehensive model to analyze and predict medal cou
 \bibitem{AI1}
 Github Copilot\\
 Query1: make one elaborate plot out of this data:
-1. add scatter points of year-countrycount
+1. add scatter points of year-country count
 2. for the last 8 years [1996-2024], add the linear regression line onto the plot.
 
 Output: I'll help you create a plot with scatter points and a linear regression line. Here's the solution step by step:

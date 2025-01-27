@@ -103,7 +103,7 @@
     \hypersetup{dvipdfm, hidelinks}
   \fi
 \fi
-\geometry{letterpaper, margin = 1in}
+\geometry{letterpaper, margin = 0.85in}
 \fancypagestyle{main}{
 \fancyhf{}
 \lhead{\small\sffamily \team}
