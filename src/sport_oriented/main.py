@@ -14,6 +14,7 @@ from sklearn.base import clone
 def train_model(X_train, y_train):
     medal_types = ['Bronze', 'Silver', 'Gold']
     trained_models = {}
+    cv_metrics = []  # List to store all CV evaluation metrics
     
     for medal_idx, medal_type in enumerate(medal_types):
         models = {
@@ -33,6 +34,9 @@ def train_model(X_train, y_train):
         
         for name, base_model in models.items():
             total_score = 0.0
+            fold_predictions = []
+            fold_actuals = []
+            
             for train_idx, val_idx in kf.split(X_train):
                 X_tr, X_val = X_train[train_idx], X_train[val_idx]
                 y_tr, y_val = y_train_medal[train_idx], y_train_medal[val_idx]
@@ -40,7 +44,27 @@ def train_model(X_train, y_train):
                 cloned_model = clone(base_model)
                 cloned_model.fit(X_tr, y_tr)
                 preds = cloned_model.predict(X_val)
+                
+                fold_predictions.extend(preds)
+                fold_actuals.extend(y_val)
                 total_score += mean_absolute_error(y_val, preds)
+            
+            # Calculate metrics across all folds
+            mae = mean_absolute_error(fold_actuals, fold_predictions)
+            mse = mean_squared_error(fold_actuals, fold_predictions)
+            residuals = np.array(fold_actuals) - np.array(fold_predictions)
+            std_residuals = np.std(residuals)
+            lower_bound = np.mean(fold_predictions) - 1.96 * std_residuals
+            upper_bound = np.mean(fold_predictions) + 1.96 * std_residuals
+            
+            cv_metrics.append({
+                'Model': name,
+                'Medal_Type': medal_type,
+                'MAE': mae,
+                'MSE': mse,
+                'Lower_Bound': lower_bound,
+                'Upper_Bound': upper_bound
+            })
             
             avg_score = total_score / kf.get_n_splits()
             if avg_score < best_score:
@@ -52,10 +76,15 @@ def train_model(X_train, y_train):
         best_model_instance.fit(X_train, y_train_medal)
         trained_models[medal_type] = {best_model_name: best_model_instance}
     
+    # Save CV metrics to CSV
+    cv_metrics_df = pd.DataFrame(cv_metrics)
+    cv_metrics_df.to_csv(f'model_cv_evaluation_results_{TARGET_YEAR}.csv', index=False)
+    
     return trained_models
 
 def evaluate_model(models, X_test, y_test):
     results = {}
+    eval_metrics = []  # New list to store evaluation metrics
     medal_types = ['Bronze', 'Silver', 'Gold']
     
     for medal_type in medal_types:
@@ -101,8 +130,22 @@ def evaluate_model(models, X_test, y_test):
             print(f"MSE: {mse:.4f}")
             print(f"MAE: {mae:.4f}")
             print(f"95% Prediction Interval: ±{1.96 * std_residuals:.2f}")
+            
+            # Store evaluation metrics
+            eval_metrics.append({
+                'Model': name,
+                'Medal_Type': medal_type,
+                'MAE': mae,
+                'MSE': mse,
+                'Lower_Bound': lower_bound.mean(),
+                'Upper_Bound': upper_bound.mean()
+            })
         
         results[medal_type] = medal_results
+    
+    # Convert metrics to DataFrame and save
+    eval_df = pd.DataFrame(eval_metrics)
+    eval_df.to_csv(f'model_evaluation_results_{TARGET_YEAR}.csv', index=False)
     
     return results
 

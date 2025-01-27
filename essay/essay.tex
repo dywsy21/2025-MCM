@@ -111,11 +111,11 @@ Due to the limitation of usable dataset, we cannot explore many of the aforement
 \section{Assumptions and Justifications} 
 
 \begin{enumerate}
-    \item \textbf{Homogeneity of Athletes}: We assume that athletes within the same country are homogeneous in terms of training, resources, and performance. This assumption simplifies the model by treating all athletes from a country as a single entity, ignoring individual variations.
-    \item \textbf{Event Independence}: We assume that the outcomes of different events are independent of each other. This assumption allows us to model each event separately without considering potential correlations between them.
-    \item \textbf{Historical Consistency}: We assume that historical trends in medal counts are consistent with future performance. This assumption underlies our prediction model, which relies on past data to forecast future outcomes.
-    \item \textbf{Host Country Advantage}: We assume that host countries have a competitive advantage due to factors such as home crowd support and familiarity with the venues. This assumption is supported by previous research on the impact of hosting the Olympics on medal counts.
-    
+    \item \textbf{Historical Consistency}: We assume that historical trends in medal counts are consistent with future performance. This assumption underlies our prediction model, which relies on past data to forecast future outcomes. This assumption is at the heart of our model and is supported by previous research on the predictability of Olympic medal counts \cite{4,5,7}.
+    \item \textbf{Comprehensive national power's great impact on medal count}: It's been widely acknowledged that a country's comprehensive national power, including economic, political, and social factors, has a significant impact on its Olympic performance \cite{1,2,3,7}. Because the provided dataset doesn't include the detailed information of these factors like GDP, we manually categorizes countries into different tiers based on their historical medal counts, which is a good proxy for their comprehensive national power. For more detail, see Data Preprocessing part.
+    \item \textbf{Host Country Advantage}: We assume that host countries have a competitive advantage due to factors such as home crowd support and familiarity with the venues.
+    \item \textbf{Time Proximity}: We assume that only the recent Olympic data is relevant for predicting future medal counts. This assumption is based on the idea that recent performance trends and current athlete conditions are more indicative of future outcomes than older data, and at the same time, only the most recent data can embody the current comprehensive power of countries. Therefore, our model primarily focuses on the last few Olympic Games to ensure the predictions are based on the most relevant and up-to-date information.
+    \item \textbf{Sport as minimal granularity}: We assume that using sport as the minimal granularity of data is the best for predicting medal counts, namely, we predict the medal outcome of each sport and sum them up to obtain the projected medal count for each country. This is justified by our trial-and-error process, which found that using event or individual athlete as the minimal granularity of data leads to overfitting and poor generalization.  Granularity too small leads to higher randomness and fewer samples for each unit, and neither of them are beneficial for the accurate prediction of medal counts in the next Olympic Games. Therefore, we use sport as the minimal granularity of data in our model.
 \end{enumerate}
 
 \section{Notations and Definitions}
@@ -215,39 +215,8 @@ The performance of each model is assessed on the test set using the following me
 
 The evaluation result is stated as below. From the result we can see that each medal type can have very different best models. This phenomenon also vouches for the veracity of our tier-based modeling strategy.
 
-\begin{lstlisting}
-    RandomForest - Bronze:
-    Prediction range: 2.14 to 7.84
-    Mean prediction: 4.43
-    Actual range: 2.00 to 9.00
-    Actual mean: 4.29
-    MSE: 11.1018
-    MAE: 2.4743
-    95% Prediction Interval: ±6.52
-    
-    GradientBoosting - Silver:
-    Prediction range: 0.96 to 7.34
-    Mean prediction: 4.39
-    Actual range: 0.00 to 8.00
-    Actual mean: 3.14
-    MSE: 7.3283
-    MAE: 2.0619
-    95% Prediction Interval: ±4.71
-    
-    XGBoost - Gold:
-    Prediction range: 1.01 to 6.13
-    Mean prediction: 3.15
-    Actual range: 0.00 to 4.00
-    Actual mean: 2.86
-    MSE: 3.4256
-    MAE: 1.6301
-    95% Prediction Interval: ±3.58
-    
-    Best model for Bronze (MAE=2.4743): RandomForest
-    Best model for Silver (MAE=2.0619): GradientBoosting
-    Best model for Gold (MAE=1.6301): XGBoost
-\end{lstlisting}
-    
+%! TODO: insert the figure here
+
 
 \subsection{Model Selection}
 
