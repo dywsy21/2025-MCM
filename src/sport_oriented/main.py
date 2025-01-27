@@ -10,6 +10,8 @@ from config import *
 from utils import *
 from sklearn.model_selection import train_test_split, KFold
 from sklearn.base import clone
+from sensitivity import run_sensitivity_analysis
+from utils import plot_sensitivity_analysis
 
 def train_model(X_train, y_train):
     medal_types = ['Bronze', 'Silver', 'Gold']
@@ -281,6 +283,10 @@ def main():
     
     print("\nFinal results with prediction intervals:")
     print(results.to_string(index=False))
+    
+    run_sensitivity_analysis(X_train_split, y_train_split)
+    plot_sensitivity_analysis('sensitivity_analysis_results.csv')
 
 if __name__ == '__main__':
-    main()
+    # main()
+    plot_sensitivity_analysis('sensitivity_analysis_results.csv')

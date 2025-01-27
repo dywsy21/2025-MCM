@@ -415,13 +415,6 @@ With \textit{X} set to 15\%, we identified the following countries that are expe
     \label{tab:medal_changes}
 \end{table}
 
-
-
-
-
-
-
-
 \subsection{Subtask 2 --- Predicting the Number of Countries Winning Their First Medal}
 
 In this subtask, we aim to predict the number of countries that will win their first Olympic medal at the 2028 Los Angeles Olympics. This involves analyzing historical data to identify trends and factors that contribute to countries winning their first medals and applying these insights to make predictions for the upcoming Olympics.
@@ -759,25 +752,47 @@ From the figure above, we recommend the top 3 countries with the highest potenti
 
 
 \section{Task3 --- Original Insights revealed from the model}
-
-
-
-
-
-
-
+% 体育全球共有
+% Host Country 显著 -> regulation限制
+% NUMBER_OF_MATCHES 影响大 -> 时效性不好 -> ever changing
+% 不同时期增速不一致 -> 全球经济和政治状况 -> GDP/Total Medal
+% 尽可能更多项目 <- 颗粒度太小随机性很高 => 训练资源分配问题
 
 
 
 \section{Sensitivity Analysis}
+In order to evaluate how changes in a key hyperparameter affect the overall prediction performance,
+we perform a sensitivity analysis that varies the number of estimators for all the regression models we used.
+Specifically, we adjust the \texttt{n\_estimators} parameter (if the model supports it) in the range of 25 to 175 with the step of 5, while maintaining consistent data and procedural steps otherwise.
 
-\subsection{Strengths}
+We use 3-fold cross-validation on the same features and labels, and for each medal type
+(\textit{Gold, Silver, Bronze}), we select the best performing model just as in the Model Evaluation part.
+We compare each tested value against a baseline model where\texttt{n\_estimators}=100, calculating two proportions:
+\begin{enumerate}
+    \item \textbf{Inner\_param\_change\_proportion}: how much \texttt{n\_estimators} changes
+    relative to the baseline, i.e. \(\frac{n\_value - 100}{100}\).
+    \item \textbf{Result\_change\_proportion}: how much the average MAE changes
+    relative to the MAE of the baseline, i.e. \(\frac{\text{MAE}(n\_value) - \text{MAE}(100)}{\text{MAE}(100)}\).
+\end{enumerate}
 
-\subsection{How to cite?}
-bibliography cite use \cite{1}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{pics/sensitivity_analysis.png}
+    \caption{Sensitivity Analysis of the Number of Estimators}
+    \label{fig:sensitivity_analysis}
+\end{figure}
+
+We can see from the resulting figure that the change in the number of estimators has a minor impact on the results overall, with the largest impact of them being only 7.5\%, and most of them around 2.5\%. This suggests that the model is relatively stable with respect to this hyperparameter, and the prediction performance is not significantly affected by the model parameters within the tested range.
+
+\section{Conclusion}
+
+
+
+
+
+
 
 % AI cite use \AIcite{AI1,AI2,AI3}
-
 \begin{thebibliography}{99}
     
     \bibitem{1} Ball, D. W. (1972). Olympic Games competition: Structural correlates of national success. International Journal of Comparative Sociology, 15, 186–200.
