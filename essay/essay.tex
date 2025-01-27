@@ -55,6 +55,7 @@
 \usepackage{enumitem} % 列表间距
 \usepackage{caption}
 \captionsetup[figure]{justification=centering}
+\captionsetup[table]{justification=centering}
 
 \setenumerate[1]{itemsep=1pt,partopsep=0pt,parsep=\parskip,topsep=2pt}
 \setitemize[1]{itemsep=1pt,partopsep=0pt,parsep=\parskip,topsep=2pt}
@@ -111,6 +112,8 @@ Despite significant progress, predicting Olympic medals remains a complex task d
     % \label{fig:cumulative_medal_winning_countries}
 \end{figure}
 
+As can be seen from the figure above, we have meticulously designed the model structure to seamlessly integrate various tasks and derive effective and sound conclusions.
+
 Due to the limitation of usable dataset, we cannot explore many of the aforementioned factors in detail. Instead, we focus on developing a model that predicts Olympic medal counts based on historical data and sport-specific information. Our model has the following features:
 
 \begin{enumerate}
@@ -133,6 +136,7 @@ Due to the limitation of usable dataset, we cannot explore many of the aforement
 
 \section{Notations and Definitions}
 
+Here are the notations and definitions used in our model and the solution of the tasks:
 \begin{table}[h!]
     \centering
     \begin{tabular}{ccc}
@@ -235,7 +239,7 @@ Multivariate Linear Regression,Gaussian Regression,Decision Tree,Random Forest. 
 
 The performance of each model is assessed on the test set using the following metrics:Mean Absolute Error (MAE),Mean Absolute Percentage Error (MAPE),Mean Squared Error (MSE),Root Mean Squared Error (RMSE),Coefficient of Determination ($R^2$)
 
-The evaluation result is stated as below. From the result we can see that each medal type can have very different best models. This phenomenon also vouches for the veracity of our tier-based modeling strategy.
+The evaluation result is shown in \textit{Figure~\ref{fig:model_comparison}}. From the result we can see that each medal type can have very different best models. This phenomenon also vouches for the veracity of our tier-based modeling strategy.
 
 %! TODO: insert the figure here
 % \begin{figure}[htbp]
@@ -320,6 +324,7 @@ The best-performing model is selected using the TOPSIS (Technique for Order Pref
 \end{itemize}
 
 Among the Tier 1 Gold medal prediction models, for instance, XGBoost exhibited the best performance after evaluation.
+It's also shown later in practice that each medal type can have very different best models.
 
 \subsection{Model Optimization}
 
@@ -327,7 +332,7 @@ We apply various optimization algorithms to enhance model performance further. T
 SSA \cite{8}, DBO \cite{9}, SCA \cite{10}, SA \cite{11}, PSO \cite{12}, SO \cite{13}, POA \cite{14},  
 GWO \cite{15}, IGWO \cite{16}, AVOA \cite{17}.
 
-As an example, SSA algorithm demonstrated the best results for optimizing the Tier 1 Gold medal prediction model, and the following figure shows the optimization outcome.
+As an example, SSA algorithm demonstrated the best results for optimizing the Tier 1 Gold medal prediction model, and the optimization outcome is shown in \textit{Figure~\ref{fig:smaller_eps_images}}.
 
 \begin{figure}[htbp]
     \centering
@@ -377,9 +382,6 @@ As an example, SSA algorithm demonstrated the best results for optimizing the Ti
     \label{fig:smaller_eps_images}
 \end{figure}
 
-
-    
-
 \begin{wrapfigure}{r}{8cm}  %这是图文混排的环境
     \centering
     % \includegraphics[width=0.9\linewidth,height=6cm]{pics/Multi-Agent_Optimization_Algorithm.jpg}
@@ -389,12 +391,7 @@ As an example, SSA algorithm demonstrated the best results for optimizing the Ti
 \end{wrapfigure}
 \subsection{Uncertainty Quantification and Prediction Intervals}
 
-To quantify the uncertainty in model predictions, we use Gaussian Probability Interval Prediction. This method calculates prediction intervals, providing upper and lower bounds for the estimated medal counts. The intervals represent the range within which the actual medal counts are expected to fall with a specified confidence level.
-% \begin{figure}[htbp]
-%     \centering
-%     \includegraphics[width=3.33in, keepaspectratio]{pics/Gaussian Probability Interval Prediction.eps}  
-% \end{figure}
-
+To quantify the uncertainty in model predictions, we use Gaussian Probability Interval Prediction. This method calculates prediction intervals, providing upper and lower bounds for the estimated medal counts. The intervals represent the range within which the actual medal counts are expected to fall within at a specified confidence level, as shown in \textit{Figure~\ref{fig:Probability_Interval_Prediction}}.
 
 \subsection{Conclusion}
 
@@ -405,7 +402,7 @@ The tier-based regression modeling approach provides a structured and efficient 
 \subsection{Subtask 1 --- Predicting Medal Counts for the 2028 Los Angeles Olympics}
 
 \subsubsection{Prediction Results}
-We tested the established model to predict medal counts for the 2028 Los Angeles Olympics. The resulting medal table is as follows: (results rounded to one decimal place, and the prediction intervals attached are calculated at a 95\% confidence level)
+We tested the established model to predict medal counts for the 2028 Los Angeles Olympics. The resulting medal table is presented as \textit{Table~\ref{tab:medal_counts}}: (results rounded to one decimal place, and the prediction intervals attached are calculated at a 95\% confidence level)
 
 \begin{table}[htbp]
     \centering
@@ -471,7 +468,7 @@ In this section, we analyze the improvements or declines in medal counts. We def
     \item \textbf{Decline:} If the predicted medal count for a country in 2028 is lower than its medal count from the previous Olympics more than a constant \textit{X} percent (\textbf{Condition 1}) or for every type of medal, the count doesn't increase and at least one type of medal shows decrease in count (\textbf{Condition 2}), we consider it a decline.
 \end{itemize}
 
-With \textit{X} set to 15\%, we identified the following countries that are expected to improve or decline in medal counts at the 2028 Los Angeles Olympics:
+With \textit{X} set to 15\%, we identified the following countries that are expected to improve or decline in medal counts at the 2028 Los Angeles Olympics shown in \textit{Table~\ref{tab:medal_changes}}.
 
 \begin{table}[htbp]
     \centering
@@ -517,7 +514,7 @@ With \textit{X} set to 15\%, we identified the following countries that are expe
 In this subtask, we aim to predict the number of countries that will win their first Olympic medal at the 2028 Los Angeles Olympics. This involves analyzing historical data to identify trends and factors that contribute to countries winning their first medals and applying these insights to make predictions for the upcoming Olympics.
 
 \subsubsection{Analysis}
-Firstly, we calculated historical data on countries that have won their first Olympic medals in past Games, which is done in Data Preprocessing. The visualization of this dataset is shown below.
+Firstly, we calculated historical data on countries that have won their first Olympic medals in past Games, which is done in Data Preprocessing. The visualization of this dataset is shown in \textit{Figure~\ref{fig:cumulative_medal_winning_countries}}.
 
 \begin{figure}[htbp]
     \centering
@@ -534,7 +531,6 @@ Looking at this figure we discovered that the data points of recent Olympics exh
     The confidence interval for the regression function $\mu (x_0)=\hat{a}x_0+\hat{b}$ at a confidence level of $(1-\alpha)$ is
     $$\bigg( \hat{a}x_0+\hat{b} \pm t_{\alpha /2,n-2}\cdot \sigma \sqrt{\frac{1}{n}+\frac{(x_0-\bar{x})^2}{S_{xx}}} \bigg)$$
 \end{Theorem}
-
 
 It's notable that $R^2=0.9935$, indicating a very high fit to the data, meaning the linear model is highly accurate for this dataset.
 
@@ -637,7 +633,7 @@ For each event $E_j$, we calculate its global importance value $W_j = \sum_{i=1}
 For each sport $S_k$, we compute its global importance $I_k = \sum_{j \in S_k} W_j$.It is completed through aggregating the global importance values $W_j$ of all events $E_j$ under the sport, providing an overall measure of the importance of each sport for all countries collectively.
 
 \paragraph{Step 4}
-The sports are then ranked based on their global importance values $I_k$. A visualization of the rankings illustrates that athletics, boxing, and wrestling are the top three most important sports globally, where athletics has the abosolute highest(more than twice of the second place) importance value.
+The sports are then ranked based on their global importance values $I_k$. A visualization of the rankings illustrates that athletics, boxing, and wrestling are the top three most important sports globally, where athletics has the abosolute highest(more than twice of the second place) importance value. Result is shown in \textit{Figure~\ref{fig:sport_importance}}.
 
 
 \begin{wrapfigure}{r}{8cm}  %这是图文混排的环境
@@ -667,7 +663,6 @@ The analysis reveals that the importance of sports varies significantly across c
 
 
 \subsection{Subtask 3.3 --- Impact of Events Chosen by Host Countries on Olympic Results}
-
 
 Following these steps, we analyze the impact of events chosen by some major host countries on their Olympic results.
 
@@ -746,7 +741,7 @@ We implemented the data filtering logic in Python with 0.23k LOC. The program re
 
 The program then pairs countries with overlapping trends in the same sport, checking the overlap period to ensure it spans at least four years and does not exceed a defined gap (OVERLAP\_GAP\_UPPER). Paired trends suggest the transfer of coaching expertise from one country to another.
 
-By carefully calibrating the thresholds and gaps, we can effectively identify the Great Coach Effect and quantify its impact on national performances.
+By carefully calibrating the thresholds and gaps, we can effectively identify the Great Coach Effect and quantify its impact on national performances. We present the visual representation of the potential occurrences of the Great Coach Effect from both sport level and event level in \textit{Figure~\ref{fig:great_coach_effect}}.
 
 \begin{figure}[htbp]
     \begin{minipage}[t]{0.5\textwidth}
@@ -758,6 +753,7 @@ By carefully calibrating the thresholds and gaps, we can effectively identify th
         \includegraphics[width=0.8\textwidth]{pics/great_coach_effect_analysis_(event_level).png}
     \end{minipage}
     \caption{Potential occurences of The Great Coach Effects from sport level and event level}
+    \label{fig:great_coach_effect}
 \end{figure}
 
 However elaborate we may calibrate the parameters, there still exists the issue of false positives and false negatives, with false positives accounting more because other factors may also contribute to this same characteristic. We recommend cross-referencing the results with external sources, such as coaching records and athlete interviews, to validate the findings and pinpoint the specific coaches responsible for these shifts. This data-driven approach allows for systematic identification of the Great Coach Effect, providing actionable insights into the strategic importance of coaching in achieving Olympic success.
@@ -781,6 +777,7 @@ We further polish the program used in the identification step to calculate the m
     \centering
     \includegraphics[width=0.8\textwidth]{pics/coach_effect_impact_Sport_from_csv.png}
     \caption{Quantification of The Great Coach Effect}
+    \label{fig:coach_effect_impact}
 \end{figure}
 
 \begin{table}[htbp]
@@ -801,9 +798,10 @@ We further polish the program used in the identification step to calculate the m
         \hline
     \end{tabular}
     \caption{Impact of The Great Coach Effect on Different Tiers of Countries}
+    \label{tab:coach_effect_impact}
 \end{table}
 
-This figure clearly shows the impact of the Great Coach Effect on different tiers of countries, highlighting the potential for significant performance improvements under the guidance of elite coaches. We can see that the positive and negative impact of the Great Coach Effect(namely, the moving in and out of great coaches) on absolute medal changes has remained constant among different tiers of countries, while its impact on relative medal changes decreases as the tier goes up. This is an expected phenomenon because countries with better overall power already do well in sports across a wide range of fields, so the arrival or departure of one specific coach won't have much effect relative to the total medal count. By quantifying the magnitude and percentage of the effect, we can better understand the strategic value of investing in high-caliber coaching talent and its implications for national Olympic success.
+\textit{Figure~\ref{fig:coach_effect_impact}} and \textit{Table~\ref{tab:coach_effect_impact}} clearly shows the impact of the Great Coach Effect on different tiers of countries, highlighting the potential for significant performance improvements under the guidance of elite coaches. We can see that the positive and negative impact of the Great Coach Effect(namely, the moving in and out of great coaches) on absolute medal changes has remained constant among different tiers of countries, while its impact on relative medal changes decreases as the tier goes up. This is an expected phenomenon because countries with better overall power already do well in sports across a wide range of fields, so the arrival or departure of one specific coach won't have much effect relative to the total medal count. By quantifying the magnitude and percentage of the effect, we can better understand the strategic value of investing in high-caliber coaching talent and its implications for national Olympic success.
 
 \subsection{Exemplification}
 By analyzing the performance trends in specific sports, we identified notable cases where the transfer of a coach coincided with a sharp increase in performance of one country and a decline or stagnation for another, allowing for the cross-verification of our algorithms. Below are three exemplifications of the Great Coach Effect based on historical Olympic data and their correlations with our results.\
@@ -852,9 +850,10 @@ To determine which three tier 2 countries can benefit the most from the Great Co
     \centering
     \includegraphics[width=0.8\textwidth]{pics/tier2_top10_absolute_gain.png}
     \caption{Quantification of The Great Coach Effect on Tier 2 Countries}
+    \label{fig:tier2_top10_absolute_gain}
 \end{figure}
 
-From the figure above, we recommend the top 3 countries with the highest potential for performance improvement: ISR (Israel), BRN (Bahrain), and VEN (Venezuela), with respective projected medal gain of 5.5, 3.9 and 3.9.
+As is shown in \textit{Figure~\ref{fig:tier2_top10_absolute_gain}}, we recommend the top 3 countries with the highest potential for performance improvement: ISR (Israel), BRN (Bahrain), and VEN (Venezuela), with respective projected medal gain of 5.5, 3.9 and 3.9.
 
 
 \section{Task3 --- Original Insights revealed from the model}
@@ -908,14 +907,6 @@ This also reflects the real-world scenario, where allocating training resources 
 
 Therefore, we recommend that national Olympic committees focus on diversifying their participation in various sports to maximize their chances of winning medals. This strategy can help mitigate the risks associated with investing heavily in individual athletes and improve the overall performance of the country in the Olympics.
 
-
-
-
-
-
-
-
-
 \section{Sensitivity Analysis}
 In order to evaluate how changes in a key hyperparameter affect the overall prediction performance,
 we perform a sensitivity analysis that varies the number of estimators for all the regression models we used.
@@ -938,7 +929,7 @@ We compare each tested value against a baseline model where\texttt{n\_estimators
     \label{fig:sensitivity_analysis}
 \end{figure}
 
-We can see from the resulting figure that the change in the number of estimators has a minor impact on the results overall, with the largest impact of them being only 7.5\%, and most of them around 2.5\%. This suggests that the model is relatively stable with respect to this hyperparameter, and the prediction performance is not significantly affected by the model parameters within the tested range.
+We can see from \textit{Figure~\ref{fig:sensitivity_analysis}} that the change in the number of estimators has a minor impact on the results overall, with the largest impact of them being only 7.5\%, and most of them around 2.5\%. This suggests that the model is relatively stable with respect to this hyperparameter, and the prediction performance is not significantly affected by the model parameters within the tested range.
 
 \section{Conclusion}
 In our work, we developed a comprehensive model to analyze and predict Olympic medal counts, mainly focusing on historical performance, host country, and elite coaching. We quantified the "Great Coach Effect" and demonstrated its significant influence on medal counts. Our analysis revealed that investing in top-tier coaching talent can yield substantial performance improvements. Additionally, we examined the phenomenon of host countries experiencing a peak in medal counts during the hosting year, using Z-score analysis to quantify this effect. Our findings may provide valuable insights for national Olympic committees to strategically allocate resources and enhance their chances of success in future Olympic Games.
