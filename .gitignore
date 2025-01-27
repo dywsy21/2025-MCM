@@ -11,3 +11,4 @@ analysis_result*.txt
 **/*.out
 **/*.synctex*
 **/*.toc
+.vscode
