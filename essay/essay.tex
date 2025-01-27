@@ -180,7 +180,7 @@ In this section, we outline the process of developing a regression-based model t
 
 Thanks to the nature of this problem being inherently correlated to chronological projection and the provided data being complete with regard of countries, sports, events and individual athletes, we adopt time series analysis and regression models to predict medal counts for the 2028 Los Angeles Olympics.
 
-To specify, we adopt a tier-based modeling strategy, aligning with the classification to be established in Task 1 - Subtask 3. Countries are grouped into five tiers based on their historical performance. Separate regression models are trained for each tier to capture the unique dynamics of countries within the same tier. The methodology involves the following steps:
+To specify, we adopt a tier-based modeling strategy, aligning with the classification to be established in Task 1 - Subtask 3. Countries are grouped into five tiers based on their historical performance (Tier 1 - Tier 5, from the worst ones to the best ones). Separate regression models are trained for each tier to capture the unique dynamics of countries within the same tier. The methodology involves the following steps:
 
 \subsection{Data Loading \& Transformation}
 
@@ -203,7 +203,7 @@ Features are selected and optimized using metaheuristic algorithm to determine t
     \item A value of 0 indicates the exclusion of a feature.
     \item A value of 1 indicates the inclusion of a feature.
 \end{itemize}
-A random forest model is trained iteratively with different feature combinations, and the performance of each combination is evaluated. 
+Regression model is trained iteratively with different feature combinations, and the performance of each combination is evaluated. 
 
 
 \subsection{Data Splitting}
@@ -212,12 +212,13 @@ Given the relatively small dataset size, we adopt k-fold cross-validation to spl
 
 \subsection{Model Training}
 
-We train several regression models on the training set, including:LSBoost,XGBoost,
-Multivariate Linear Regression,Gaussian Regression,Decision Tree,Random Forest. Each model is trained using the training set and evaluated on the validation set to determine the optimal hyperparameters.
+We train several regression models on the training set, including: LSBoost, XGBoost, Multivariate Linear Regression, Gaussian Regression, Decision Tree and Random Forest.
+
+Each model is trained using the training set and evaluated on the validation set to determine the optimal hyperparameters.
 
 \subsection{Model Evaluation}
 
-The performance of each model is assessed on the test set using the following metrics:Mean Absolute Error (MAE),Mean Absolute Percentage Error (MAPE),Mean Squared Error (MSE),Root Mean Squared Error (RMSE),Coefficient of Determination ($R^2$)
+The performance of each model is assessed on the test set using the following metrics: Mean Absolute Error (MAE),Mean Absolute Percentage Error (MAPE), Mean Squared Error (MSE), Root Mean Squared Error (RMSE), Coefficient of Determination ($R^2$)
 
 The evaluation result is stated as below. From the result we can see that each medal type can have very different best models. This phenomenon also vouches for the veracity of our tier-based modeling strategy.
 
@@ -373,7 +374,7 @@ As an example, SSA algorithm demonstrated the best results for optimizing the Ti
 \end{wrapfigure}
 \subsection{Uncertainty Quantification and Prediction Intervals}
 
-To quantify the uncertainty in model predictions, we use Gaussian Probability Interval Prediction. This method calculates prediction intervals, providing upper and lower bounds for the estimated medal counts. The intervals represent the range within which the actual medal counts are expected to fall with a specified confidence level.
+To quantify the uncertainty in model predictions, we use Gaussian Probability Interval Prediction. This method calculates prediction intervals, providing upper and lower bounds for the estimated medal counts. The intervals represent the range within which the actual medal counts are expected to fall within at a specified confidence level.
 % \begin{figure}[htbp]
 %     \centering
 %     \includegraphics[width=3.33in, keepaspectratio]{pics/Gaussian Probability Interval Prediction.eps}  
@@ -606,7 +607,6 @@ The analysis indicates that for most tiers (1, 2, 4, and 5), there is a statisti
 
 % This subtask aims to determine the most significant sports for different countries based on their historical performance in the Olympics. To achieve this, we develop a method to calculate the importance of each event and sport, both at the country level and globally. 
 
-
 \subsubsection{Methodology}
 To answer the question of which sports are most important for various countries, we proceed with the following steps:
 
@@ -664,7 +664,7 @@ Events are categorized into three types:
     \item \textbf{Normal Events:} All remaining events that do not fall into the above categories.
 \end{itemize}
 
-\paragraph{Analysis of Event Performance}
+\paragraph{\textbf{\underline{Analysis of Event Performance}}}
 
 For each event type:
 \begin{itemize}
@@ -675,7 +675,7 @@ For each event type:
     \item Determine if $Z > 1.96$, indicating statistical significance.
 \end{itemize}
 
-\paragraph{Application to Multiple Host Countries}
+\paragraph{\textbf{\underline{Application to Multiple Host Countries}}}
 
 Applied the algorithm above to various host countries. Z-scores for new, dominant, and normal events are calculated for each host country to identify patterns in performance.
 
@@ -888,7 +888,7 @@ Through our initial attempt at using individual athletes as the smallest granula
 
 In our initial attempt at using individual athletes as the smallest granularity, we found that the model's prediction performance was significantly affected by the high randomness and variability in individual athlete performance, making it defective.
 
-This also reflects the real-world scenario, where allocating training resources to individual athletes is challenging due to the high uncertainty and variability in individual performance. Over-investing in a single project or athlete does not necessarily guarantee a return on investment, but in the meantime, taking part in more sports, as shown in the model, can steadily increase the chances of winning medals.
+This also reflects the real-world scenario, where allocating training resources to individual athletes is challenging due to the high uncertainty and variability in individual performance. Over-investing in a single project or athlete does not necessarily guarantee a return on investment, but in the meantime, taking part in more sports, as shown in the model(effective for tier 1, 2, 4 and 5 countries), can steadily increase the chances of winning medals.
 
 Therefore, we recommend that national Olympic committees focus on diversifying their participation in various sports to maximize their chances of winning medals. This strategy can help mitigate the risks associated with investing heavily in individual athletes and improve the overall performance of the country in the Olympics.
 
