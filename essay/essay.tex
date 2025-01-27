@@ -103,10 +103,11 @@ Despite significant progress, predicting Olympic medals remains a complex task d
 Due to the limitation of usable dataset, we cannot explore many of the aforementioned factors in detail. Instead, we focus on developing a model that predicts Olympic medal counts based on historical data and sport-specific information. Our model has the following features:
 
 \begin{enumerate}
+    \item A tier-based modeling strategy that classifies countries into five tiers based on their historical performance, allowing for more accurate predictions for countries with similar overall strengths.
     \item A two-stage model that first predicts the number of medals won by each country in each sport, then aggregates these predictions to estimate the total medal count.
-    \item Trains and evaluates multiple models with different underlying algorithms on the same dataset, and use the best-performing model for prediction.
-    \item Separates different countries into multiple clusters based on their historical medal counts (in which their comprehensive national power is also embodied \cite{7}), allowing for more accurate predictions for countries with similar overall strengths.
-    \item A sensitivity analysis that assesses the impact of different factors on medal counts and identifies key drivers of success. 
+    \item Trains and evaluates multiple models on the same dataset, and uses the best-performing model for prediction.
+    \item Quantifies the uncertainty in model predictions using Gaussian Probability Interval Prediction, providing upper and lower bounds for the estimated medal counts.
+    \item A sensitivity analysis that assesses the impact of different factors on medal counts and identifies key drivers of success.
 \end{enumerate}
 
 \section{Assumptions and Justifications} 
